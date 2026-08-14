@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Focus - Sid Ahir</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0c29; background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            color: white; padding-bottom: 80px; overflow-x: hidden;
+        }
+
+        @keyframes panicAlert { 0% { box-shadow: inset 0 0 0px red; } 50% { box-shadow: inset 0 0 50px red; } 100% { box-shadow: inset 0 0 0px red; } }
+        body.panic-mode { animation: panicAlert 1s infinite; }
+
+        #warmup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 12, 41, 0.98); backdrop-filter: blur(15px);
+            z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .warmup-box {
+            background: rgba(255, 255, 255, 0.05); border: 2px solid #00ffff; border-radius: 20px;
+            padding: 30px; text-align: center; box-shadow: 0 0 30px rgba(0, 255, 255, 0.2); width: 85%; max-width: 400px;
+        }
+        .warmup-q { font-size: 32px; font-weight: bold; margin: 20px 0; color: #ffcc00; }
+        .warmup-input { font-size: 24px; text-align: center; padding: 10px; width: 120px; border-radius: 10px; border: none; outline: none; background: #222; color: #00ffff; font-weight: bold; }
+        .warmup-status { margin-top: 15px; color: #00ff00; font-weight: bold; }
+
+        .header {
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
+            padding: 15px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header h1 { margin: 0; font-size: 22px; color: #00ffff; letter-spacing: 1px; text-transform: uppercase; }
+        
+        .status-container { display: flex; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .glass-badge {
+            background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 15px;
+            font-size: 13px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2);
+        }
+        .streak { color: #ffcc00; border-color: #ffcc00; }
+        .coin { color: #ff9900; border-color: #ff9900; cursor: pointer; box-shadow: 0 0 10px rgba(255,153,0,0.4); }
+
+        .progress-bg { width: 90%; max-width: 450px; background: #222; border-radius: 10px; margin: 15px auto; height: 10px; box-shadow: inset 0 0 5px #000; }
+        .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #00c6ff, #0072ff); transition: 0.5s; border-radius: 10px; }
+
+        .tabs { display: flex; justify-content: center; gap: 8px; margin: 20px 0; flex-wrap: wrap; padding: 0 10px; }
+        .tab-btn {
+            background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s;
+        }
+        .tab-btn.active { background: linear-gradient(135deg, #0088cc, #005580); border-color: #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.5); }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 0 15px; }
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .cat-title { background: linear-gradient(90deg, #59498d, transparent); padding: 8px 15px; border-left: 4px solid #00ffff; font-size: 15px; font-weight: bold; border-radius: 4px; margin: 20px 0 10px; }
+        .task-item {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05); padding: 15px; margin-bottom: 10px;
+            border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s;
+        }
+        .task-item.done { background: rgba(0, 255, 0, 0.1); border-color: #00ff00; }
+        .task-item.done .task-name { text-decoration: line-through; color: #888; }
+        input[type="checkbox"] { width: 22px; height: 22px; accent-color: #00ff00; cursor: pointer; }
+
+        .pomodoro-box { text-align: center; background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; border: 1px solid #00ffff; box-shadow: 0 0 20px rgba(0,255,255,0.1); }
+        .tree-emoji { font-size: 80px; transition: transform 0.5s; margin-bottom: 10px; display: inline-block; }
+        .pom-time { font-size: 60px; font-weight: bold; font-family: 'Courier New', Courier, monospace; color: #fff; text-shadow: 0 0 15px #fff; margin: 10px 0; }
+        .time-controls { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .time-controls button { background: #444; color: white; border: 1px solid #666; padding: 5px 15px; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; }
+        .pom-btns button { background: linear-gradient(135deg, #00b4db, #0083b0); color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; margin: 5px; }
+        .pom-btns .btn-stop { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
+
+        .input-box { width: 90%; background: rgba(0,0,0,0.5); color: white; border: 1px solid #555; padding: 12px; border-radius: 10px; margin-bottom: 10px; font-size: 14px; }
+        .btn-save { background: #00ffcc; color: black; font-weight: bold; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer; width: 95%; }
+        .log-item { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 14px; border-left: 3px solid #ffcc00; }
+
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; }
+        .cal-day { background: rgba(255,255,255,0.05); border-radius: 8px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .cal-day.success { background: rgba(0, 255, 0, 0.2); border-color: #00ff00; color: #00ff00; }
+        .cal-day.failed { background: rgba(255, 0, 0, 0.2); border-color: #ff4444; color: #ff4444; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-box { background: #1a1a2e; width: 90%; max-width: 350px; border-radius: 15px; padding: 20px; text-align: center; border: 2px solid #ff9900; }
+        
+        .home-btn { position: fixed; bottom: 15px; right: 15px; background: rgba(255,255,255,0.1); border: 1px solid #00ffff; padding: 10px; border-radius: 50%; font-size: 20px; text-decoration: none; backdrop-filter: blur(5px); z-index: 1000; }
+    </style>
+</head>
+<body>
+
+    <!-- ૧ એક ટાસ્ક માટે: "ટન-ટન" ડિંગ સાઉન્ડ -->
+    <audio id="sound-pop" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+    <!-- બધા ટાસ્ક પૂરા થવા પર: અસલી મોટો ધડાકો -->
+    <audio id="sound-blast" src="https://assets.mixkit.co/active_storage/sfx/1703/1703-preview.mp3" preload="auto"></audio>
+
+    <!-- Brain Warm-up Overlay (10 Questions) -->
+    <div id="warmup-overlay">
+        <div class="warmup-box">
+            <h2 style="color:#00ffff; margin-top:0;">🧠 Brain Warm-up</h2>
+            <p style="font-size:13px; color:#ccc;">તમારું મગજ એક્ટિવ કરવા 10 પ્રશ્નો સોલ્વ કરો!</p>
+            <div id="warmup-q" class="warmup-q">Loading...</div>
+            <input type="number" id="warmup-ans" class="warmup-input" placeholder="Ans" onkeyup="checkWarmup(event)">
+            <div id="warmup-status" class="warmup-status">Question 1 / 10</div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>🎯 Ultimate Focus</h1>
+        <div class="status-container">
+            <div class="glass-badge streak">🔥 Streak: <span id="streak-count">0</span></div>
+            <div class="glass-badge coin" onclick="useCheatCoin()">🪙 Coins: <span id="coin-count">0</span></div>
+            <div class="glass-badge" style="color:#00ffcc; border-color:#00ffcc;">👑 <span id="user-rank">Starter</span></div>
+        </div>
+        <div class="progress-bg"><div class="progress-fill" id="progress-bar"></div></div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('tasks')">📝 Tasks</button>
+        <button class="tab-btn" onclick="switchTab('pomodoro')">⏱️ Pomodoro</button>
+        <button class="tab-btn" onclick="switchTab('vault')">📓 Vault</button>
+        <button class="tab-btn" onclick="switchTab('calendar')">📅 Cal</button>
+    </div>
+
+    <div class="container">
+        <!-- TASKS TAB -->
+        <div id="tasks-view" class="view-section active"></div>
+
+        <!-- POMODORO TAB -->
+        <div id="pomodoro-view" class="view-section">
+            <div class="pomodoro-box">
+                <div class="tree-emoji" id="tree-icon">🌱</div>
+                <h3 style="color:#aaa; margin:0;">Focus Time</h3>
+                <div class="time-controls">
+                    <button onclick="adjustTime(-5)">- 5 Min</button>
+                    <button onclick="adjustTime(5)">+ 5 Min</button>
+                </div>
+                <div class="pom-time" id="timer-display">40:00</div>
+                <div class="pom-btns">
+                    <button id="btn-start-timer" onclick="startTimer()">🚀 Start Focus</button>
+                    <button id="btn-stop-timer" class="btn-stop" style="display:none;" onclick="stopTimer()">⏹️ Stop (Tree Dies)</button>
+                </div>
+                <p style="font-size:12px; color:#ff4444; margin-top:15px;">*સાયલન્ટ ટાઈમર: પૂરું થશે એટલે ખાલી 5 સેકન્ડ વાઈબ્રેટ થશે.</p>
+            </div>
+        </div>
+
+        <!-- VAULT TAB -->
+        <div id="vault-view" class="view-section">
+            <h3 style="color:#00ffff;">📊 Mock Test Tracker</h3>
+            <input type="text" id="mock-name" class="input-box" placeholder="Exam Name (e.g. SBI PO Pre 1)">
+            <input type="number" id="mock-score" class="input-box" placeholder="Score (e.g. 65.25)">
+            <button class="btn-save" onclick="saveMock()">💾 Save Score</button>
+            <div id="mock-list"></div>
+
+            <h3 style="color:#ffcc00; margin-top:30px;">📓 Mistake Vault</h3>
+            <textarea id="mistake-text" class="input-box" style="height:60px;" placeholder="આજની ભૂલ અહી લખો..."></textarea>
+            <button class="btn-save" style="background:#ffcc00;" onclick="saveMistake()">🔒 Lock Mistake</button>
+            <div id="mistake-list"></div>
+        </div>
+
+        <!-- CALENDAR TAB -->
+        <div id="calendar-view" class="view-section">
+            <h3 style="text-align:center; color:#00ffff;" id="cal-month-title"></h3>
+            <div class="calendar-grid" id="cal-days-container"></div>
+        </div>
+    </div>
+
+    <a href="index.html" class="home-btn">🏠</a>
+
+    <!-- Brain Dump Modal -->
+    <div class="modal-overlay" id="braindump-modal">
+        <div class="modal-box">
+            <h3>🎉 All Tasks Done!</h3>
+            <p style="color:#ccc; font-size:14px;">આજના દિવસમાંથી તમે શું નવું શીખ્યા? (Brain Dump)</p>
+            <textarea id="dump-text" class="input-box" style="height:80px;" placeholder="Self Analysis..."></textarea>
+            <button class="btn-save" onclick="saveBrainDump()">Save & Sleep</button>
+        </div>
+    </div>
+
+    <!-- Reason Modal -->
+    <div class="modal-overlay" id="reason-modal">
+        <div class="modal-box">
+            <h3 id="modal-date-title">Date</h3>
+            <textarea id="reason-text" class="input-box" style="height:60px;" placeholder="ટાસ્ક કેમ અધૂરા રહ્યા?"></textarea>
+            <button class="btn-save" onclick="saveReason()">Save</button>
+            <button class="btn-save" style="background:transparent; border:1px solid #777; margin-top:10px;" onclick="document.getElementById('reason-modal').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const taskData = [
+            { cat: "1. Maths", tasks: [{ id: "m1", name: "Speed Maths - 50 Qs" }, { id: "m2", name: "DI - 10 Set" }, { id: "m3", name: "Arithmetic - 30 Qs" }] },
+            { cat: "2. Reasoning", tasks: [{ id: "r1", name: "Misc - 20 Set" }, { id: "r2", name: "Seating - 15 Set" }, { id: "r3", name: "Puzzle - 15 Set" }] },
+            { cat: "3. English", tasks: [{ id: "e1", name: "Error Detection - 10 Qs" }, { id: "e2", name: "Cloze Test - 10 Qs" }, { id: "e3", name: "Para Jumble - 10 Set" }, { id: "e4", name: "Reading - 5 Set" }, { id: "e5", name: "Sentence Rearrangement - 10 Set" }] },
+            { cat: "4. Daily Current Affairs", tasks: [{ id: "ca1", name: "Complete Daily CA" }] },
+            { cat: "5. Gym & Meditation", tasks: [{ id: "g1", name: "Gym / Workout" }, { id: "g2", name: "Meditation / Focus" }] }
+        ];
+
+        let historyData = JSON.parse(localStorage.getItem('focusDataV3')) || {};
+        let appStats = JSON.parse(localStorage.getItem('statsDataV3')) || { coins: 0, lastWarmup: "" };
+        let mockData = JSON.parse(localStorage.getItem('mockDataV3')) || [];
+        let mistakeData = JSON.parse(localStorage.getItem('mistakeDataV3')) || [];
+        
+        let todayStr = new Date().toLocaleDateString('en-CA'); 
+        let selectedDate = "";
+
+        function getValidTaskIds() {
+            let ids = [];
+            taskData.forEach(g => g.tasks.forEach(t => ids.push(t.id)));
+            return ids;
+        }
+
+        if (!historyData[todayStr]) { historyData[todayStr] = { completedTasks: [], isAllDone: false, reason: "", dump: "" }; saveAll(); }
+
+        // --- BRAIN WARM-UP ---
+        let wCount = 0, currentAns = 0;
+        function loadWarmup() {
+            if(appStats.lastWarmup === todayStr) { document.getElementById('warmup-overlay').style.display = 'none'; return; }
+            let type = Math.floor(Math.random() * 5); let qStr = "";
+            
+            if(type === 0) { let n = Math.floor(Math.random() * 50) + 1; qStr = `${n}² = ?`; currentAns = n * n; }
+            else if(type === 1) { let n = Math.floor(Math.random() * 20) + 1; qStr = `${n}³ = ?`; currentAns = n * n * n; }
+            else if(type === 2) { let n = Math.floor(Math.random() * 30) + 1; let m = Math.floor(Math.random() * 9) + 2; qStr = `${n} × ${m} = ?`; currentAns = n * m; }
+            else if(type === 3) { 
+                let fractions = [{pct: 50, d: 2}, {pct: 25, d: 4}, {pct: 20, d: 5}, {pct: 10, d: 10}, {pct: 5, d: 20}, {pct: 4, d: 25}];
+                let f = fractions[Math.floor(Math.random() * fractions.length)];
+                qStr = `${f.pct}% = 1 / ?`; currentAns = f.d; 
+            }
+            else { 
+                let rates = [5, 10, 20]; let r = rates[Math.floor(Math.random() * rates.length)];
+                qStr = `CI % for ${r}% (2 Yrs) = ?`; currentAns = r * 2 + (r * r)/100;
+            }
+
+            document.getElementById('warmup-q').innerText = qStr;
+            document.getElementById('warmup-ans').value = "";
+            document.getElementById('warmup-status').innerText = `Question ${wCount+1} / 10`;
+            document.getElementById('warmup-ans').focus();
+        }
+
+        function checkWarmup(e) {
+            if(e.key === 'Enter') {
+                let userAns = parseFloat(document.getElementById('warmup-ans').value);
+                if(userAns === currentAns) {
+                    wCount++;
+                    if(wCount >= 10) { 
+                        appStats.lastWarmup = todayStr; saveAll();
+                        document.getElementById('warmup-overlay').style.display = 'none'; fireSmallConfetti();
+                    } else { loadWarmup(); }
+                } else { alert("Wrong! Try again."); document.getElementById('warmup-ans').value = ""; }
+            }
+        }
+        loadWarmup();
+
+        // --- TASKS ---
+        function renderTasks() {
+            const container = document.getElementById('tasks-view'); container.innerHTML = "";
+            let todayTasks = historyData[todayStr].completedTasks || [];
+
+            taskData.forEach(group => {
+                let html = `<div class="category"><div class="cat-title">${group.cat}</div>`;
+                group.tasks.forEach(task => {
+                    let isChecked = todayTasks.includes(task.id) ? "checked" : "";
+                    html += `<div class="task-item ${isChecked ? 'done':''}" id="box-${task.id}">
+                            <div class="task-name">${task.name}</div>
+                            <input type="checkbox" id="chk-${task.id}" onchange="toggleTask('${task.id}')" ${isChecked}>
+                        </div>`;
+                });
+                container.innerHTML += html + `</div>`;
+            });
+            updateProgress(); updateStreak();
+        }
+
+        function toggleTask(id) {
+            let chk = document.getElementById(`chk-${id}`);
+            let box = document.getElementById(`box-${id}`);
+            let todayTasks = historyData[todayStr].completedTasks || [];
+            todayTasks = Array.from(new Set(todayTasks)); // Remove duplicates
+
+            if (chk.checked) { 
+                box.classList.add('done'); 
+                if(!todayTasks.includes(id)) todayTasks.push(id); 
+                playPopSound(); // "ટન-ટન" sound
+                fireSmallConfetti(); 
+            } else { 
+                box.classList.remove('done'); 
+                todayTasks = todayTasks.filter(t => t !== id); 
+            }
+            
+            historyData[todayStr].completedTasks = todayTasks;
+            updateProgress(); 
+            checkAllCompleted(); 
+            saveAll();
+        }
+
+        function updateProgress() {
+            let validIds = getValidTaskIds();
+            let currentDone = (historyData[todayStr].completedTasks || []).filter(id => validIds.includes(id));
+            currentDone = Array.from(new Set(currentDone));
+
+            let pct = (currentDone.length / validIds.length) * 100;
+            let bar = document.getElementById('progress-bar'); bar.style.width = pct + "%";
+            bar.style.background = pct === 100 ? "linear-gradient(90deg, #00ff00, #32cd32)" : "linear-gradient(90deg, #00c6ff, #0072ff)";
+        }
+
+        function checkAllCompleted() {
+            let validIds = getValidTaskIds();
+            let currentDone = (historyData[todayStr].completedTasks || []).filter(id => validIds.includes(id));
+            currentDone = Array.from(new Set(currentDone));
+
+            // એકદમ પાક્કી ગણતરી: જ્યારે બધે બધા ટાસ્ક સાચે જ પૂરા થશે ત્યારે જ ફટાકડા ફૂટશે
+            if (currentDone.length === validIds.length && validIds.length > 0) {
+                if (!historyData[todayStr].isAllDone) {
+                    historyData[todayStr].isAllDone = true; 
+                    playBlastSound(); // અસલી મોટો ધડાકો
+                    fireBigRockets();
+                    setTimeout(() => { document.getElementById('braindump-modal').style.display='flex'; }, 3000);
+                }
+            } else { 
+                historyData[todayStr].isAllDone = false; 
+            }
+            updateStreak();
+        }
+
+        // --- STREAK & COINS ---
+        function updateStreak() {
+            let streak = 0, missed = 0, d = new Date();
+            for (let i = 0; i < 365; i++) {
+                let checkDate = d.toLocaleDateString('en-CA'); let dayData = historyData[checkDate];
+                if (dayData && (dayData.isAllDone || dayData.excused)) { streak++; missed = 0; } 
+                else if (checkDate !== todayStr) { missed++; if (missed >= 3) break; }
+                d.setDate(d.getDate() - 1);
+            }
+            document.getElementById('streak-count').innerText = streak;
+            document.getElementById('coin-count').innerText = appStats.coins;
+            
+            if(streak > 0 && streak % 14 === 0 && historyData[todayStr].isAllDone && !historyData[todayStr].coinGiven) {
+                appStats.coins++; historyData[todayStr].coinGiven = true; saveAll(); alert("🎉 You earned a Cheat Coin!");
+            }
+
+            let rank = "🌱 Starter";
+            if(streak >= 3) rank = "🚀 Challenger"; if(streak >= 7) rank = "⚡ Pro Banker"; if(streak >= 21) rank = "👑 Legend";
+            document.getElementById('user-rank').innerText = rank;
+        }
+
+        function useCheatCoin() {
+            if(appStats.coins > 0) {
+                if(confirm("Use 1 🪙 Cheat Coin to save yesterday's broken streak?")) {
+                    appStats.coins--; 
+                    let yest = new Date(); yest.setDate(yest.getDate()-1); let yStr = yest.toLocaleDateString('en-CA');
+                    if(!historyData[yStr]) historyData[yStr] = { completedTasks:[] };
+                    historyData[yStr].excused = true; saveAll(); updateStreak(); alert("Streak Saved! 🔥");
+                }
+            } else { alert("You don't have any Cheat Coins! Complete 14 days streak to earn 1."); }
+        }
+
+        // --- POMODORO ---
+        let pomTimer, pomTimeLeft = 40 * 60, pomDuration = 40 * 60;
+        function adjustTime(m) { if(!pomTimer) { pomTimeLeft += m*60; if(pomTimeLeft<60) pomTimeLeft=60; pomDuration=pomTimeLeft; updatePomDisplay(); } }
+        function updatePomDisplay() { let m = Math.floor(pomTimeLeft/60), s = pomTimeLeft%60; document.getElementById('timer-display').innerText = `${m<10?'0':''}${m}:${s<10?'0':''}${s}`; }
+        
+        function startTimer() {
+            document.getElementById('btn-start-timer').style.display = 'none'; document.getElementById('btn-stop-timer').style.display = 'inline-block';
+            document.getElementById('tree-icon').innerText = "🌿";
+            
+            pomTimer = setInterval(() => {
+                pomTimeLeft--; updatePomDisplay();
+                if(pomTimeLeft === 120) document.body.classList.add('panic-mode');
+
+                if(pomTimeLeft <= 0) {
+                    clearInterval(pomTimer); document.body.classList.remove('panic-mode');
+                    document.getElementById('tree-icon').innerText = "🌳";
+                    if("vibrate" in navigator) { navigator.vibrate(5000); }
+                    document.getElementById('btn-start-timer').style.display = 'inline-block'; 
+                    document.getElementById('btn-stop-timer').style.display = 'none';
+                    pomTimeLeft = pomDuration; 
+                }
+            }, 1000);
+        }
+        
+        function stopTimer() {
+            clearInterval(pomTimer); document.body.classList.remove('panic-mode');
+            document.getElementById('tree-icon').innerText = "🥀"; 
+            document.getElementById('btn-start-timer').style.display = 'inline-block'; 
+            document.getElementById('btn-stop-timer').style.display = 'none';
+            pomTimeLeft = pomDuration; updatePomDisplay();
+        }
+
+        // --- VAULT & MOCKS ---
+        function saveMock() {
+            let n = document.getElementById('mock-name').value, s = document.getElementById('mock-score').value;
+            if(n && s) { mockData.push({ date: todayStr, name: n, score: s }); saveAll(); document.getElementById('mock-name').value=""; document.getElementById('mock-score').value=""; renderVault(); }
+        }
+        function saveMistake() {
+            let t = document.getElementById('mistake-text').value;
+            if(t) { mistakeData.push({ date: todayStr, text: t }); saveAll(); document.getElementById('mistake-text').value=""; renderVault(); }
+        }
+        function renderVault() {
+            let mList = document.getElementById('mock-list'); mList.innerHTML = "";
+            mockData.forEach(m => mList.innerHTML += `<div class="log-item">📅 ${m.date} | <b>${m.name}</b> : 🎯 Score - ${m.score}</div>`);
+            let vList = document.getElementById('mistake-list'); vList.innerHTML = "";
+            mistakeData.forEach(m => vList.innerHTML += `<div class="log-item">⚠️ [${m.date}] : ${m.text}</div>`);
+        }
+
+        // --- CALENDAR & BRAINDUMP ---
+        function saveBrainDump() { historyData[todayStr].dump = document.getElementById('dump-text').value; saveAll(); document.getElementById('braindump-modal').style.display='none'; }
+        
+        function renderCalendar() {
+            let d = new Date(), month = d.getMonth(), year = d.getFullYear();
+            document.getElementById('cal-month-title').innerText = d.toLocaleString('default', { month: 'long', year: 'numeric' });
+            let container = document.getElementById('cal-days-container'); container.innerHTML = "";
+            
+            let days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            days.forEach(day => container.innerHTML += `<div class="day-name">${day}</div>`);
+
+            for (let i = 0; i < new Date(year, month, 1).getDay(); i++) container.innerHTML += `<div></div>`;
+            for (let i = 1; i <= new Date(year, month + 1, 0).getDate(); i++) {
+                let dateStr = new Date(year, month, i).toLocaleDateString('en-CA');
+                let cls = "cal-day"; if (dateStr === todayStr) cls += " today";
+                let hData = historyData[dateStr];
+                if (hData) { if (hData.isAllDone || hData.excused) cls += " success"; else if (dateStr !== todayStr) cls += " failed"; } 
+                else if (new Date(year, month, i) < new Date()) cls += " failed";
+                container.innerHTML += `<div class="${cls}" onclick="openDayDetails('${dateStr}')">${i}</div>`;
+            }
+        }
+        function openDayDetails(dateStr) {
+            let hData = historyData[dateStr]; if(!hData) return;
+            if (hData.isAllDone) { alert(hData.dump ? "Brain Dump: " + hData.dump : "All Tasks Completed!"); return; }
+            selectedDate = dateStr; document.getElementById('modal-date-title').innerText = dateStr;
+            document.getElementById('reason-text').value = hData.reason || ""; document.getElementById('reason-modal').style.display = 'flex';
+        }
+        function saveReason() { historyData[selectedDate].reason = document.getElementById('reason-text').value; saveAll(); document.getElementById('reason-modal').style.display='none'; }
+
+        // --- TABS & SAVE ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId+'-view').classList.add('active');
+            event.target.classList.add('active');
+            if(tabId === 'calendar') renderCalendar();
+            if(tabId === 'vault') renderVault();
+        }
+        function saveAll() {
+            localStorage.setItem('focusDataV3', JSON.stringify(historyData));
+            localStorage.setItem('statsDataV3', JSON.stringify(appStats));
+            localStorage.setItem('mockDataV3', JSON.stringify(mockData));
+            localStorage.setItem('mistakeDataV3', JSON.stringify(mistakeData));
+        }
+
+        // --- AUDIO & CONFETTI ---
+        function playPopSound() { let a = document.getElementById('sound-pop'); a.currentTime = 0; a.play().catch(e=>{}); }
+        function playBlastSound() { let a = document.getElementById('sound-blast'); a.currentTime = 0; a.play().catch(e=>{}); }
+        
+        function fireSmallConfetti() { confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 }, zIndex: 10000, colors: ['#00ffff', '#8a2be2', '#ff00ff'] }); }
+        function fireBigRockets() { 
+            var dur=5000, end=Date.now()+dur; 
+            var def = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
+            var int=setInterval(function(){ 
+                if(Date.now()>end) return clearInterval(int); 
+                confetti(Object.assign({}, def, { particleCount: 40, origin: { x: Math.random()*(0.3-0.1)+0.1, y: Math.random()-0.2 } }));
+                confetti(Object.assign({}, def, { particleCount: 40, origin: { x: Math.random()*(0.9-0.7)+0.7, y: Math.random()-0.2 } }));
+            }, 250); 
+        }
+
+        renderTasks(); updatePomDisplay();
+    </script>
+</body>
+</html>
