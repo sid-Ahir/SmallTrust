@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sid Ahir - Premium Current Affairs Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Vadodara:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ================= THEME VARIABLES ================= */
+        :root {
+            /* Light Theme (For Inner Pages) */
+            --bg-color: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+            
+            --primary: #6d28d9;
+            --primary-light: #ede9fe;
+            --secondary: #0284c7;
+            --secondary-light: #e0f2fe;
+
+            --success: #16a34a;
+            --success-light: #dcfce7;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --warning: #d97706;
+            --warning-light: #fef3c7;
+            
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme (For Inner Pages) */
+            --bg-color: #0b1121;
+            --surface: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            
+            --primary: #8b5cf6;
+            --primary-light: #2e1065;
+            --secondary: #38bdf8;
+            --secondary-light: #082f49;
+
+            --success: #10b981;
+            --success-light: #064e3b;
+            --danger: #ef4444;
+            --danger-light: #7f1d1d;
+            --warning: #fbbf24;
+            --warning-light: #78350f;
+            
+            --glass-bg: rgba(30, 41, 59, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ================= GLOBAL STYLES ================= */
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Hind Vadodara', 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 80px;
+        }
+
+        /* ================= 🖤 HOME DASHBOARD (ALWAYS DARK) ================= */
+        #home-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #020617 0%, #0f172a 60%, #1e1b4b 100%);
+            color: #ffffff;
+            z-index: 2000;
+            overflow-y: auto;
+            animation: fadeIn 0.5s ease;
+        }
+
+        #home-screen::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 20%, rgba(124, 58, 237, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .home-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* 📅 Date Badge */
+        .date-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+        }
+
+        /* 🧑 Profile Photo with NORTH-WEST NEON GLOW */
+        .profile-photo-wrapper {
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .profile-photo {
+            width: 220px; 
+            height: 220px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            /* ONLY North-West Shadow & Glow */
+            box-shadow: -15px -15px 35px rgba(124, 58, 237, 0.5), 
+                        -5px -5px 15px rgba(14, 165, 233, 0.4);
+            animation: nwNeonBlink 3s infinite alternate ease-in-out;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes nwNeonBlink {
+            0% {
+                box-shadow: -10px -10px 25px rgba(124, 58, 237, 0.4), 
+                            -3px -3px 10px rgba(14, 165, 233, 0.3);
+            }
+            100% {
+                box-shadow: -20px -20px 45px rgba(124, 58, 237, 0.7), 
+                            -8px -8px 20px rgba(14, 165, 233, 0.6);
+            }
+        }
+
+        /* 👤 Profile Text */
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 6px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .profile-tags {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #94a3b8;
+            letter-spacing: 2.5px;
+            margin-bottom: 45px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* 🔘 Navigation Buttons */
+        .home-btn {
+            width: 100%;
+            padding: 22px;
+            border-radius: 18px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .home-btn:active { transform: scale(0.96); }
+
+        .btn-mcq {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+        }
+        .btn-news {
+            background: linear-gradient(135deg, #0284c7, #0891b2);
+            box-shadow: 0 8px 25px rgba(2, 132, 199, 0.3);
+        }
+
+        /* ================= INNER PAGES ================= */
+        .internal-screen { display: none; animation: slideUp 0.4s ease; min-height: 100vh; padding-bottom: 40px;}
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 65px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; z-index: 1000;
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+        .sticky-header.visible { transform: translateY(0); }
+
+        .header-info { display: flex; flex-direction: column; font-family: 'Plus Jakarta Sans', sans-serif;}
+        .header-topic { font-size: 0.9rem; font-weight: 800; color: var(--primary); }
+        .header-date { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+
+        .theme-toggle {
+            background: var(--surface); border: 1px solid var(--border);
+            width: 42px; height: 42px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; font-size: 1.3rem; color: var(--text-main);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 🔙 Back Button */
+        .back-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: var(--surface); border: 2px solid var(--border);
+            color: var(--text-main); padding: 14px 20px;
+            border-radius: 14px; font-weight: 800; font-size: 1rem;
+            cursor: pointer; margin-bottom: 24px; width: 100%;
+            box-shadow: var(--shadow-sm); transition: transform 0.1s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .back-btn:active { transform: scale(0.97); }
+
+        /* ================= MCQ SECTION ================= */
+        .progress-container { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+        .progress-text { font-size: 1rem; font-weight: 800; color: var(--primary); font-family: 'Plus Jakarta Sans', sans-serif;}
+        .progress-bar-bg { flex: 1; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s ease; }
+
+        .mcq-card, .news-card {
+            background: var(--surface); border-radius: 20px; padding: 24px;
+            box-shadow: var(--shadow-md); margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .question { font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: var(--text-main); }
+        .options-grid { display: flex; flex-direction: column; gap: 12px; }
+        
+        .option-btn {
+            background: var(--bg-color); border: 2px solid var(--border);
+            padding: 16px; border-radius: 14px; text-align: left;
+            font-size: 1.1rem; font-weight: 600; color: var(--text-main);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-light); }
+        .option-btn:disabled { cursor: default; }
+        .option-btn.correct { background: var(--success-light); border-color: var(--success); color: #064e3b;}
+        .option-btn.wrong { background: var(--danger-light); border-color: var(--danger); color: #7f1d1d;}
+        
+        .status-badge { float: right; font-weight: 800; font-size: 0.9rem; padding: 4px 10px; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif;}
+        .correct .status-badge { background: var(--success); color: white; }
+        .wrong .status-badge { background: var(--danger); color: white; }
+
+        /* Explanation Blocks */
+        .explanation-box { display: none; margin-top: 24px; padding-top: 24px; border-top: 2px dashed var(--border); animation: fadeIn 0.4s ease; }
+        .sec-title { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-family: 'Plus Jakarta Sans', sans-serif;}
+        
+        .content-block { background: var(--bg-color); padding: 18px; border-radius: 14px; margin-bottom: 16px; border: 1px solid var(--border); font-size: 1.1rem; }
+        .content-block ul { padding-left: 24px; margin-top: 8px;}
+        .content-block li { margin-bottom: 10px; }
+        
+        .related-block { background: var(--secondary-light); border-left: 5px solid var(--secondary); padding: 18px; border-radius: 14px; margin-bottom: 16px; font-size: 1.1rem; color: var(--text-main); }
+        .exam-block { background: var(--danger-light); border-left: 5px solid var(--danger); padding: 18px; border-radius: 14px; margin-bottom: 16px; font-size: 1.1rem; color: var(--text-main); font-weight: 600;}
+        .memory-block { background: var(--warning-light); border-left: 5px solid var(--warning); padding: 18px; border-radius: 14px; margin-bottom: 16px; font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
+        
+        mark { background: #fef08a; color: #854d0e; padding: 2px 8px; border-radius: 6px; font-weight: 700; border: 1px solid #fde047; }
+
+        .action-btn {
+            background: var(--text-main); color: var(--bg-color); border: none;
+            padding: 18px; width: 100%; border-radius: 16px; font-size: 1.15rem;
+            font-weight: 800; cursor: pointer; margin-top: 20px; display: none;
+            font-family: 'Plus Jakarta Sans', sans-serif; transition: transform 0.1s;
+        }
+        .action-btn:active { transform: scale(0.98); }
+
+        /* MCQ Result */
+        .score-circle {
+            width: 140px; height: 140px; border-radius: 50%;
+            background: conic-gradient(var(--success) var(--p), var(--border) 0);
+            display: flex; justify-content: center; align-items: center;
+            margin: 0 auto 24px auto; font-size: 2.5rem; font-weight: 800; color: var(--text-main);
+            position: relative; font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .score-circle::after { content: ''; position: absolute; width: 116px; height: 116px; background: var(--surface); border-radius: 50%; }
+        .score-circle span { position: relative; z-index: 1; }
+        .wrong-item { background: var(--danger-light); border-left: 5px solid var(--danger); padding: 18px; border-radius: 14px; margin-bottom: 16px; color: var(--text-main); font-size: 1.1rem;}
+
+        /* ================= NEWS SCREEN ================= */
+        .news-header-title { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 18px; border-bottom: 3px solid var(--primary-light); padding-bottom: 14px; line-height: 1.5; font-family: 'Plus Jakarta Sans', sans-serif;}
+        .static-section-title { font-size: 1.6rem; font-weight: 800; text-align: center; margin: 50px 0 24px 0; color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif;}
+        
+        .table-wrap { overflow-x: auto; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); }
+        table { width: 100%; min-width: 600px; border-collapse: collapse; font-family: 'Plus Jakarta Sans', sans-serif;}
+        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border); font-size: 1rem; }
+        th { background: var(--primary-light); color: var(--primary); font-weight: 800; }
+        tr:last-child td { border-bottom: none; }
+        
+    </style>
+</head>
+<body>
+
+    <!-- 🖤 MAIN HOME DASHBOARD -->
+    <div id="home-screen">
+        <div class="home-content">
+            <div class="date-badge">📅 05 AUG 2026 • REVISION</div>
+            
+            <div class="profile-photo-wrapper">
+                <img src="https://i.ibb.co/HL4hBwQ7/Screenshot-2026-08-06-16-21-28-251-com-google-android-apps-photos-edit.jpg" alt="Sid Ahir" class="profile-photo">
+            </div>
+
+            <div class="profile-name">SID AHIR</div>
+            <div class="profile-tags">IBPS &nbsp;•&nbsp; SBI &nbsp;•&nbsp; RRB</div>
+
+            <button class="home-btn btn-mcq" onclick="openSection('mcq-app')">
+                📝 YESTERDAY'S MCQs
+            </button>
+
+            <button class="home-btn btn-news" onclick="openSection('news-app')">
+                📰 TODAY'S CURRENT AFFAIRS
+            </button>
+        </div>
+    </div>
+
+    <!-- STICKY HEADER (Inner Pages) -->
+    <header class="sticky-header" id="stickyHeader">
+        <div class="header-info">
+            <div class="header-topic">DAILY CURRENT AFFAIRS</div>
+            <div class="header-date">05 AUG 2026</div>
+        </div>
+        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()">☀️</button>
+    </header>
+
+    <div class="container">
+        <!-- ================= 📝 MCQ SECTION ================= -->
+        <div id="mcq-app" class="internal-screen">
+            <button class="back-btn" onclick="goHome()">← BACK TO HOME</button>
+            
+            <div class="progress-container">
+                <div class="progress-text">Q <span id="qNum">1</span>/10</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div>
+            </div>
+
+            <div id="mcqContainer"></div>
+        </div>
+
+        <!-- ================= 🎯 MCQ RESULT SCREEN ================= -->
+        <div id="result-app" class="internal-screen">
+            <button class="back-btn" onclick="goHome()">← BACK TO HOME</button>
+            <div class="mcq-card" style="text-align: center;">
+                <div class="sec-title" style="justify-content: center; margin-bottom: 24px; font-size: 1.3rem;">🎯 YOUR SCORE</div>
+                <div class="score-circle" id="scoreCircle">
+                    <span id="scoreText">0/10</span>
+                </div>
+                <div id="scoreRemark" style="font-size: 1.8rem; font-weight: 800; color: var(--primary); font-family: 'Plus Jakarta Sans', sans-serif;">Excellent!</div>
+                <div id="scoreAccuracy" style="margin-bottom: 35px; font-weight: 700; font-size: 1.1rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif;">Accuracy: 0%</div>
+
+                <div id="wrongQuestionsBox" style="text-align: left;">
+                    <div class="sec-title" style="color:var(--danger); justify-content: center; margin-top:30px; font-size: 1.2rem;">❌ QUESTIONS TO REVISE</div>
+                    <div id="wrongListContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 📰 TODAY'S CURRENT AFFAIRS ================= -->
+        <div id="news-app" class="internal-screen">
+            <button class="back-btn" onclick="goHome()">← BACK TO HOME</button>
+            
+            <div id="newsContainer">
+                <!-- ALL NEWS INJECTED HERE FIRST -->
+            </div>
+
+            <div id="memoryExtras">
+                <!-- Memory sections injected here after news -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        // ---------------- 100% PRESERVED DATA (Gujarati + English Terms) ----------------
+        const mcqs = [
+            {
+                q: "Q1. મોનીષા ચક્રવર્તી (Monisha Chakraborty) ને તાજેતરમાં વિદેશી વિનિમય અને નાણાકીય બજારના નિયમન માટે કયા સંગઠનના Executive Director તરીકે નિયુક્ત કરવામાં આવ્યા છે?",
+                options: ["A) SEBI", "B) Reserve Bank of India (RBI)", "C) NABARD", "D) State Bank of India"],
+                ansIndex: 1,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: RBI</mark></li>
+                    <li>RBI એ <strong>European Central Bank (ECB)</strong> સાથે મિત્રતાને સંબંધમાં બદલીને <strong>Central Banking Cooperation</strong> માટે કરાર કર્યા છે.</li>
+                    <li>આ કરારમાં RBI Governor <strong>Sanjay Malhotra</strong> અને ECB Head <strong>Christine Lagarde</strong> સામેલ હતા.</li>
+                    <li>આ એગ્રીમેન્ટ <strong>Basel (Switzerland)</strong> માં થયો હતો, જ્યાં <strong>Bank for International Settlements (BIS)</strong> નું Headquarter આવેલું છે.</li>
+                    <li>ECB (European Central Bank) નું Headquarter <strong>Frankfurt, Germany</strong> માં છે.</li>
+                </ul>`,
+                related: `<ul>
+                    <li><strong>RBIH + I4C Partnership:</strong> RBI ની સબસિડરી Reserve Bank Innovation Hub (RBIH, HQ: Bengaluru) એ <strong>Indian Cyber Crime Coordination Centre (I4C, HQ: Delhi)</strong> સાથે Cyber Fraud અને Mule Accounts ને રોકવા માટે partnership કરી છે.</li>
+                    <li><strong>Surplus Transfer:</strong> RBI એ Govt of India ને FY 25-26 માટે <strong>₹2.87 Lakh Crore</strong> નો સરપ્લસ (Dividend) ટ્રાન્સફર કર્યો છે.</li>
+                    <li><strong>CRB (Contingent Risk Buffer):</strong> આની રેન્જ 4.5% થી 7.5% હોય છે, જેને હવે <strong>6.5%</strong> નક્કી કરવામાં આવી છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q2. વિશ્વેશ નેગી (Vishwesh Negi) એ તાજેતરમાં કયા દેશમાં ભારતના Ambassador (રાજદૂત) તરીકે પદ સંભાળ્યું છે?",
+                options: ["A) USA", "B) Indonesia", "C) Iran", "D) Nepal"],
+                ansIndex: 2,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Iran</mark></li>
+                    <li>વિશ્વેશ નેગી (Vishwesh Negi) ઈરાનમાં ભારતના નવા Ambassador બન્યા છે.</li>
+                </ul>`,
+                related: `<strong>Countries in News (Teacher's Revision):</strong>
+                <ul>
+                    <li><strong>USA:</strong> Strait of Hormuz માં Project Freedom લોન્ચ કર્યો.</li>
+                    <li><strong>Indonesia:</strong> Mount Dukono (માઉન્ટ ડુકોનો) જ્વાળામુખી ફાટ્યો. (ભારત સાથે Garuda Shakti, Samudra Shakti exercise).</li>
+                    <li><strong>Philippines:</strong> Mayon Volcano ફાટ્યો હતો. હાલમાં ASEAN Summit હોસ્ટ કરી રહ્યું છે.</li>
+                    <li><strong>Nepal:</strong> Kami Rita Sherpa એ 32મી વખત Mount Everest ચઢીને ઇતિહાસ રચ્યો.</li>
+                    <li><strong>Saudi Arabia:</strong> International Big Cat Alliance (IBCA) નો મેમ્બર બન્યો.</li>
+                    <li><strong>Malaysia, Canada & UK:</strong> 16 વર્ષથી નીચેના બાળકો માટે Social Media પ્રતિબંધિત કર્યું. UK ના નવા PM Keir Starmer છે.</li>
+                    <li><strong>UAE:</strong> Social Media માટે Minimum Age 15 વર્ષ ફિક્સ કરી.</li>
+                    <li><strong>UNSC:</strong> 5 નવા Non-Permanent Members બન્યા (Austria, Zimbabwe, Portugal, Kyrgyzstan, Trinidad & Tobago) - 2 વર્ષનો કાર્યકાળ, 1 Jan 2027 થી.</li>
+                    <li><strong>Uzbekistan:</strong> NDB (BRICS Bank) જોઈન કર્યું. (ભારત સાથે Dustlik exercise).</li>
+                </ul>`
+            },
+            {
+                q: "Q3. અરુણાચલ પ્રદેશમાં Glow Lake ના સમાવેશ સાથે, ભારતમાં હવે કુલ કેટલી Ramsar Sites થઈ ગઈ છે?",
+                options: ["A) 99", "B) 100", "C) 101", "D) 102"],
+                ansIndex: 2,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: 101</mark></li>
+                    <li>Glow Lake અરુણાચલ પ્રદેશની પહેલી અને ભારતની <strong>101મી Ramsar Site</strong> બની છે. આ Kamlang Tiger Reserve / Wildlife Sanctuary માં આવેલી છે.</li>
+                    <li>Ramsar Convention <strong>2 February 1971</strong> ના રોજ સાઈન થયો હતો (જેને World Wetland Day તરીકે ઉજવાય છે). આ <strong>21 Dec 1975</strong> થી લાગુ થયો અને India એ <strong>1982</strong> માં જોઈન કર્યો.</li>
+                    <li>સૌથી વધુ Ramsar Sites <strong>Tamil Nadu (20)</strong> માં છે. સૌથી મોટો Wetland Area <strong>Gujarat</strong> માં છે.</li>
+                </ul>`,
+                related: `<strong>Recent Ramsar Sites:</strong>
+                <ul>
+                    <li>100મી: Jayaprakash Narayan Bird Sanctuary (Surha Taal), UP</li>
+                    <li>99મી: Shekha Jheel Bird Sanctuary, UP</li>
+                    <li>97મી & 98મી: Patna Bird Sanctuary (UP) & Chhari Dhand Wetland (Gujarat)</li>
+                </ul>`
+            },
+            {
+                q: "Q4. તાજેતરમાં કઈ બેંકે Senior Citizens માટે ખાસ 'Senior Citizen Savings Account' લોન્ચ કર્યું છે?",
+                options: ["A) State Bank of India", "B) HDFC Bank", "C) ICICI Bank", "D) Axis Bank"],
+                ansIndex: 1,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: HDFC Bank</mark></li>
+                    <li>HDFC Bank એ Senior Citizens માટે સ્પેશિયલ સેવિંગ એકાઉન્ટ અને મહિલાઓ માટે 'Saving Max Account' લોન્ચ કર્યું છે.</li>
+                    <li>HDFC ના Part-time Chairman તરીકે <strong>Rajiv Kumar</strong> ની નિમણૂક થઈ છે (તેમણે Atanu Chakraborty ને રિપ્લેસ કર્યા). રાજીવ કુમાર 25th CEC અને Former Finance Secretary રહી ચૂક્યા છે.</li>
+                </ul>`,
+                related: `<ul>
+                    <li><strong>D-SIB (Domestic Systemically Important Banks):</strong> ભારતમાં 3 D-SIB બેંકો છે - SBI, HDFC, ICICI.</li>
+                    <li><strong>Cards:</strong> Visa + HDFC એ <strong>FIFA World Cup 2026 Pixel Credit Card</strong> લોન્ચ કર્યું. HDFC + Swiggy એ <strong>Swiggy Black & Orange</strong> ક્રેડિટ કાર્ડ લોન્ચ કર્યા.</li>
+                    <li><strong>CSR Spending (FY 24-25):</strong> NSE listed companies માં CSR પર સૌથી વધુ ખર્ચ Reliance Industries (₹133.09 Cr) એ કર્યો. બીજા નંબરે HDFC Bank (₹10.68 Cr) રહ્યું.</li>
+                    <li>HDFC Life ના MD & CEO <strong>Vibha Padalkar</strong> છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q5. Insurance business સંબંધિત લીડના નિર્માણ, ટ્રેકિંગ અને મોનિટરિંગને સરળ બનાવવા 'KBL PI Insurance' ડિજિટલ પ્લેટફોર્મ તાજેતરમાં કઈ બેંકે લોન્ચ કર્યું છે?",
+                options: ["A) Canara Bank", "B) Karnataka Bank", "C) Kerala Gramin Bank", "D) Kotak Mahindra Bank"],
+                ansIndex: 1,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Karnataka Bank</mark></li>
+                    <li>Karnataka Bank એ KBL PI Insurance પ્લેટફોર્મ લોન્ચ કર્યું છે.</li>
+                </ul>`,
+                related: `<strong>Additional Govt Stake Sale News:</strong>
+                <ul>
+                    <li>Govt of India પોતાની <strong>LIC (Life Insurance Corporation)</strong> માંથી <strong>6.5% Stake</strong> Offer for Sale (OFS) દ્વારા વેચી રહી છે.</li>
+                    <li>હાલમાં LIC માં સરકારની ભાગીદારી 96.5% છે (પબ્લિક પાસે 3.5%).</li>
+                    <li>Minimum Public Shareholding <strong>10%</strong> (May 2027 સુધીમાં) અચીવ કરવાની છે. જેથી 6.5% વેચાઈ ગયા પછી 90% સરકાર અને 10% પબ્લિક પાસે રહેશે.</li>
+                </ul>`
+            },
+            {
+                q: "Q6. રાષ્ટ્રપતિ દ્રૌપદી મુર્મૂજીએ તાજેતરમાં ઓડિશામાં કઈ યુનિવર્સિટીનું ઉદ્ઘાટન કર્યું છે?",
+                options: ["A) Kalinga University", "B) Utkal University", "C) Jagadguru Kripalu University", "D) Sambalpur University"],
+                ansIndex: 2,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Jagadguru Kripalu University</mark></li>
+                    <li>President Droupadi Murmu એ કટક (Cuttack), ઓડિશામાં આ યુનિવર્સિટીનું ઉદ્ઘાટન કર્યું છે.</li>
+                </ul>`,
+                related: `<strong>NITI Aayog Fiscal Health Index (2nd Edition, 2026):</strong>
+                <ul>
+                    <li><strong>Top 5 States:</strong> 1. Odisha (73.1), 2. Goa (54.7), 3. Jharkhand (50.5), 4. Gujarat (49.9), 5. Maharashtra (45.0).</li>
+                    <li>જે રાજ્યોનો સ્કોર 50+ છે, તેમને <strong>'Achiever'</strong> નું સ્ટેટસ મળ્યું છે (Odisha, Goa, Jharkhand).</li>
+                </ul>`
+            },
+            {
+                q: "Q7. AI-driven smart transport system વિકસાવવા માટે તાજેતરમાં કયા મ્યુનિસિપલ કોર્પોરેશને માસ્કો (Moscow) સરકાર સાથે MOU કર્યા છે?",
+                options: ["A) Hyderabad", "B) Chennai", "C) Visakhapatnam", "D) Bengaluru"],
+                ansIndex: 2,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Visakhapatnam</mark></li>
+                    <li>Greater Visakhapatnam Municipal Corporation એ Moscow સરકાર સાથે AI-driven smart transport system ડેવલપ કરવા અને અર્બન ટ્રાન્સપોર્ટને મોડર્નાઈઝ કરવા કરાર કર્યા છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q8. પેસિફિક આઈલેન્ડ નેશન Nauru એ સત્તાવાર રીતે પોતાનું નામ બદલીને 'Republic of Naoero' કર્યું છે. તેની સત્તાવાર કરન્સી (મુદ્રા) કઈ છે?",
+                options: ["A) US Dollar", "B) Australian Dollar", "C) New Zealand Dollar", "D) Fijian Dollar"],
+                ansIndex: 1,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Australian Dollar</mark></li>
+                    <li>Nauru નું નવું સત્તાવાર નામ <strong>Republic of Naoero (નોએરો)</strong> થઈ ગયું છે. તેમની સત્તાવાર કરન્સી Australian Dollar છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q9. તાજેતરમાં નિધન પામેલા કયા પૂર્વ ચીફ જસ્ટિસે બાબરી મસ્જિદ ધ્વંસની તપાસ માટે બનેલા વન-મેમ્બર ઇન્ક્વાયરી કમિશનને હેડ કર્યું હતું?",
+                options: ["A) Ranjan Gogoi", "B) M. S. Liberhan", "C) Dipak Misra", "D) N. V. Ramana"],
+                ansIndex: 1,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: M. S. Liberhan</mark></li>
+                    <li>પૂર્વ ચીફ જસ્ટિસ <strong>Manmohan Singh Liberhan (M.S. Liberhan)</strong> નું નિધન થયું છે.</li>
+                    <li>તેમણે બાબરી મસ્જિદ ડિમોલિશનની તપાસ માટે બનેલા One-member 'Liberhan Commission' નું નેતૃત્વ કર્યું હતું.</li>
+                </ul>`
+            },
+            {
+                q: "Q10. 4 Platform Supply Vessels ના નિર્માણ માટે ONGC તરફથી 1032 કરોડનો કોન્ટ્રાક્ટ કયા Defense PSU ને મળ્યો છે?",
+                options: ["A) Mazagon Dock", "B) Cochin Shipyard", "C) Goa Shipyard", "D) GRSE (Kolkata)"],
+                ansIndex: 3,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: GRSE</mark></li>
+                    <li>આ ₹1032 કરોડનો કોન્ટ્રાક્ટ <strong>GRSE (Garden Reach Shipbuilders & Engineers)</strong> કોલકાતા (West Bengal) ને મળ્યો છે.</li>
+                </ul>`,
+                related: `<strong>West Bengal & Governors Revision:</strong>
+                <ul>
+                    <li>PM મોદીએ West Bengal (કોલકાતા) માં <strong>Haldia Bulk Terminal</strong> નું ઉદ્ઘાટન કર્યું (Adani Ports દ્વારા નિર્મિત).</li>
+                    <li><strong>Recent Governors/LGs:</strong></li>
+                    <li>West Bengal: R. N. Ravi (C.V. Ananda Bose ની જગ્યાએ)</li>
+                    <li>Maharashtra: Jishnu Dev Varma</li>
+                    <li>Telangana: Shiv Pratap Shukla</li>
+                    <li>Himachal Pradesh: Kavinder Gupta</li>
+                    <li>Bihar: Syed Ata Hasnain</li>
+                    <li>Nagaland: Nand Kishore Yadav</li>
+                    <li>Delhi (LG): Taranjit Singh Sandhu</li>
+                    <li>Ladakh (LG): Vinay Kumar Saxena</li>
+                </ul>`
+            }
+        ];
+
+        // ---------------- 100% PRESERVED TODAY'S NEWS ----------------
+        const newsData = [
+            {
+                headline: "1. Willie Walsh became new CEO of IndiGo",
+                exp: `<ul>
+                    <li><strong>Willie Walsh</strong> IndiGo ના નવા CEO બન્યા છે. તેમણે Pieter Elbers ને રિપ્લેસ કર્યા છે.</li>
+                    <li>IndiGo ની સ્થાપના 2005 માં થઈ હતી અને તેનું Headquarter <strong>Gurugram</strong> માં આવેલું છે.</li>
+                </ul>`,
+                rel: `<ul>
+                    <li>Gurugram માં <strong>International Solar Alliance (ISA)</strong> નું પણ હેડક્વાર્ટર છે.</li>
+                    <li>Gurugram ના સાંસદ (MP) <strong>Rao Inderjit Singh</strong> છે, જેઓ Ministry of Statistics and Programme Implementation (MoSPI) સંભાળે છે.</li>
+                    <li>MoSPI અંતર્ગત NSO (National Statistical Office) આવે છે.</li>
+                    <li><strong>NSO આ તમામ ડેટા પબ્લિશ કરે છે:</strong> CPI (Consumer Price Index), GDP (Gross Domestic Product), IIP (Index of Industrial Production), અને PLFS (Periodic Labour Force Survey).</li>
+                </ul>`,
+                exam: "Willie Walsh replaced Pieter Elbers. NSO releases CPI, GDP, IIP, PLFS data."
+            },
+            {
+                headline: "2. RBI Monetary Policy Committee (MPC) Review",
+                exp: `<ul>
+                    <li>RBI એ પોતાની Monetary Policy માં કોઈ ફેરફાર કર્યો નથી. <strong>Repo Rate 6.50%</strong> પર યથાવત રાખવામાં આવ્યો છે.</li>
+                    <li>Monetary Policy Committee (MPC) માં <strong>6 Members</strong> હોય છે (3 RBI ના, 3 Govt of India ના).</li>
+                    <li>આ 62મી મીટિંગ હતી (FY 26-27 ની ત્રીજી). મીટિંગની અધ્યક્ષતા RBI Governor <strong>Sanjay Malhotra</strong> એ કરી હતી (Transcript પ્રમાણે).</li>
+                    <li>6 સભ્યોએ એકમતે (Unanimously) <strong>Neutral Stance</strong> જાળવી રાખવા માટે વોટ આપ્યો.</li>
+                    <li><strong>MPC Members:</strong> RBI (Sanjay Malhotra, Poonam Gupta, Indranil Bhattacharya) & Govt (Nagesh Kumar, Saugata Bhattacharya, Ram Singh).</li>
+                    <li><strong>Current Rates:</strong> Repo: 6.5%, SDF: 6.25%, MSF & Bank Rate: 6.75%, CRR: 3%, SLR: 18%.</li>
+                </ul>`,
+                rel: `<ul>
+                    <li><strong>Projections:</strong> GDP Growth Rate (FY 26-27) નું અનુમાન <strong>6.7%</strong> રાખવામાં આવ્યું છે (પહેલા 6.6% હતું).</li>
+                    <li>CPI Inflation Projection <strong>5%</strong> રાખવામાં આવ્યું છે (પહેલા 5.1% હતું).</li>
+                    <li>CPI ડેટા NSO કેલ્ક્યુલેટ કરે છે. RBI નો Inflation Target <strong>4% (± 2%)</strong> છે.</li>
+                </ul>`,
+                exam: "Repo Rate unchanged at 6.5%. GDP projected at 6.7%, CPI at 5%."
+            },
+            {
+                headline: "3. Clouded Leopard Conservation Action Plan",
+                exp: `<ul>
+                    <li>Government of India એ North East India માં લેપર્ડ્સને પ્રોટેક્ટ કરવા <strong>Clouded Leopard Conservation Action Plan</strong> લોન્ચ કર્યો છે.</li>
+                    <li>આ <strong>GoI, GEF (Global Environment Facility)</strong> અને <strong>UNDP (United Nations Development Programme)</strong> નો જોઈન્ટ ઇનિશિયેટિવ છે.</li>
+                    <li>આ પ્લાન Coimbatore માં National Board for Wildlife (NBWL) ની <strong>91મી મીટિંગ</strong>માં રિલીઝ કરાયો. આ કમિટીના અધ્યક્ષ Environment Minister <strong>Bhupender Yadav</strong> છે.</li>
+                    <li>આમાં <strong>14 Priority Conservation Landscapes</strong> આઇડેન્ટિફાય કરવામાં આવ્યા છે જ્યાં પ્રાકૃતિક આવાસ બહાલ કરાશે.</li>
+                </ul>`,
+                rel: `<ul>
+                    <li>ભારતમાં ચીતા (Cheetah) ને <strong>1952</strong> માં લુપ્ત (Extinct) ઘોષિત કરાયા હતા.</li>
+                    <li><strong>International Big Cat Alliance (IBCA)</strong> માં કુલ 7 બિગ કેટ્સ છે: Cheetah, Lion, Tiger, Leopard, Snow Leopard, Puma, Jaguar.</li>
+                </ul>`
+            },
+            {
+                headline: "4. REC & PFC Loan for Meja Thermal Power Project (UP)",
+                exp: `<ul>
+                    <li>REC Limited અને Power Finance Corporation (PFC) એ <strong>Meja Thermal Power Project</strong> (પ્રયાગરાજ, ઉત્તર પ્રદેશ) ના એક્સપેન્શન માટે લોન આપી છે.</li>
+                    <li>પ્રોજેક્ટની કુલ કોસ્ટ ₹38,357 કરોડ છે, જેમાં <strong>₹26,850 કરોડ</strong> ની લોન (Meja Urja Nigam Pvt Ltd સાથે) ફાળવવામાં આવી છે.</li>
+                    <li>આ પ્રોજેક્ટની નવી કેપેસિટી <strong>2400 MW</strong> (800 MW ની 3 યુનિટ્સ) છે.</li>
+                </ul>`
+            },
+            {
+                headline: "5. Meghalaya's Clouded Leopard Mission",
+                exp: `<ul>
+                    <li>Meghalaya એ પોતાના State Animal ને કન્ઝર્વ કરવા માટે <strong>Clouded Leopard Mission</strong> લોન્ચ કર્યું છે.</li>
+                    <li>તેનું સાયન્ટિફિક નામ <strong>Neofelis nebulosa (નિયોફેલિસ નેબુલોસા)</strong> છે.</li>
+                    <li>IUCN ની Red List માં તે <strong>Vulnerable</strong> (અસુરક્ષિત) કેટેગરીમાં છે.</li>
+                </ul>`,
+                rel: `<strong>Meghalaya Static GK:</strong>
+                <ul>
+                    <li>Capital: Shillong | CM: Conrad Sangma | Governor: C.H. Vijayashankar.</li>
+                    <li>National Parks: Nokrek, Balpakram.</li>
+                    <li>Festivals: Behdienkhlam, Wangala, Nongkrem, Cherry Blossom Festival.</li>
+                </ul>`
+            },
+            {
+                headline: "6. Chhattisgarh: Project Sahara for Divyangs",
+                exp: `<ul>
+                    <li>Chhattisgarh ના મુખ્યમંત્રી Vishnu Deo Sai એ <strong>'Project Sahara'</strong> હેઠળ દિવ્યાંગ ભાઈ-બંધુઓને Assistive Devices (સહાયક ઉપકરણો) વિતરિત કર્યા છે.</li>
+                </ul>`,
+                rel: `<strong>Chhattisgarh Static GK:</strong>
+                <ul>
+                    <li>Formation: 1 November 2000 | Capital: Raipur | CM: Vishnu Deo Sai | Governor: Ramen Deka.</li>
+                    <li>National Parks / Tiger Reserves: Guru Ghasidas, Indravati, Kanger Valley, Udanti Sitanadi, Achanakmar.</li>
+                </ul>`
+            },
+            {
+                headline: "7. Commemorative Postage Stamp on Satish Gujral",
+                exp: `<ul>
+                    <li>Department of Posts એ <strong>Satish Gujral</strong> ની જન્મ શતાબ્દી પર એક Postage Stamp રિલીઝ કરી છે.</li>
+                    <li>તેને Union Minister of Communication <strong>Jyotiraditya M. Scindia</strong> એ અનવીલ કરી.</li>
+                    <li>સતીશ ગુજરાલ એક પ્રખ્યાત ચિત્રકાર (Painter), મૂર્તિકાર (Sculptor), અને ગ્રાફિક ડિઝાઇનર હતા.</li>
+                </ul>`
+            },
+            {
+                headline: "8. Center of Excellence for Handloom Technology at IIT Delhi",
+                exp: `<ul>
+                    <li>Textile Minister <strong>Giriraj Singh</strong> એ IIT Delhi માં Handloom Technology માટે Center of Excellence નું ઉદ્ઘાટન કર્યું.</li>
+                    <li><strong>આ દરમિયાન 5 Initiatives લોન્ચ કરાયા:</strong>
+                        <ol>
+                            <li>Handloom 4.0: Mobile app.</li>
+                            <li>Handloom EED: Digital learning platform.</li>
+                            <li>Handloom X: Accelerator incubation platform.</li>
+                            <li>Kalagrah Handloom Studio: GenZ design studio.</li>
+                            <li>Thread of Will: Sustainability initiative (Recycling defense textile).</li>
+                        </ol>
+                    </li>
+                </ul>`
+            },
+            {
+                headline: "9. CCI 56th Foundation Day & Kapas Kranti",
+                exp: `<ul>
+                    <li>Cotton Corporation of India (CCI) નો 56મો સ્થાપના દિવસ <strong>Chhatrapati Sambhajinagar (Maharashtra)</strong> માં ઉજવાયો.</li>
+                    <li>કોટન સેક્ટરની માહિતી માટે <strong>'Kapas Darshan Bulletin'</strong> જાહેર કરાયું.</li>
+                    <li>CCI ની સ્થાપના 31 July 1970 માં થઈ હતી (Ministry of Textile). HQ: Mumbai, CMD: Lalit Kumar Gupta.</li>
+                </ul>`,
+                rel: `<strong>Mission for Cotton Productivity (Kapas Kranti):</strong>
+                <ul>
+                    <li>આ 5 વર્ષનો પ્રોગ્રામ છે (2026-27 થી 2030-31 સુધી). બજેટ: <strong>₹5659.22 Crore</strong>.</li>
+                    <li>Target (2031): કોટનની પ્રોડક્ટિવિટી 440 Kg/ha થી વધારીને <strong>750 Kg/ha</strong> કરવી.</li>
+                </ul>`
+            },
+            {
+                headline: "10. First Indigenous African Swine Fever Vaccine",
+                exp: `<ul>
+                    <li>ભારતે પહેલી સ્વદેશી <strong>African Swine Fever Vaccine</strong> વિકસાવી છે (Agriculture Minister <strong>Shivraj Singh Chouhan</strong> એ દેશને સમર્પિત કરી).</li>
+                    <li>આ <strong>MA-104 cell line based</strong> વેક્સીન છે. <strong>ICAR-NIHSAD, Bhopal</strong> દ્વારા ડેવલપ કરાઈ છે.</li>
+                </ul>`
+            },
+            {
+                headline: "11. India - Guyana 60 Years of Diplomatic Relations",
+                exp: `<ul>
+                    <li>India અને <strong>Guyana (ગુયાના)</strong> તેમના રાજદ્વારી સંબંધોના <strong>60 વર્ષ</strong> પૂરા થવાની ઉજવણી કરી રહ્યા છે.</li>
+                    <li>MoS External Affairs <strong>Pabitra Margherita</strong> એ તેમાં ભાગ લીધો. ગુયાનાને <strong>1966</strong> માં આઝાદી મળી હતી.</li>
+                </ul>`
+            },
+            {
+                headline: "12. BEL and ESRI India MoU for Defence",
+                exp: `<ul>
+                    <li><strong>Bharat Electronics Limited (BEL)</strong> (સરકારી નવરત્ન કંપની, Est 1954, HQ Bengaluru) અને <strong>ESRI India</strong> એ પાર્ટનરશિપ કરી છે.</li>
+                    <li>મુખ્ય ફોકસ: Defense Geo-spatial capabilities, Local Intelligence, Geo-Spatial AI (Geo-AI), અને GIS.</li>
+                </ul>`
+            },
+            {
+                headline: "13. Indian Navy's 5th Diving Support Craft (DSC A24)",
+                exp: `<ul>
+                    <li>Indian Navy એ પોતાનું 5મું Diving Support Craft <strong>DSC A24 (Yard 321)</strong> <strong>Titagarh, Kolkata</strong> માં લોન્ચ કર્યું છે.</li>
+                    <li>નિર્માતા: <strong>Titagarh Rail Systems Limited (TRSL)</strong>.</li>
+                </ul>`
+            },
+            {
+                headline: "14. Para-shuttler Biri Takar Wins Double Medals",
+                exp: `<ul>
+                    <li>અરુણાચલ પ્રદેશના પેરા-શટલર <strong>Biri Takar</strong> એ BWF Para Badminton International 2024 (Sao Paulo, Brazil) માં Men's Doubles માં <strong>Gold Medal</strong> અને Men's Singles માં <strong>Bronze Medal</strong> જીત્યો.</li>
+                </ul>`
+            },
+            {
+                headline: "15. Harshita Jakhar in Tour de France Femmes",
+                exp: `<ul>
+                    <li>રાજસ્થાનના સાઇક્લિસ્ટ <strong>Harshita Jakhar</strong> પહેલી ભારતીય મહિલા બની ગયા છે જેમણે <strong>'Tour de France Femmes'</strong> (સ્વિટ્ઝર્લૅન્ડ) માં ભાગ લીધો હોય.</li>
+                </ul>`
+            },
+            {
+                headline: "16. Obituary: D. Y. Patil Passed Away",
+                exp: `<ul>
+                    <li>પ્રખ્યાત શિક્ષણવિદ્ અને પૂર્વ ગવર્નર <strong>Dnyandeo Yashwantrao Patil (D.Y. Patil)</strong> નું નિધન થયું છે.</li>
+                    <li>તેઓ <strong>Tripura અને Bihar</strong> ના ગવર્નર, અને <strong>West Bengal</strong> ના Acting Governor રહી ચૂક્યા હતા. 1991 માં <strong>Padma Shri</strong> મળ્યો હતો.</li>
+                </ul>`
+            },
+            {
+                headline: "17. International Clouded Leopard Day",
+                exp: `<ul>
+                    <li>International Clouded Leopard Day <strong>4 August</strong> ના રોજ મનાવવામાં આવ્યો.</li>
+                    <li>આ દિવસની સ્થાપના <strong>2018</strong> માં <strong>The Aspinall Foundation</strong> દ્વારા કરવામાં આવી હતી.</li>
+                </ul>`
+            }
+        ];
+
+        // ---------------- LOGIC ----------------
+        let currentQ = 0;
+        let score = 0;
+        let wrongQuestions = [];
+        let optionClicked = false;
+        let isNewsRendered = false; // FLAG TO PREVENT MULTIPLE RENDERS
+
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggleBtn');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                btn.innerText = '☀️';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                btn.innerText = '🌙';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('themeToggleBtn').innerText = '🌙';
+        }
+
+        // Navigation
+        function goHome() {
+            document.getElementById('home-screen').style.display = 'flex';
+            document.querySelectorAll('.internal-screen').forEach(el => el.style.display = 'none');
+            document.getElementById('stickyHeader').classList.remove('visible');
+            window.scrollTo(0, 0);
+        }
+
+        function openSection(id) {
+            document.getElementById('home-screen').style.display = 'none';
+            document.querySelectorAll('.internal-screen').forEach(el => el.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+            document.getElementById('stickyHeader').classList.add('visible');
+            
+            if(id === 'mcq-app' && currentQ === 0) initMCQ();
+            else if (id === 'news-app') renderNews();
+            
+            window.scrollTo(0, 0);
+        }
+
+        // 📝 MCQ ENGINE
+        function initMCQ() {
+            currentQ = 0; score = 0; wrongQuestions = [];
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            optionClicked = false;
+            const qData = mcqs[currentQ];
+            document.getElementById('qNum').innerText = currentQ + 1;
+            document.getElementById('progressBar').style.width = `${((currentQ) / mcqs.length) * 100}%`;
+            
+            let html = `
+                <div class="mcq-card">
+                    <div class="question">${qData.q}</div>
+                    <div class="options-grid">
+                        ${qData.options.map((opt, i) => `
+                            <button class="option-btn" id="opt_${i}" onclick="checkAns(${i}, ${qData.ansIndex})">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <div class="explanation-box" id="expBox">
+                        <div class="sec-title">📖 COMPLETE TEACHER EXPLANATION</div>
+                        <div class="content-block">${qData.explanation}</div>
+                        ${qData.related ? `<div class="sec-title">🔗 ALL RELATED FACTS</div><div class="related-block">${qData.related}</div>` : ''}
+                        
+                        <button class="action-btn" id="nextBtn" onclick="nextQuestion()">${currentQ === mcqs.length - 1 ? 'See Final Score 🏆' : 'Next Question ➡️'}</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('mcqContainer').innerHTML = html;
+        }
+
+        function checkAns(selectedIdx, correctIdx) {
+            if(optionClicked) return;
+            optionClicked = true;
+
+            for(let i=0; i<4; i++) document.getElementById(`opt_${i}`).disabled = true;
+
+            const isCorrect = selectedIdx === correctIdx;
+            
+            if(isCorrect) {
+                document.getElementById(`opt_${selectedIdx}`).classList.add('correct');
+                document.getElementById(`opt_${selectedIdx}`).innerHTML += '<span class="status-badge">✓</span>';
+                score++;
+            } else {
+                document.getElementById(`opt_${selectedIdx}`).classList.add('wrong');
+                document.getElementById(`opt_${selectedIdx}`).innerHTML += '<span class="status-badge">✗</span>';
+                document.getElementById(`opt_${correctIdx}`).classList.add('correct');
+                document.getElementById(`opt_${correctIdx}`).innerHTML += '<span class="status-badge">✓</span>';
+                wrongQuestions.push(mcqs[currentQ]);
+            }
+
+            document.getElementById('expBox').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('progressBar').style.width = `${((currentQ + 1) / mcqs.length) * 100}%`;
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if(currentQ < mcqs.length) { renderQuestion(); window.scrollTo(0, 0); }
+            else showResult();
+        }
+
+        function showResult() {
+            openSection('result-app');
+            const percent = (score / mcqs.length) * 100;
+            document.getElementById('scoreText').innerText = `${score}/10`;
+            document.getElementById('scoreCircle').style.setProperty('--p', `${percent}%`);
+            document.getElementById('scoreAccuracy').innerText = `Accuracy: ${Math.round(percent)}%`;
+            
+            let remark = score >= 9 ? "🏆 Excellent!" : score >= 7 ? "🔥 Very Good!" : score >= 5 ? "👍 Good Effort!" : "📚 Revise Again!";
+            document.getElementById('scoreRemark').innerText = remark;
+
+            let wrongHtml = wrongQuestions.length === 0 
+                ? `<div class="wrong-item" style="border-left-color: var(--success); background: var(--success-light); font-weight:700;">Perfect Score! 🎉</div>`
+                : wrongQuestions.map(q => `
+                    <div class="wrong-item">
+                        <strong style="display:block; margin-bottom:8px;">${q.q}</strong>
+                        <span style="color:var(--success); font-weight:700;">✅ ${q.options[q.ansIndex]}</span>
+                    </div>`).join('');
+            document.getElementById('wrongListContainer').innerHTML = wrongHtml;
+        }
+
+        // 📰 NEWS ENGINE (Exact News First -> Memory Later)
+        function renderNews() {
+            if(isNewsRendered) return; // Prevent multiple renders
+            
+            // 1. Render All Complete News
+            let newsHtml = "";
+            newsData.forEach((news, idx) => {
+                newsHtml += `
+                    <div class="news-card">
+                        <div class="news-header-title">🔥 NEWS ${idx + 1} <br><span style="font-size: 1.2rem; color: var(--text-main); font-weight:700; display:block; margin-top:5px;">${news.headline.replace(/^[0-9]+\.\s/, '')}</span></div>
+                        <div class="sec-title">📖 COMPLETE TEACHER EXPLANATION</div>
+                        <div class="content-block">${news.exp}</div>
+                        ${news.rel ? `<div class="sec-title">🔗 ALL RELATED FACTS</div><div class="related-block">${news.rel}</div>` : ''}
+                        ${news.exam ? `<div class="sec-title">🎯 EXAM ANGLE</div><div class="exam-block">${news.exam}</div>` : ''}
+                    </div>
+                `;
+            });
+            document.getElementById('newsContainer').innerHTML = newsHtml;
+
+            // 2. Render Memory Sections at the BOTTOM
+            let memoryHtml = `
+                <h2 class="static-section-title">🧠 MEMORY TRICKS & CONNECT THE DOTS</h2>
+                <div class="news-card">
+                    <div class="memory-block">
+                        💡 <strong>RBI → ECB → BIS:</strong> RBI signs MoU with ECB (European Central Bank, HQ Frankfurt) at Basel (Switzerland). Basel is also the HQ of BIS.
+                    </div>
+                    <div class="memory-block">
+                        💡 <strong>Gurugram Hub:</strong> HQ of IndiGo + HQ of ISA + Constituency of Rao Inderjit Singh (MoSPI Minister -> handles NSO -> releases CPI, GDP, PLFS).
+                    </div>
+                    <div class="memory-block">
+                        💡 <strong>Textile Ministry → CCI → IIT Delhi:</strong> Giriraj Singh opened CoE at IIT Delhi + attended 56th Foundation Day of CCI in Maharashtra.
+                    </div>
+                </div>
+
+                <h2 class="static-section-title">🔥 FINAL MEMORY SHEET</h2>
+                <div class="table-wrap">
+                    <table>
+                        <tr>
+                            <th>Entity / Person</th>
+                            <th>Details</th>
+                            <th>Key Associated Fact</th>
+                        </tr>
+                        <tr><td>Willie Walsh</td><td>CEO, IndiGo</td><td>Replaced Pieter Elbers</td></tr>
+                        <tr><td>Sanjay Malhotra</td><td>RBI Governor</td><td>Chaired 62nd MPC (Repo: 6.5%)</td></tr>
+                        <tr><td>Clouded Leopard Action Plan</td><td>Conservation Plan</td><td>By GoI + GEF + UNDP in NE India</td></tr>
+                        <tr><td>REC + PFC</td><td>Financial Institutions</td><td>₹26,850 Cr loan for Meja Thermal (UP)</td></tr>
+                        <tr><td>Neofelis nebulosa</td><td>Clouded Leopard</td><td>State animal of Meghalaya; Vulnerable</td></tr>
+                        <tr><td>Vishnu Deo Sai</td><td>CM, Chhattisgarh</td><td>Launched Project Sahara (Divyangs)</td></tr>
+                        <tr><td>Satish Gujral</td><td>Painter/Sculptor</td><td>Birth Centenary Postage Stamp</td></tr>
+                        <tr><td>Giriraj Singh</td><td>Textile Minister</td><td>Opened CoE at IIT Delhi</td></tr>
+                        <tr><td>CCI</td><td>Public Sector (Est 1970)</td><td>Released 'Kapas Darshan' Bulletin</td></tr>
+                        <tr><td>Kapas Kranti</td><td>Mission (2026-31)</td><td>Target: 750 kg/hectare by 2031</td></tr>
+                        <tr><td>ICAR-NIHSAD</td><td>Institute, Bhopal</td><td>First Indigenous African Swine Fever Vaccine</td></tr>
+                        <tr><td>Guyana</td><td>Country</td><td>60th Anniv. of Diplomatic Relations with India</td></tr>
+                        <tr><td>BEL & ESRI India</td><td>Defense MoU</td><td>Geo-spatial AI, GIS partnership</td></tr>
+                        <tr><td>DSC A24 (Yard 321)</td><td>Diving Support Craft</td><td>Launched at Titagarh, Kolkata (Indian Navy)</td></tr>
+                        <tr><td>Biri Takar</td><td>Para-shuttler</td><td>Gold (Doubles), Bronze (Singles) in Brazil</td></tr>
+                        <tr><td>Harshita Jakhar</td><td>Cyclist (Rajasthan)</td><td>1st Indian woman in Tour de France Femmes</td></tr>
+                        <tr><td>D.Y. Patil</td><td>Educationist / Ex-Gov</td><td>Passed Away. Ex-Gov Tripura, Bihar, WB</td></tr>
+                    </table>
+                </div>
+                <button class="back-btn" onclick="goHome()" style="margin-top:24px;">← BACK TO HOME</button>
+            `;
+            document.getElementById('memoryExtras').innerHTML = memoryHtml;
+            
+            isNewsRendered = true; // Mark as rendered successfully
+        }
+    </script>
+</body>
+</html>

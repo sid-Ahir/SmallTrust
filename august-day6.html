@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sid Ahir - Premium Current Affairs Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Vadodara:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ================= THEME VARIABLES ================= */
+        :root {
+            /* Light Theme (For Inner Pages) */
+            --bg-color: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+            
+            --primary: #6d28d9;
+            --primary-light: #ede9fe;
+            --secondary: #0284c7;
+            --secondary-light: #e0f2fe;
+
+            --success: #16a34a;
+            --success-light: #dcfce7;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --warning: #d97706;
+            --warning-light: #fef3c7;
+            
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme (For Inner Pages) */
+            --bg-color: #0b1121;
+            --surface: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            
+            --primary: #8b5cf6;
+            --primary-light: #2e1065;
+            --secondary: #38bdf8;
+            --secondary-light: #082f49;
+
+            --success: #10b981;
+            --success-light: #064e3b;
+            --danger: #ef4444;
+            --danger-light: #7f1d1d;
+            --warning: #fbbf24;
+            --warning-light: #78350f;
+            
+            --glass-bg: rgba(30, 41, 59, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ================= GLOBAL STYLES ================= */
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Hind Vadodara', 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 80px;
+        }
+
+        /* ================= 🖤 HOME DASHBOARD (ALWAYS DARK) ================= */
+        #home-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #020617 0%, #0f172a 60%, #1e1b4b 100%);
+            color: #ffffff;
+            z-index: 2000;
+            overflow-y: auto;
+            animation: fadeIn 0.5s ease;
+        }
+
+        #home-screen::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 20%, rgba(124, 58, 237, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .home-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* 📅 Date Badge */
+        .date-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+        }
+
+        /* 🧑 Profile Photo with NORTH-WEST NEON GLOW */
+        .profile-photo-wrapper {
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .profile-photo {
+            width: 220px; 
+            height: 220px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            /* ONLY North-West Shadow & Glow */
+            box-shadow: -15px -15px 35px rgba(124, 58, 237, 0.5), 
+                        -5px -5px 15px rgba(14, 165, 233, 0.4);
+            animation: nwNeonBlink 3s infinite alternate ease-in-out;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes nwNeonBlink {
+            0% {
+                box-shadow: -10px -10px 25px rgba(124, 58, 237, 0.4), 
+                            -3px -3px 10px rgba(14, 165, 233, 0.3);
+            }
+            100% {
+                box-shadow: -20px -20px 45px rgba(124, 58, 237, 0.7), 
+                            -8px -8px 20px rgba(14, 165, 233, 0.6);
+            }
+        }
+
+        /* 👤 Profile Text */
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 6px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .profile-tags {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #94a3b8;
+            letter-spacing: 2.5px;
+            margin-bottom: 45px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* 🔘 Navigation Buttons */
+        .home-btn {
+            width: 100%;
+            padding: 22px;
+            border-radius: 18px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .home-btn:active { transform: scale(0.96); }
+
+        .btn-mcq {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+        }
+        .btn-news {
+            background: linear-gradient(135deg, #0284c7, #0891b2);
+            box-shadow: 0 8px 25px rgba(2, 132, 199, 0.3);
+        }
+
+        /* ================= INNER PAGES ================= */
+        .internal-screen { display: none; animation: slideUp 0.4s ease; min-height: 100vh; padding-bottom: 40px;}
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 65px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; z-index: 1000;
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+        .sticky-header.visible { transform: translateY(0); }
+
+        .header-info { display: flex; flex-direction: column; font-family: 'Plus Jakarta Sans', sans-serif;}
+        .header-topic { font-size: 0.9rem; font-weight: 800; color: var(--primary); }
+        .header-date { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+
+        .theme-toggle {
+            background: var(--surface); border: 1px solid var(--border);
+            width: 42px; height: 42px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; font-size: 1.3rem; color: var(--text-main);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 🔙 Back Button */
+        .back-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: var(--surface); border: 2px solid var(--border);
+            color: var(--text-main); padding: 14px 20px;
+            border-radius: 14px; font-weight: 800; font-size: 1rem;
+            cursor: pointer; margin-bottom: 24px; width: 100%;
+            box-shadow: var(--shadow-sm); transition: transform 0.1s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .back-btn:active { transform: scale(0.97); }
+
+        /* ================= MCQ SECTION ================= */
+        .progress-container { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+        .progress-text { font-size: 1rem; font-weight: 800; color: var(--primary); font-family: 'Plus Jakarta Sans', sans-serif;}
+        .progress-bar-bg { flex: 1; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s ease; }
+
+        .mcq-card, .news-card {
+            background: var(--surface); border-radius: 20px; padding: 24px;
+            box-shadow: var(--shadow-md); margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .question { font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: var(--text-main); }
+        .options-grid { display: flex; flex-direction: column; gap: 12px; }
+        
+        .option-btn {
+            background: var(--bg-color); border: 2px solid var(--border);
+            padding: 16px; border-radius: 14px; text-align: left;
+            font-size: 1.1rem; font-weight: 600; color: var(--text-main);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-light); }
+        .option-btn:disabled { cursor: default; }
+        .option-btn.correct { background: var(--success-light); border-color: var(--success); color: #064e3b;}
+        .option-btn.wrong { background: var(--danger-light); border-color: var(--danger); color: #7f1d1d;}
+        
+        .status-badge { float: right; font-weight: 800; font-size: 0.9rem; padding: 4px 10px; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif;}
+        .correct .status-badge { background: var(--success); color: white; }
+        .wrong .status-badge { background: var(--danger); color: white; }
+
+        /* Explanation Blocks */
+        .explanation-box { display: none; margin-top: 24px; padding-top: 24px; border-top: 2px dashed var(--border); animation: fadeIn 0.4s ease; }
+        .sec-title { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-family: 'Plus Jakarta Sans', sans-serif;}
+        
+        .content-block { background: var(--bg-color); padding: 18px; border-radius: 14px; margin-bottom: 16px; border: 1px solid var(--border); font-size: 1.1rem; }
+        .content-block ul { padding-left: 24px; margin-top: 8px;}
+        .content-block li { margin-bottom: 10px; }
+        
+        .related-block { background: var(--secondary-light); border-left: 5px solid var(--secondary); padding: 18px; border-radius: 14px; margin-bottom: 16px; font-size: 1.1rem; color: var(--text-main); }
+        .exam-block { background: var(--danger-light); border-left: 5px solid var(--danger); padding: 18px; border-radius: 14px; margin-bottom: 16px; font-size: 1.1rem; color: var(--text-main); font-weight: 600;}
+        .memory-block { background: var(--warning-light); border-left: 5px solid var(--warning); padding: 18px; border-radius: 14px; margin-bottom: 16px; font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
+        
+        mark { background: #fef08a; color: #854d0e; padding: 2px 8px; border-radius: 6px; font-weight: 700; border: 1px solid #fde047; }
+
+        .action-btn {
+            background: var(--text-main); color: var(--bg-color); border: none;
+            padding: 18px; width: 100%; border-radius: 16px; font-size: 1.15rem;
+            font-weight: 800; cursor: pointer; margin-top: 20px; display: none;
+            font-family: 'Plus Jakarta Sans', sans-serif; transition: transform 0.1s;
+        }
+        .action-btn:active { transform: scale(0.98); }
+
+        /* MCQ Result */
+        .score-circle {
+            width: 140px; height: 140px; border-radius: 50%;
+            background: conic-gradient(var(--success) var(--p), var(--border) 0);
+            display: flex; justify-content: center; align-items: center;
+            margin: 0 auto 24px auto; font-size: 2.5rem; font-weight: 800; color: var(--text-main);
+            position: relative; font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .score-circle::after { content: ''; position: absolute; width: 116px; height: 116px; background: var(--surface); border-radius: 50%; }
+        .score-circle span { position: relative; z-index: 1; }
+        .wrong-item { background: var(--danger-light); border-left: 5px solid var(--danger); padding: 18px; border-radius: 14px; margin-bottom: 16px; color: var(--text-main); font-size: 1.1rem;}
+
+        /* ================= NEWS SCREEN ================= */
+        .news-header-title { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 18px; border-bottom: 3px solid var(--primary-light); padding-bottom: 14px; line-height: 1.5; font-family: 'Plus Jakarta Sans', sans-serif;}
+        .static-section-title { font-size: 1.6rem; font-weight: 800; text-align: center; margin: 50px 0 24px 0; color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif;}
+        
+        .table-wrap { overflow-x: auto; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); }
+        table { width: 100%; min-width: 600px; border-collapse: collapse; font-family: 'Plus Jakarta Sans', sans-serif;}
+        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border); font-size: 1rem; }
+        th { background: var(--primary-light); color: var(--primary); font-weight: 800; }
+        tr:last-child td { border-bottom: none; }
+        
+    </style>
+</head>
+<body>
+
+    <!-- 🖤 MAIN HOME DASHBOARD -->
+    <div id="home-screen">
+        <div class="home-content">
+            <div class="date-badge">📅 06 AUG 2026 • REVISION</div>
+            
+            <div class="profile-photo-wrapper">
+                <img src="https://i.ibb.co/HL4hBwQ7/Screenshot-2026-08-06-16-21-28-251-com-google-android-apps-photos-edit.jpg" alt="Sid Ahir" class="profile-photo">
+            </div>
+
+            <div class="profile-name">SID AHIR</div>
+            <div class="profile-tags">IBPS &nbsp;•&nbsp; SBI &nbsp;•&nbsp; RRB</div>
+
+            <button class="home-btn btn-mcq" onclick="openSection('mcq-app')">
+                📝 YESTERDAY'S MCQs
+            </button>
+
+            <button class="home-btn btn-news" onclick="openSection('news-app')">
+                📰 TODAY'S CURRENT AFFAIRS
+            </button>
+        </div>
+    </div>
+
+    <!-- STICKY HEADER (Inner Pages) -->
+    <header class="sticky-header" id="stickyHeader">
+        <div class="header-info">
+            <div class="header-topic">DAILY CURRENT AFFAIRS</div>
+            <div class="header-date">06 AUG 2026</div>
+        </div>
+        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()">☀️</button>
+    </header>
+
+    <div class="container">
+        <!-- ================= 📝 MCQ SECTION ================= -->
+        <div id="mcq-app" class="internal-screen">
+            <button class="back-btn" onclick="goHome()">← BACK TO HOME</button>
+            
+            <div class="progress-container">
+                <div class="progress-text">Q <span id="qNum">1</span>/15</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div>
+            </div>
+
+            <div id="mcqContainer"></div>
+        </div>
+
+        <!-- ================= 🎯 MCQ RESULT SCREEN ================= -->
+        <div id="result-app" class="internal-screen">
+            <button class="back-btn" onclick="goHome()">← BACK TO HOME</button>
+            <div class="mcq-card" style="text-align: center;">
+                <div class="sec-title" style="justify-content: center; margin-bottom: 24px; font-size: 1.3rem;">🎯 YOUR SCORE</div>
+                <div class="score-circle" id="scoreCircle">
+                    <span id="scoreText">0/15</span>
+                </div>
+                <div id="scoreRemark" style="font-size: 1.8rem; font-weight: 800; color: var(--primary); font-family: 'Plus Jakarta Sans', sans-serif;">Excellent!</div>
+                <div id="scoreAccuracy" style="margin-bottom: 35px; font-weight: 700; font-size: 1.1rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif;">Accuracy: 0%</div>
+
+                <div id="wrongQuestionsBox" style="text-align: left;">
+                    <div class="sec-title" style="color:var(--danger); justify-content: center; margin-top:30px; font-size: 1.2rem;">❌ QUESTIONS TO REVISE</div>
+                    <div id="wrongListContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 📰 TODAY'S CURRENT AFFAIRS ================= -->
+        <div id="news-app" class="internal-screen">
+            <button class="back-btn" onclick="goHome()">← BACK TO HOME</button>
+            
+            <div id="newsContainer">
+                <!-- ALL NEWS INJECTED HERE FIRST -->
+            </div>
+
+            <div id="memoryExtras">
+                <!-- Memory sections injected here after news -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        // ---------------- 100% PRESERVED DATA (Gujarati + English Terms) ----------------
+        const mcqs = [
+            {
+                q: "Q1. ઈન્ડિગો (IndiGo) ના નવા CEO કોને બનાવવામાં આવ્યા છે?",
+                options: ["A) પીટર એલ્બર્સ", "B) બિલલી વોશ (Willie Walsh)", "C) કેમ્પબેલ વિલ્સન", "D) સંજય મલ્હોત્રા"],
+                ansIndex: 1,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Willie Walsh</mark></li>
+                    <li><strong>Willie Walsh</strong> ને IndiGo ના નવા CEO બનાવવામાં આવ્યા છે.</li>
+                    <li>તેમણે <strong>Pieter Elbers (પીટર એલ્બર્સ)</strong> ને રિપ્લેસ કર્યા છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q2. 2026 માં RBI ની મોનિટરી પોલિસી કમિટી (MPC) એ Neutral Policy Stance રાખવાનો નિર્ણય લીધો છે. આ તેમની કેટલામા નંબરની મીટિંગ હતી?",
+                options: ["A) 60મી", "B) 61મી", "C) 62મી", "D) 63મી"],
+                ansIndex: 2,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: 62મી (62nd)</mark></li>
+                    <li>RBI ની મોનિટરી પોલિસી કમિટીની આ <strong>62nd Meeting</strong> હતી.</li>
+                    <li>તેમણે <strong>Neutral Policy Stance</strong> રાખવાનો નિર્ણય લીધો છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q3. ઓગસ્ટ 2026 માં લોન્ચ કરાયેલ 'Clouded Leopard Conservation Action Plan' ને Government of India અને GEF દ્વારા કયા ઇન્ટરનેશનલ ઓર્ગેનાઇઝેશનના કોલોબ્રેશનમાં તૈયાર કરવામાં આવ્યો છે?",
+                options: ["A) UNEP", "B) UNDP", "C) WWF", "D) IUCN"],
+                ansIndex: 1,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: UNDP</mark></li>
+                    <li>આ પ્લાન Government of India, <strong>GEF (Global Environment Facility)</strong> અને <strong>UNDP (United Nations Development Programme)</strong> ના કોલોબ્રેશનમાં તૈયાર કરાયો છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q4. REC Limited અને Power Finance Corporation (PFC) એ તાજેતરમાં ₹26,850 કરોડનો લોન એગ્રીમેન્ટ કયા થર્મલ પાવર પ્રોજેક્ટના એક્સપેન્શન માટે સાઈન કર્યો છે?",
+                options: ["A) વિંધ્યાચલ થર્મલ પાવર", "B) રિહંદ થર્મલ પાવર", "C) મુન્દ્રા થર્મલ પાવર", "D) મેજા થર્મલ પાવર પ્રોજેક્ટ (Meja Thermal Power Project)"],
+                ansIndex: 3,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Meja Thermal Power Project</mark></li>
+                    <li>REC અને PFC એ <strong>Meja Thermal Power Project</strong> ના એક્સપેન્શન માટે <strong>₹26,850 કરોડ</strong> નો લોન એગ્રીમેન્ટ સાઈન કર્યો છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q5. કઈ રાજ્ય સરકારે તાજેતરમાં પોતાના State Animal ના કન્ઝર્વેશન માટે 'Mission Clouded Leopard' લોન્ચ કર્યું છે?",
+                options: ["A) આસામ", "B) મિઝોરમ", "C) મેઘાલય", "D) ત્રિપુરા"],
+                ansIndex: 2,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Meghalaya</mark></li>
+                    <li><strong>Meghalaya</strong> સરકારે પોતાના State Animal માટે 'Mission Clouded Leopard' લોન્ચ કર્યું છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q6. કઈ રાજ્ય સરકારે તાજેતરમાં દિવ્યાંગજનોને Assistive Devices આપવા માટે 'Project Sahara' (Divyangjan Equipment Distribution Program 2026) લોન્ચ કર્યો છે?",
+                options: ["A) મધ્ય પ્રદેશ", "B) છત્તીસગઢ", "C) ઝારખંડ", "D) ઓડિશા"],
+                ansIndex: 1,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Chhattisgarh</mark></li>
+                    <li><strong>Chhattisgarh</strong> સરકારે દિવ્યાંગજનોને Assistive Devices વહેંચવા માટે 'Project Sahara' લોન્ચ કર્યો છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q7. Department of Post એ તાજેતરમાં કયા પ્રખ્યાત ચિત્રકાર અને મૂર્તિકારની જન્મ શતાબ્દી (Birth Centenary) નિમિત્તે Commemorative Postage Stamp રિલીઝ કરી છે?",
+                options: ["A) એમ. એફ. હુસૈન", "B) અમૃતા શેરગિલ", "C) સતીશ ગુજરાલ", "D) નંદલાલ બોઝ"],
+                ansIndex: 2,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Satish Gujral</mark></li>
+                    <li>પ્રખ્યાત ચિત્રકાર અને મૂર્તિકાર <strong>સતીશ ગુજરાલ (Satish Gujral)</strong> ની જન્મ શતાબ્દી પર આ ડાક ટિકિટ (Postage Stamp) રિલીઝ કરાઈ છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q8. 'Handloom X' જેવા ઈનિશિએટિવ્સ અંતર્ગત Center of Excellence for Handloom Technology કયા સંસ્થાન ખાતે સ્થાપિત કરવામાં આવ્યું છે?",
+                options: ["A) IIT Bombay", "B) IIT Madras", "C) IIT Delhi", "D) NIFT Delhi"],
+                ansIndex: 2,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: IIT Delhi</mark></li>
+                    <li>Center of Excellence for Handloom Technology <strong>IIT Delhi</strong> ખાતે સ્થાપિત કરાયું છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q9. સરકારના 5 વર્ષીય 'Mission for Cotton Productivity' (કપાસ ક્રાંતિ) નો લક્ષ્યાંક 498 લાખ ગાંસડી (bales) કપાસનું ઉત્પાદન કયા વર્ષ સુધીમાં હાંસલ કરવાનો છે?",
+                options: ["A) 2028", "B) 2029", "C) 2030", "D) 2031"],
+                ansIndex: 3,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: 2031</mark></li>
+                    <li>સરકારનો <strong>Kapas Kranti (કપાસ ક્રાંતિ)</strong> નો લક્ષ્યાંક <strong>2031</strong> સુધીમાં 498 લાખ ગાંસડી કપાસ ઉત્પાદનનો છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q10. ભારતની પહેલી સ્વદેશી 'MA 104 cell line based' African Swine Fever Vaccine ને ICAR ના કેટલામા ફાઉન્ડેશન વર્ષ દરમિયાન રાષ્ટ્રને સમર્પિત કરવામાં આવી?",
+                options: ["A) 95માં", "B) 96માં", "C) 97માં", "D) 98માં"],
+                ansIndex: 3,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: 98th</mark></li>
+                    <li>Indian Council of Agricultural Research (ICAR) ના <strong>98માં (98th)</strong> ફાઉન્ડેશન ડે પર ભારતની પહેલી સ્વદેશી <strong>African Swine Fever Vaccine</strong> દેશને સમર્પિત કરાઈ. (Teacher એ કન્ફર્મ કર્યું કે 96 નહિ, 98 જ છે).</li>
+                </ul>`
+            },
+            {
+                q: "Q11. ગુયાના (Guyana) ની આઝાદીની 60મી એનિવર્સરી અને ભારત-ગુયાના ડિપ્લોમેટિક રિલેશનના 60 વર્ષની ઉજવણીમાં ભારતનું પ્રતિનિધિત્વ કોણે કર્યું?",
+                options: ["A) એસ. જયશંકર", "B) પવિત્રા માર્ગેરિટા (Pabitra Margherita)", "C) મીનાક્ષી લેખી", "D) વી. મુરલીધરન"],
+                ansIndex: 1,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Pabitra Margherita</mark></li>
+                    <li>ભારતનું પ્રતિનિધિત્વ <strong>પવિત્રા માર્ગેરિટા (Pabitra Margherita)</strong> એ કર્યું હતું.</li>
+                </ul>`
+            },
+            {
+                q: "Q12. કઈ નવરત્ન ડિફેન્સ PSU (Public Sector Undertaking) એ GIS, Location Intelligence અને Geo-AI નો ઉપયોગ કરીને ડિફેન્સ પ્લાનિંગ વધારવા માટે ESRI India સાથે કરાર કર્યા છે?",
+                options: ["A) HAL", "B) BDL", "C) BEL (Bharat Electronics Limited)", "D) BEML"],
+                ansIndex: 2,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: BEL (Bharat Electronics Limited)</mark></li>
+                    <li>નવરત્ન કંપની <strong>BEL</strong> એ <strong>ESRI India</strong> સાથે GIS અને Geo-AI ના ઉપયોગ માટે કરાર કર્યા છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q13. ઇન્ડિયન નેવીના ડાઇવિંગ સપોર્ટ ક્રાફ્ટ પ્રોજેક્ટના પાંચમા અને અંતિમ પોત 'DSC A24' ને તાજેતરમાં કયા શહેરમાં લોન્ચ કરવામાં આવ્યું?",
+                options: ["A) કોચી", "B) મુંબઈ", "C) વિશાખાપટ્ટનમ", "D) કોલકાતા (Kolkata)"],
+                ansIndex: 3,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Kolkata</mark></li>
+                    <li>આ પોત (DSC A24) ને <strong>Kolkata, West Bengal</strong> માં લોન્ચ કરવામાં આવ્યું છે.</li>
+                </ul>`,
+                related: `<strong>West Bengal Related Revision Facts (Teacher's Context):</strong>
+                <ul>
+                    <li>Kolkata માં <strong>GRSE (Garden Reach Shipbuilders)</strong>, <strong>Bandhan Bank</strong> અને <strong>GSI (Geological Survey of India)</strong> ના હેડક્વાર્ટર છે.</li>
+                    <li>West Bengal માંથી રાજ્યસભા MP તરીકે <strong>Menaka Guruswamy (મેનિકા ગુરુસ્વામી)</strong> એ શપથ લીધા છે. તેઓ ભારતના પ્રથમ Openly Queer MP છે.</li>
+                    <li><strong>Arunyak Ghosh (અરણ્યક ઘોષ)</strong> ભારતના <strong>95માં (95th) Grand Master</strong> બન્યા છે, તેઓ પણ West Bengal ના છે.</li>
+                    <li>PM મોદીએ <strong>PM Kisan Scheme</strong> નો 17મો હપ્તો (17th Installment) પશ્ચિમ બંગાળથી જ લોન્ચ કર્યો હતો. આ સ્કીમમાં વાર્ષિક ₹6000 અપાય છે (100% Central Government Funded).</li>
+                    <li>West Bengal એ તાજેતરમાં <strong>Ayushman Bharat Pradhan Mantri Jan Arogya Yojana</strong> (જેમાં ₹5 લાખનું હેલ્થ કવર મળે છે) જોઈન કરી લીધી છે.</li>
+                    <li>West Bengal સરકારની સ્કીમ: અગાઉ 'Lakshmi Bhandar' હતી, હવે <strong>'Annapurna Bhandar'</strong> સ્કીમ અપ્રુવ કરી છે જેમાં મહિલાઓને દર મહિને ₹3000 અપાશે.</li>
+                    <li>તાજેતરમાં West Bengal ના CM <strong>Suvendu Adhikari (શુભેંદુ અધિકારી)</strong> બન્યા છે. તેમને શપથ ગવર્નર <strong>R. N. Ravi</strong> એ લેવડાવ્યા હતા. (અગાઉ ગવર્નર C.V. Ananda Bose હતા).</li>
+                    <li>PM મોદીએ કોલકાતામાં Automated <strong>Haldia Bulk Terminal</strong> નું ઉદ્ઘાટન પણ કર્યું હતું.</li>
+                </ul>`
+            },
+            {
+                q: "Q14. કયા પેરા શટલરે તાજેતરમાં બ્રાઝિલ પેરા બેડમિન્ટન ઇન્ટરનેશનલ 2026 માં Men's Doubles માં Gold અને Men's Singles માં Bronze મેડલ જીત્યો?",
+                options: ["A) પ્રમોદ ભગત", "B) સુહાસ યથિરાજ", "C) કૃષ્ણા નાગર", "D) બિરી તાકર (Biri Takar)"],
+                ansIndex: 3,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Biri Takar</mark></li>
+                    <li>પેરા શટલર <strong>બિરી તાકર (Biri Takar)</strong> એ આ બંને મેડલ જીત્યા છે.</li>
+                </ul>`
+            },
+            {
+                q: "Q15. 'Tour de France Femmes' માં ભાગ લેનારી પ્રથમ ભારતીય મહિલા સાઇક્લિસ્ટ કોણ બની છે?",
+                options: ["A) હર્ષિતા ઝાખડ (Harshita Jakhar)", "B) ડેબોરા હેરોલ્ડ", "C) સ્વાતિ સિંહ", "D) મહિકા શર્મા"],
+                ansIndex: 0,
+                explanation: `<ul>
+                    <li><mark>Correct Answer: Harshita Jakhar</mark></li>
+                    <li>રાજસ્થાનની <strong>હર્ષિતા ઝાખડ (Harshita Jakhar)</strong> 'Tour de France Femmes' માં ભાગ લેનારી <strong>First Indian Women Cyclist</strong> બની છે.</li>
+                </ul>`,
+                related: `<strong>Commonwealth Games (CWG) Revision Facts:</strong>
+                <ul>
+                    <li><strong>22nd Edition (2022):</strong> Birmingham, England માં યોજાયો.</li>
+                    <li><strong>23rd Edition (2026):</strong> અગાઉ Australia માં થવાનો હતો, પરંતુ હવે <strong>Glasgow, Scotland</strong> હોસ્ટ કરશે.</li>
+                    <li><strong>24th Edition (2030):</strong> <strong>India (Ahmedabad, Gujarat)</strong> હોસ્ટ કરશે. આ 100મી એનિવર્સરી (Centenary Edition) હશે (પહેલો ગેમ 1930માં હતો).</li>
+                    <li>ભારત બીજી વખત CWG હોસ્ટ કરશે (પહેલા 2010 માં Delhi માં કર્યો હતો).</li>
+                    <li>2026 CWG ની Opening Ceremony માં ભારતના ફ્લેગ બિયરર (Flag Bearer) <strong>Mirabai Chanu</strong> અને <strong>Lovlina Borgohain</strong> હતા.</li>
+                    <li>CWG માં 56 સભ્ય દેશો છે અને તેનું <strong>Headquarter: London, UK</strong> માં છે.</li>
+                </ul>`
+            }
+        ];
+
+        // ---------------- 100% PRESERVED TODAY'S NEWS (Gujarati + English Terms) ----------------
+        const newsData = [
+            {
+                headline: "1. Cabinet Secretary & Home Secretary Extension",
+                exp: `<ul>
+                    <li>Appointments Committee of the Cabinet (ACC) એ બે મહત્વના સેક્રેટરીને <strong>1 વર્ષનું Extension (વિસ્તરણ)</strong> આપ્યું છે.</li>
+                    <li><strong>Cabinet Secretary:</strong> TV Somanathan (ટી.વી. સોમનાથન).</li>
+                    <li><strong>Union Home Secretary:</strong> Govind Mohan (ગોવિંદ મોહન).</li>
+                    <li>આ બંને નામો એક્ઝામ માટે ખૂબ જ મહત્વપૂર્ણ છે.</li>
+                </ul>`,
+                rel: ``,
+                exam: "Cabinet Sec: TV Somanathan. Home Sec: Govind Mohan. Both got 1-year extension."
+            },
+            {
+                headline: "2. New CEO & MD of Air India",
+                exp: `<ul>
+                    <li>Air India ના નવા CEO અને MD તરીકે <strong>Tewolde GebreMariam (ટેવોલ્ડે ગેબ્રેમરિયમ)</strong> ની નિમણૂક કરવામાં આવી છે.</li>
+                    <li>તેઓ અગાઉ <strong>Ethiopian Airlines Group</strong> ના પૂર્વ Chief Executive Officer રહી ચૂક્યા છે.</li>
+                    <li>તેમણે Air India માં <strong>Campbell Wilson (કેમ્પબેલ વિલ્સન)</strong> ને રિપ્લેસ કર્યા છે.</li>
+                </ul>`,
+                rel: ``,
+                exam: "Tewolde GebreMariam replaced Campbell Wilson as CEO & MD of Air India."
+            },
+            {
+                headline: "3. Shah Rukh Khan is India's Most Valued Celebrity Brand 2025",
+                exp: `<ul>
+                    <li><strong>Kroll</strong> (એક Global Financial Risk Advisory Firm) એ ભારતની Celebrity Brand Valuation Report 2025 જાહેર કરી છે.</li>
+                    <li>આ લિસ્ટમાં <strong>Shah Rukh Khan (શાહરૂખ ખાન)</strong> ભારતની Most Valued Celebrity Brand 2025 બની ગયા છે.</li>
+                    <li>2024માં શાહરૂખ ખાન 3જા નંબરે હતા, હવે તેઓ 1લા નંબરે આવી ગયા છે. તેમની બ્રાન્ડ વેલ્યુ <strong>177.9 Million US Dollar</strong> થઈ ગઈ છે.</li>
+                </ul>`,
+                rel: `<strong>Top 7 Celebrities (Rankings):</strong>
+                <ol>
+                    <li>Shah Rukh Khan</li>
+                    <li>Ranveer Singh (ગયા વર્ષે પણ 2જા નંબરે હતા)</li>
+                    <li>Virat Kohli (અગાઉ 1લા નંબરે હતા, હવે 3જા ક્રમે ખસી ગયા)</li>
+                    <li>Sachin Tendulkar</li>
+                    <li>MS Dhoni</li>
+                    <li>Alia Bhatt</li>
+                    <li>Deepika Padukone</li>
+                </ol>
+                <p>આ લિસ્ટમાં ત્યારબાદ Hrithik Roshan, Amitabh Bachchan, Akshay Kumar અને Ranbir Kapoor છે.</p>`,
+                exam: "Shah Rukh Khan ranked #1 ($177.9M). Virat Kohli slipped to #3. Alia Bhatt is at #6."
+            },
+            {
+                headline: "4. RBI to Restart On-Tap Licensing for Urban Cooperative Banks (UCBs)",
+                exp: `<ul>
+                    <li>Reserve Bank of India (RBI) એ લગભગ <strong>2 દાયકા (20 વર્ષ)</strong> ના અંતરાલ પછી Urban Cooperative Banks (UCBs) માટે <strong>On-Tap Licensing</strong> ફરીથી શરૂ કરવાનો પ્લાન બનાવ્યો છે. (છેલ્લે 2004 માં ફ્રેશ લાયસન્સ આપવાનું બંધ કર્યું હતું).</li>
+                    <li><strong>On-Tap Licensing</strong> એટલે કે અરજદાર ગમે ત્યારે (At any time) પોતાની એપ્લિકેશન સબમિટ કરી શકે છે (કોઈ ફિક્સ ટાઈમ વિન્ડોની રાહ જોવાની જરૂર નથી, જેવું Small Finance Banks માં હતું).</li>
+                    <li>હાલની <strong>Multi-State Credit Cooperative Societies</strong> જો UCB માં કન્વર્ટ થવા માંગતી હોય, તો તેમણે અમુક શરતો પૂરી કરવી પડશે.</li>
+                </ul>`,
+                rel: `<strong>Conditions for Licensing:</strong>
+                <ul>
+                    <li><strong>Minimum Operational History:</strong> સોસાયટી ઓછામાં ઓછા <strong>10 વર્ષથી</strong> સતત કામ કરતી હોવી જોઈએ.</li>
+                    <li><strong>Minimum Deposit:</strong> સોસાયટી પાસે ગ્રાહકોના જમા થયેલા ઓછામાં ઓછા <strong>₹10,000 કરોડ</strong> હોવા જોઈએ. (Teacher corrected this from 300 to 10,000).</li>
+                    <li><strong>Minimum Net Worth:</strong> સોસાયટીની નેટવર્થ ઓછામાં ઓછી <strong>₹300 કરોડ</strong> હોવી જોઈએ.</li>
+                    <li><strong>CRAR (Capital to Risk Weighted Assets Ratio):</strong> ઓછામાં ઓછું <strong>12%</strong> હોવું જોઈએ.</li>
+                    <li><strong>Net NPA Ratio:</strong> સોસાયટીનો Net NPA (Non-Performing Asset) <strong>3%</strong> થી વધુ ન હોવો જોઈએ.</li>
+                    <li>છેલ્લા 5 વર્ષમાં ફાઇનાન્સિયલ પર્ફોર્મન્સ પોઝિટિવ હોવું જોઈએ (ડિપોઝિટ, પ્રોફિટ, નેટવર્થ વધતા હોવા જોઈએ).</li>
+                </ul>`,
+                exam: "UCB On-tap licensing restarted after 2004. Requirements: 10 yrs history, ₹10k Cr deposits, ₹300 Cr Net worth, 12% CRAR, <3% NPA."
+            },
+            {
+                headline: "5. Tourism Ministry & Netflix Celebrate 10 Years in India",
+                exp: `<ul>
+                    <li>Ministry of Tourism એ Ministry of Culture સાથે મળીને ભારતમાં <strong>Netflix ના 10 વર્ષ</strong> પૂરા થવાની ઉજવણી માટે <strong>New Delhi</strong> માં એક સ્પેશિયલ ઈવેન્ટ આયોજિત કરી.</li>
+                    <li>આ કોલોબ્રેશનના ભાગરૂપે, <strong>Incredible India Digital Platform</strong> પર <strong>'As seen on Netflix'</strong> નામનું એક નવું સેક્શન એડ કરવામાં આવ્યું છે.</li>
+                    <li><strong>આનો ફાયદો:</strong> જો Netflix ની કોઈ સીરીઝમાં રાજસ્થાનનો કોઈ કિલ્લો બતાવ્યો હોય, તો યુઝર આ સેક્શનમાં જઈને તે લોકેશનનું અસલી નામ, ત્યાં કેવી રીતે પહોંચવું, આસપાસના ટુરિસ્ટ અટ્રેક્શન અને લોકલ ફૂડ ફેસ્ટિવલની માહિતી મેળવી શકશે.</li>
+                </ul>`,
+                rel: ``,
+                exam: "'As seen on Netflix' section integrated with Incredible India Digital Platform."
+            },
+            {
+                headline: "6. Indian Pharmacopoeia Commission (IPC) gets WHO SEARN Recognition",
+                exp: `<ul>
+                    <li>Indian Pharmacopoeia Commission (IPC) ને નેપાળના કાઠમાંડુમાં આયોજિત <strong>SEARN (South East Asia Regulatory Network)</strong> ની 10મી એનીવર્સરી મીટિંગમાં મહત્વના બે Recognition મળ્યા છે.</li>
+                    <li>1. WHO SEARN Regional Centre of Excellence in Pharmacovigilance.</li>
+                    <li>2. WHO SEARN Technical Centre and Quality.</li>
+                    <li>આનો મુખ્ય ઉદ્દેશ્ય South East Asia Region માં <strong>દવાઓની ગુણવત્તા (Quality of Medicine)</strong> ને ઇમ્પ્રુવ કરવાનો અને મેડિકલ પ્રોડક્ટ્સ સેફ અને ઇફેક્ટિવ રહે તે સુનિશ્ચિત કરવાનો છે.</li>
+                </ul>`,
+                rel: `<ul>
+                    <li><strong>IPC (Indian Pharmacopoeia Commission):</strong> આ <strong>Ministry of Health and Family Welfare</strong> અંતર્ગત કામ કરે છે. તે Indian Pharmacopoeia પબ્લિશ કરે છે, જે ભારતની દવાઓની ગુણવત્તા માટેની Official Book છે.</li>
+                </ul>`,
+                exam: "IPC gets WHO SEARN recognition for Pharmacovigilance and Quality. Falls under Health Ministry."
+            },
+            {
+                headline: "7. 7th Anniversary of Abrogation of Article 370",
+                exp: `<ul>
+                    <li><strong>5 August 2026</strong> ના રોજ Article 370 હટાવવાની <strong>7મી એનિવર્સરી (7th Anniversary)</strong> ઓબ્ઝર્વ કરવામાં આવી.</li>
+                    <li>આ આર્ટિકલ જમ્મુ કાશ્મીરને સ્પેશિયલ સ્ટેટસ (ખાસ સંવિધાનિક દરજ્જો) આપતો હતો, જે <strong>August 2019</strong> માં Inoperative કરાયો.</li>
+                    <li>5 August 2019 ના રોજ સંસદમાં પ્રેસિડેન્શિયલ ઓર્ડર રજૂ કરાયો હતો અને 6 ઓગસ્ટે અપ્રુવલ મળી હતી.</li>
+                </ul>`,
+                rel: `<ul>
+                    <li>હવે જમ્મુ-કાશ્મીર રાજ્ય નથી, પરંતુ બે અલગ <strong>Union Territories (UT)</strong> છે.</li>
+                    <li>1. <strong>Ladakh:</strong> Without Legislature (વિધાનસભા વગરની).</li>
+                    <li>2. <strong>Jammu & Kashmir:</strong> With Legislature (વિધાનસભા વાળી, એટલે કે તેમાં મુખ્યમંત્રી હશે).</li>
+                    <li>આ બંને અલગ <strong>31st October 2019</strong> ના રોજ થયા હતા.</li>
+                </ul>`,
+                exam: "Article 370 abrogated on Aug 5, 2019. J&K and Ladakh became separate UTs on Oct 31, 2019."
+            },
+            {
+                headline: "8. Hiroshima Day (August 6)",
+                exp: `<ul>
+                    <li><strong>6 August</strong> ના રોજ <strong>Hiroshima Day</strong> મનાવવામાં આવે છે.</li>
+                    <li>આ દિવસે <strong>1945</strong> માં (World War II દરમિયાન) <strong>USA</strong> ના 'B-29 bomber' વિમાને જાપાનના હિરોશિમા શહેર પર <strong>'Little Boy'</strong> નામનો Atomic Bomb ફેંક્યો હતો. આ ઘટનાને 81 વર્ષ પૂરા થયા છે.</li>
+                    <li><strong>9 August</strong> ના રોજ <strong>Nagasaki Day</strong> મનાવાશે (જ્યાં 'Fat Man' નામનો બોમ્બ ફેંકાયો હતો).</li>
+                </ul>`,
+                rel: ``,
+                exam: "Hiroshima Day: 6 Aug 1945 (Little Boy bomb). Nagasaki Day: 9 Aug 1945 (Fat Man bomb)."
+            },
+            {
+                headline: "9. Book: 'Bringing the Cheetah Back to India'",
+                exp: `<ul>
+                    <li><strong>'Bringing the Cheetah Back to India'</strong> નામની નવી બુક લખવામાં આવી છે.</li>
+                    <li>આ બુકના લેખક (Author) <strong>Prashant Agarwal (પ્રશાંત અગ્રવાલ)</strong> છે.</li>
+                </ul>`,
+                rel: ``,
+                exam: "Author of 'Bringing the Cheetah Back to India' is Prashant Agarwal."
+            },
+            {
+                headline: "10. RBI to introduce Polymer (Plastic) Banknotes in FY 27-28",
+                exp: `<ul>
+                    <li>RBI ગવર્નર <strong>Sanjay Malhotra</strong> એ કન્ફર્મ કર્યું છે કે, RBI <strong>Financial Year 2027-28</strong> ની શરૂઆતમાં ભારતમાં <strong>Polymer Banknotes (પ્લાસ્ટિકની નોટો)</strong> રજૂ કરવા જઈ રહ્યું છે.</li>
+                    <li>દેશભરમાં વ્યાપક રોલઆઉટ કરતા પહેલાં, તેનું <strong>Pilot Basis</strong> પર ટેસ્ટિંગ કરવામાં આવશે.</li>
+                    <li>શરૂઆતમાં <strong>₹10 અને ₹20</strong> ના મૂલ્યની નોટો આવશે.</li>
+                    <li>દરેક મૂલ્યના <strong>100 Crore pieces (100 કરોડ નંગ)</strong> (એટલે કુલ 200 કરોડ પીસ) પ્રિન્ટ કરવામાં આવશે.</li>
+                    <li>આ નોટોમાં Plastic-based material નો ઉપયોગ થશે, જેથી તે ફાટશે કે કપાશે નહીં.</li>
+                </ul>`,
+                rel: ``,
+                exam: "RBI will issue Polymer notes in FY 27-28. Starting with ₹10 and ₹20. 100 Crore pieces each for pilot testing."
+            },
+            {
+                headline: "11. Foreign Postings approved by Centre (IMF & ICAO)",
+                exp: `<ul>
+                    <li>કેન્દ્ર સરકારે ઇન્ટરનેશનલ ઓર્ગેનાઇઝેશન્સમાં <strong>3 વર્ષ (3 years)</strong> ના સમયગાળા માટે કેટલાક મહત્વના અધિકારીઓની ફોરેન પોસ્ટિંગ અપ્રુવ કરી છે.</li>
+                    <li><strong>Satyajit Mohanty (સત્યજીત મોહંતી):</strong> તેમને <strong>ICAO (International Civil Aviation Organization)</strong> કાઉન્સિલમાં ભારતના Representative તરીકે નિયુક્ત કરાયા છે. (લોકેશન: <strong>Montreal, Canada</strong>).</li>
+                    <li><strong>Rahul Jain (રાહુલ જૈન):</strong> તેમને <strong>IMF (International Monetary Fund)</strong> માં Senior Advisor to Executive Director તરીકે નિયુક્ત કરાયા છે. (લોકેશન: <strong>Washington DC, USA</strong>).</li>
+                </ul>`,
+                rel: `<ul>
+                    <li>Teacher એ ન્યૂઝમાં ADB (Asian Development Bank) નો ઉલ્લેખ જોયો હતો પણ નામ ન હોવાથી આવતીકાલે ચેક કરવાનું કહ્યું છે.</li>
+                </ul>`,
+                exam: "Satyajit Mohanty -> Rep to ICAO (Montreal). Rahul Jain -> Sr Advisor to ED at IMF (Washington DC). Both for 3 years."
+            }
+        ];
+
+        // ---------------- LOGIC ----------------
+        let currentQ = 0;
+        let score = 0;
+        let wrongQuestions = [];
+        let optionClicked = false;
+        let isNewsRendered = false; // FLAG TO PREVENT MULTIPLE RENDERS
+
+        // Theme Toggle (Inner Pages only)
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggleBtn');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                btn.innerText = '☀️';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                btn.innerText = '🌙';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('themeToggleBtn').innerText = '🌙';
+        }
+
+        // Navigation
+        function goHome() {
+            document.getElementById('home-screen').style.display = 'flex';
+            document.querySelectorAll('.internal-screen').forEach(el => el.style.display = 'none');
+            document.getElementById('stickyHeader').classList.remove('visible');
+            window.scrollTo(0, 0);
+        }
+
+        function openSection(id) {
+            document.getElementById('home-screen').style.display = 'none';
+            document.querySelectorAll('.internal-screen').forEach(el => el.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+            document.getElementById('stickyHeader').classList.add('visible');
+            
+            if(id === 'mcq-app' && currentQ === 0) initMCQ();
+            else if (id === 'news-app') renderNews();
+            
+            window.scrollTo(0, 0);
+        }
+
+        // 📝 MCQ ENGINE
+        function initMCQ() {
+            currentQ = 0; score = 0; wrongQuestions = [];
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            optionClicked = false;
+            const qData = mcqs[currentQ];
+            document.getElementById('qNum').innerText = currentQ + 1;
+            document.getElementById('progressBar').style.width = `${((currentQ) / mcqs.length) * 100}%`;
+            
+            let html = `
+                <div class="mcq-card">
+                    <div class="question">${qData.q}</div>
+                    <div class="options-grid">
+                        ${qData.options.map((opt, i) => `
+                            <button class="option-btn" id="opt_${i}" onclick="checkAns(${i}, ${qData.ansIndex})">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <div class="explanation-box" id="expBox">
+                        <div class="sec-title">📖 COMPLETE TEACHER EXPLANATION</div>
+                        <div class="content-block">${qData.explanation}</div>
+                        ${qData.related ? `<div class="sec-title">🔗 ALL RELATED FACTS</div><div class="related-block">${qData.related}</div>` : ''}
+                        
+                        <button class="action-btn" id="nextBtn" onclick="nextQuestion()">${currentQ === mcqs.length - 1 ? 'See Final Score 🏆' : 'Next Question ➡️'}</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('mcqContainer').innerHTML = html;
+        }
+
+        function checkAns(selectedIdx, correctIdx) {
+            if(optionClicked) return;
+            optionClicked = true;
+
+            for(let i=0; i<4; i++) document.getElementById(`opt_${i}`).disabled = true;
+
+            const isCorrect = selectedIdx === correctIdx;
+            
+            if(isCorrect) {
+                document.getElementById(`opt_${selectedIdx}`).classList.add('correct');
+                document.getElementById(`opt_${selectedIdx}`).innerHTML += '<span class="status-badge">✓</span>';
+                score++;
+            } else {
+                document.getElementById(`opt_${selectedIdx}`).classList.add('wrong');
+                document.getElementById(`opt_${selectedIdx}`).innerHTML += '<span class="status-badge">✗</span>';
+                document.getElementById(`opt_${correctIdx}`).classList.add('correct');
+                document.getElementById(`opt_${correctIdx}`).innerHTML += '<span class="status-badge">✓</span>';
+                wrongQuestions.push(mcqs[currentQ]);
+            }
+
+            document.getElementById('expBox').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('progressBar').style.width = `${((currentQ + 1) / mcqs.length) * 100}%`;
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if(currentQ < mcqs.length) { renderQuestion(); window.scrollTo(0, 0); }
+            else showResult();
+        }
+
+        function showResult() {
+            openSection('result-app');
+            const percent = (score / mcqs.length) * 100;
+            document.getElementById('scoreText').innerText = `${score}/15`;
+            document.getElementById('scoreCircle').style.setProperty('--p', `${percent}%`);
+            document.getElementById('scoreAccuracy').innerText = `Accuracy: ${Math.round(percent)}%`;
+            
+            let remark = score >= 13 ? "🏆 Excellent!" : score >= 10 ? "🔥 Very Good!" : score >= 7 ? "👍 Good Effort!" : "📚 Revise Again!";
+            document.getElementById('scoreRemark').innerText = remark;
+
+            let wrongHtml = wrongQuestions.length === 0 
+                ? `<div class="wrong-item" style="border-left-color: var(--success); background: var(--success-light); font-weight:700;">Perfect Score! 🎉</div>`
+                : wrongQuestions.map(q => `
+                    <div class="wrong-item">
+                        <strong style="display:block; margin-bottom:8px;">${q.q}</strong>
+                        <span style="color:var(--success); font-weight:700;">✅ ${q.options[q.ansIndex]}</span>
+                    </div>`).join('');
+            document.getElementById('wrongListContainer').innerHTML = wrongHtml;
+        }
+
+        // 📰 NEWS ENGINE (Exact News First -> Memory Later)
+        function renderNews() {
+            if(isNewsRendered) return; // Prevent multiple renders
+            
+            // 1. Render All Complete News
+            let newsHtml = "";
+            newsData.forEach((news, idx) => {
+                newsHtml += `
+                    <div class="news-card">
+                        <div class="news-header-title">🔥 NEWS ${idx + 1} <br><span style="font-size: 1.2rem; color: var(--text-main); font-weight:700; display:block; margin-top:5px;">${news.headline.replace(/^[0-9]+\.\s/, '')}</span></div>
+                        <div class="sec-title">📖 COMPLETE TEACHER EXPLANATION</div>
+                        <div class="content-block">${news.exp}</div>
+                        ${news.rel ? `<div class="sec-title">🔗 ALL RELATED FACTS</div><div class="related-block">${news.rel}</div>` : ''}
+                        ${news.exam ? `<div class="sec-title">🎯 EXAM ANGLE</div><div class="exam-block">${news.exam}</div>` : ''}
+                    </div>
+                `;
+            });
+            document.getElementById('newsContainer').innerHTML = newsHtml;
+
+            // 2. Render Memory Sections at the BOTTOM
+            let memoryHtml = `
+                <h2 class="static-section-title">🧠 MEMORY TRICKS & CONNECT THE DOTS</h2>
+                <div class="news-card">
+                    <div class="memory-block">
+                        💡 <strong>Shah Rukh Khan:</strong> Most Valued Celebrity 2025 ($177.9M). Replaced Virat Kohli (Now #3).
+                    </div>
+                    <div class="memory-block">
+                        💡 <strong>UCB On-Tap Licensing:</strong> RBI restarting after 20 yrs. Requirements: 10yrs history, 10k Cr deposits, 300 Cr net worth, 12% CRAR.
+                    </div>
+                    <div class="memory-block">
+                        💡 <strong>Polymer Notes:</strong> Coming in FY 27-28 for ₹10 and ₹20. 100 Crore pieces each for pilot.
+                    </div>
+                    <div class="memory-block">
+                        💡 <strong>Foreign Postings (3 Yrs):</strong> Satyajit Mohanty -> ICAO (Montreal). Rahul Jain -> IMF (Washington DC).
+                    </div>
+                    <div class="memory-block">
+                        💡 <strong>Dates:</strong> 5 Aug: Article 370 (7th Anniv). 6 Aug: Hiroshima Day (81st Anniv). 
+                    </div>
+                </div>
+
+                <h2 class="static-section-title">🔥 FINAL MEMORY SHEET</h2>
+                <div class="table-wrap">
+                    <table>
+                        <tr>
+                            <th>Entity / Person</th>
+                            <th>Details</th>
+                            <th>Key Associated Fact</th>
+                        </tr>
+                        <tr><td>TV Somanathan</td><td>Cabinet Secretary</td><td>Got 1-year extension</td></tr>
+                        <tr><td>Govind Mohan</td><td>Home Secretary</td><td>Got 1-year extension</td></tr>
+                        <tr><td>Tewolde GebreMariam</td><td>CEO & MD, Air India</td><td>Replaced Campbell Wilson</td></tr>
+                        <tr><td>Shah Rukh Khan</td><td>Most Valued Celebrity</td><td>177.9 Million USD (Replaced Kohli)</td></tr>
+                        <tr><td>Urban Cooperative Banks</td><td>On-Tap Licensing</td><td>Restarted by RBI after 2 decades</td></tr>
+                        <tr><td>Netflix</td><td>10 Years in India</td><td>'As seen on Netflix' on Incredible India</td></tr>
+                        <tr><td>IPC</td><td>Indian Pharmacopoeia Comm.</td><td>Got WHO SEARN Recognition</td></tr>
+                        <tr><td>Article 370</td><td>Abrogation Anniversary</td><td>7th Anniv (5 Aug). J&K/Ladakh UTs on 31 Oct.</td></tr>
+                        <tr><td>Hiroshima Day</td><td>6 August (1945)</td><td>'Little Boy' bomb by US B-29 bomber</td></tr>
+                        <tr><td>Prashant Agarwal</td><td>Author</td><td>Book: Bringing the Cheetah Back to India</td></tr>
+                        <tr><td>Polymer Banknotes</td><td>Plastic Notes (₹10, ₹20)</td><td>FY 27-28 (100 Cr pieces pilot each)</td></tr>
+                        <tr><td>Satyajit Mohanty</td><td>Rep to ICAO</td><td>Located in Montreal, Canada (3 Yrs)</td></tr>
+                        <tr><td>Rahul Jain</td><td>Sr Advisor to ED, IMF</td><td>Located in Washington DC, USA (3 Yrs)</td></tr>
+                    </table>
+                </div>
+                <button class="back-btn" onclick="goHome()" style="margin-top:24px;">← BACK TO HOME</button>
+            `;
+            document.getElementById('memoryExtras').innerHTML = memoryHtml;
+            
+            isNewsRendered = true; // Mark as rendered successfully
+        }
+    </script>
+</body>
+</html>
+

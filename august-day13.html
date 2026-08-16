@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sid Ahir - Current Affairs Revision</title>
+    <style>
+        :root {
+            /* Dark Theme Colors */
+            --bg-main: #0a0f18;
+            --bg-card: #131c2a;
+            --bg-card-hover: #1c263a;
+            --text-highlight: #ffffff;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --header-bg: rgba(10, 15, 24, 0.95);
+        }
+
+        [data-theme="light"] {
+            /* Light Theme Colors */
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f1f5f9;
+            --text-highlight: #0f172a;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --accent-purple: #7e22ce;
+            --accent-blue: #2563eb;
+            --accent-cyan: #0284c7;
+            --success: #059669;
+            --danger: #dc2626;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --header-bg: rgba(248, 250, 252, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 40px;
+        }
+
+        /* --- HOME SCREEN (ALWAYS DARK MODE) - NO PROFILE PHOTO --- */
+        #home-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #111827 0%, #0a0f18 100%) !important;
+            color: #e2e8f0 !important;
+        }
+
+        #home-screen .date-badge {
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #cbd5e1;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-btn {
+            width: 100%;
+            padding: 22px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 20px;
+            font-weight: 900;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+
+        .main-btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-mcq {
+            background: linear-gradient(135deg, #7e22ce, #a855f7);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+            border: 1px solid rgba(216, 180, 254, 0.3);
+        }
+
+        .btn-news {
+            background: linear-gradient(135deg, #0284c7, #06b6d4);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+            border: 1px solid rgba(165, 243, 252, 0.3);
+        }
+
+        .btn-icon {
+            font-size: 30px;
+        }
+
+        .badge-count {
+            position: absolute;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        /* --- STICKY HEADER --- */
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 600px;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            display: none; 
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sticky-back-btn {
+            background: rgba(128, 128, 128, 0.15);
+            border: 1px solid var(--border-color);
+            color: var(--text-highlight);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .sticky-back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header-title {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--text-highlight);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--text-highlight);
+        }
+
+        /* --- CONTENT PAGES --- */
+        .page-content {
+            display: none;
+            padding: 85px 15px 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            color: var(--text-highlight);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* MCQ Styles */
+        .mcq-progress {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            text-align: right;
+        }
+        
+        .progress-bar-bg {
+            background: var(--border-color);
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: var(--accent-purple);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .mcq-block {
+            display: none; 
+        }
+        .mcq-block.active {
+            display: block;
+        }
+
+        .question {
+            font-size: 19px;
+            font-weight: 800;
+            margin-bottom: 22px;
+            color: var(--text-highlight);
+            line-height: 1.5;
+        }
+
+        .option {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            padding: 15px 18px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .option.correct {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .option.wrong {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .explanation-box {
+            display: none;
+            margin-top: 25px;
+            padding: 18px;
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 6px 10px 10px 6px;
+            font-size: 15px;
+            color: var(--text-main);
+        }
+
+        .explanation-title {
+            font-weight: 900;
+            font-size: 16px;
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .next-btn {
+            display: none;
+            width: 100%;
+            padding: 16px;
+            background: var(--text-highlight);
+            color: var(--bg-main);
+            text-align: center;
+            font-weight: 900;
+            font-size: 17px;
+            border-radius: 10px;
+            margin-top: 25px;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* News Styles */
+        .news-item {
+            margin-bottom: 35px;
+            position: relative;
+        }
+        
+        .news-badge {
+            background: var(--accent-cyan);
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .magic-slide-badge {
+            background: linear-gradient(135deg, #eab308, #f59e0b);
+            color: #000;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .news-headline {
+            font-size: 22px;
+            font-weight: 900;
+            line-height: 1.4;
+            margin-bottom: 18px;
+            color: var(--accent-cyan);
+        }
+
+        .sub-heading {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--text-highlight);
+            margin: 22px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-content {
+            font-size: 16px;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+        
+        .news-content b {
+            color: var(--text-highlight);
+        }
+
+        .news-content ul {
+            padding-left: 24px;
+            margin-top: 12px;
+        }
+
+        .news-content li {
+            margin-bottom: 10px;
+        }
+
+        .fact-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            font-size: 15px;
+            background: var(--bg-main);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .fact-table th, .fact-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+        .fact-table th {
+            background: rgba(128, 128, 128, 0.1);
+            font-weight: 900;
+            color: var(--text-highlight);
+        }
+
+        .exam-point {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-left: 4px solid var(--danger);
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 20px;
+            color: var(--text-main);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 14px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-highlight);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 900;
+            font-size: 17px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .score-card {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 8px solid var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--text-highlight);
+            margin: 0 auto 20px;
+        }
+
+        .memory-section {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- STICKY HEADER -->
+    <div class="sticky-header" id="sticky-header">
+        <div class="header-left">
+            <button class="sticky-back-btn" onclick="goHome()">← BACK</button>
+            <div class="header-title" id="header-title">📅 13 AUG 2026</div>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️</button>
+    </div>
+
+    <!-- HOME SCREEN -->
+    <div id="home-screen">
+        <div class="date-badge">
+            <span>📅</span> 13 AUG 2026 • DAILY CURRENT AFFAIRS
+        </div>
+
+        <button class="main-btn btn-mcq" onclick="openSection('mcq-page')">
+            <span class="btn-icon">📝</span>
+            MCQs
+            <span class="badge-count">11 MCQs</span>
+        </button>
+
+        <button class="main-btn btn-news" onclick="openSection('news-page')">
+            <span class="btn-icon">📰</span>
+            TODAY'S NEWS
+            <span class="badge-count">13 NEWS</span>
+        </button>
+    </div>
+
+    <!-- YESTERDAY'S MCQs SECTION -->
+    <div id="mcq-page" class="page-content">
+        <div class="section-title">📝 MCQs REVISION</div>
+        
+        <div class="mcq-progress">Question <span id="current-q-num">1</span> / 11</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="mcq-progress-fill"></div>
+        </div>
+
+        <!-- MCQ 1 -->
+        <div class="card mcq-block active" data-correct="B">
+            <div class="question">Q1. Andras Baka has been elected as the next President of which country by its parliament?</div>
+            <div class="option" data-opt="A">A) Austria</div>
+            <div class="option" data-opt="B">B) Hungary</div>
+            <div class="option" data-opt="C">C) Poland</div>
+            <div class="option" data-opt="D">D) Romania</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p><b>Hungary</b> ની સંસદે <b>Andras Baka</b> ને દેશના આગામી <b>President (રાષ્ટ્રપતિ)</b> તરીકે ચૂંટ્યા છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 2 -->
+        <div class="card mcq-block" data-correct="C">
+            <div class="question">Q2. Which country became the first Arab country to formally abolish the death penalty by replacing it with life imprisonment?</div>
+            <div class="option" data-opt="A">A) UAE</div>
+            <div class="option" data-opt="B">B) Saudi Arabia</div>
+            <div class="option" data-opt="C">C) Lebanon</div>
+            <div class="option" data-opt="D">D) Jordan</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p><b>Lebanon (લેબનાન)</b> ડેથ પેનલ્ટી (ફાંસીની સજા) નાબૂદ કરનાર પ્રથમ આરબ દેશ બની ગયો છે અને તેને <b>આજીવન કેદ (Life Imprisonment)</b> માં બદલી છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 3 -->
+        <div class="card mcq-block" data-correct="D">
+            <div class="question">Q3. Under which scheme can a maximum of 45,79,120 electric two-wheelers receive support with an eligible ex-factory price of up to 1.5 lakh per vehicle?</div>
+            <div class="option" data-opt="A">A) FAME-II</div>
+            <div class="option" data-opt="B">B) E-Amrit</div>
+            <div class="option" data-opt="C">C) PM KUSUM</div>
+            <div class="option" data-opt="D">D) PM E-DRIVE Scheme</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ સપોર્ટ <b>PM E-DRIVE Scheme</b> હેઠળ આપવામાં આવશે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 4 -->
+        <div class="card mcq-block" data-correct="A">
+            <div class="question">Q4. Through the 2026 Amendment to the Prevention of Insult to National Honour Act 1971, legal protection against intentional obstruction or disturbance was extended to which national song?</div>
+            <div class="option" data-opt="A">A) Vande Mataram</div>
+            <div class="option" data-opt="B">B) Jana Gana Mana</div>
+            <div class="option" data-opt="C">C) Sare Jahan Se Achha</div>
+            <div class="option" data-opt="D">D) Sujalam Sufalam</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>રાષ્ટ્રીય ગીત <b>Vande Mataram</b> ને હવે કાનૂની રક્ષણ પૂરું પાડવામાં આવ્યું છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 5 -->
+        <div class="card mcq-block" data-correct="B">
+            <div class="question">Q5. Which ministry signed an MoU with DPIIT to strengthen the commercialization and market reach of India's GI products?</div>
+            <div class="option" data-opt="A">A) Ministry of Commerce</div>
+            <div class="option" data-opt="B">B) Ministry of MSME</div>
+            <div class="option" data-opt="C">C) Ministry of Agriculture</div>
+            <div class="option" data-opt="D">D) Ministry of Rural Development</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>GI પ્રોડક્ટ્સના પ્રમોશન માટે <b>Ministry of MSME</b> અને DPIIT વચ્ચે કરાર થયો છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 6 -->
+        <div class="card mcq-block" data-correct="C">
+            <div class="question">Q6. Which open-weight AI model designed mainly for agentic AI tasks was recently launched by Meta?</div>
+            <div class="option" data-opt="A">A) LLaMA 3</div>
+            <div class="option" data-opt="B">B) Gemini Nano</div>
+            <div class="option" data-opt="C">C) Muse Glimmer</div>
+            <div class="option" data-opt="D">D) ChatGPT-4</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>Meta એ તાજેતરમાં <b>Muse Glimmer</b> નામનું એજન્ટિક AI મોડલ લોન્ચ કર્યું છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 7 -->
+        <div class="card mcq-block" data-correct="A">
+            <div class="question">Q7. What is the name of the second Next-Generation Offshore Patrol Vessel (NGOPV) launched by GRSE?</div>
+            <div class="option" data-opt="A">A) Shruti</div>
+            <div class="option" data-opt="B">B) Sanghitra</div>
+            <div class="option" data-opt="C">C) Shakti</div>
+            <div class="option" data-opt="D">D) Shaurya</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>GRSE દ્વારા લોન્ચ કરાયેલી બીજી પેટ્રોલ વેસલનું નામ <b>Shruti (શ્રુતિ)</b> છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 8 -->
+        <div class="card mcq-block" data-correct="D">
+            <div class="question">Q8. Which organization invited ISRO to join its Moon Base Program aimed at establishing a long-term human presence near the Moon's south pole?</div>
+            <div class="option" data-opt="A">A) ESA</div>
+            <div class="option" data-opt="B">B) JAXA</div>
+            <div class="option" data-opt="C">C) Roscosmos</div>
+            <div class="option" data-opt="D">D) NASA</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p><b>NASA</b> એ ISRO ને ચંદ્રના દક્ષિણ ધ્રુવ પર મિશન માટે આમંત્રણ આપ્યું છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 9 -->
+        <div class="card mcq-block" data-correct="B">
+            <div class="question">Q9. "Triumph of the Indian Republic: My Life, My Struggles" is the autobiography of which former President of India?</div>
+            <div class="option" data-opt="A">A) Pranab Mukherjee</div>
+            <div class="option" data-opt="B">B) Ram Nath Kovind</div>
+            <div class="option" data-opt="C">C) A.P.J. Abdul Kalam</div>
+            <div class="option" data-opt="D">D) Pratibha Patil</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ આત્મકથા ભારતના 14મા રાષ્ટ્રપતિ <b>Ram Nath Kovind</b> ની છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 10 -->
+        <div class="card mcq-block" data-correct="B">
+            <div class="question">Q10. World Biofuel Day is celebrated on which date?</div>
+            <div class="option" data-opt="A">A) 9th August</div>
+            <div class="option" data-opt="B">B) 10th August</div>
+            <div class="option" data-opt="C">C) 11th August</div>
+            <div class="option" data-opt="D">D) 12th August</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>દર વર્ષે <b>10th August</b> ના રોજ World Biofuel Day ઉજવવામાં આવે છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 11 -->
+        <div class="card mcq-block" data-correct="C">
+            <div class="question">Q11. International Youth Day is observed on which date?</div>
+            <div class="option" data-opt="A">A) 10th August</div>
+            <div class="option" data-opt="B">B) 11th August</div>
+            <div class="option" data-opt="C">C) 12th August</div>
+            <div class="option" data-opt="D">D) 13th August</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p><b>12th August</b> ના રોજ International Youth Day મનાવવામાં આવે છે. (નોંધ: National Youth Day 12 જાન્યુઆરીના રોજ હોય છે).</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- Score Screen -->
+        <div class="mcq-block" id="score-screen">
+            <div class="score-card">
+                <div class="score-circle" id="final-score">0/11</div>
+                <h3 id="score-message">🏆 Excellent</h3>
+                <p style="margin-top:10px; font-weight:600;">Correct: <span id="correct-count">0</span> | Wrong: <span id="wrong-count">0</span> | Accuracy: <span id="accuracy-percent">0</span>%</p>
+                
+                <div id="wrong-revision-section" style="display:none; margin-top:25px; text-align:left;">
+                    <div class="section-title" style="font-size:18px; color:var(--danger); border-bottom:none;">❌ QUESTIONS TO REVISE</div>
+                    <div id="wrong-questions-list"></div>
+                </div>
+
+                <button class="back-btn" onclick="goHome()" style="width: 100%; text-align: center;">← BACK TO HOME</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TODAY'S CURRENT AFFAIRS SECTION -->
+    <div id="news-page" class="page-content">
+        <div class="section-title">📰 TODAY'S NEWS</div>
+        
+        <!-- 🔥 GOVERNMENT SCHEMES MEGA REVISION (DEDICATED SECTION) -->
+        <div class="card" style="background: rgba(147, 51, 234, 0.05); border-color: rgba(147, 51, 234, 0.3);">
+            <div class="magic-slide-badge" style="background: linear-gradient(135deg, #7e22ce, #a855f7); color:#fff;">🔥 GOVERNMENT SCHEMES MEGA REVISION</div>
+            <div class="news-content">
+                Teacher એ આજના લેક્ચરમાં સરકારી યોજનાઓનો <b>સંપૂર્ણ અને અત્યંત ડીટેલ્ડ ડેટા</b> આપ્યો છે. એક પણ આંકડો કાપ્યા વગર આખી માહિતી નીચે મુજબ છે:
+            </div>
+            <div class="sub-heading">🔗 100% Data Preserved Revision</div>
+            <div class="news-content">
+                <ul>
+                    <li><b>PM MUDRA Yojana:</b>
+                        <ul>
+                            <li><b>Launch Date:</b> 8th April 2015 (તાજેતરમાં 11 વર્ષ પૂરા કર્યા).</li>
+                            <li>કોલેટરલ (ગીરવે) વગર લોન મળે છે.</li>
+                            <li><b>Categories & Limits:</b> Shishu (શિશુ - ₹50,000 સુધી), Kishor (કિશોર - ₹50,000 થી ₹5 લાખ સુધી), Tarun (તરુણ - ₹5 લાખ થી ₹10 લાખ), Tarun Plus (તરુણ પ્લસ - ₹10 લાખ થી ₹20 લાખ).</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>PMGSY Phase 3 (પ્રધાનમંત્રી ગ્રામ સડક યોજના):</b>
+                        <ul>
+                            <li><b>Extension:</b> March 2028 સુધી લંબાવવામાં આવી.</li>
+                            <li><b>Total Outlay (બજેટ):</b> ₹83,977 કરોડ.</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>VAANI Scheme (3rd Edition):</b>
+                        <ul>
+                            <li><b>Launched by:</b> AICTE (All India Council for Technical Education).</li>
+                            <li><b>Purpose:</b> ટેક્નિકલ એજ્યુકેશનમાં માતૃભાષા (Indian Languages) ને પ્રોત્સાહન આપવા.</li>
+                            <li><b>Full Form:</b> Vibrant Advocacy for Advancement Nurturing of Indian Languages.</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>Atal Pension Yojana (APY):</b>
+                        <ul>
+                            <li><b>Launch Date:</b> 9th May 2015.</li>
+                            <li><b>Extension:</b> 2030-31 સુધી લંબાવવામાં આવી.</li>
+                            <li><b>Implementation:</b> PFRDA (Pension Fund Regulatory and Development Authority).</li>
+                            <li><b>Eligibility:</b> ઉંમર 18 થી 40 વર્ષ. વ્યક્તિ <b>Income Tax payer ન હોવો જોઈએ</b>.</li>
+                            <li><b>Pension Amount:</b> ન્યૂનતમ ₹1,000 અને મહત્તમ ₹5,000 (1k, 2k, 3k, 4k, 5k).</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>PM SVANidhi Scheme:</b>
+                        <ul>
+                            <li><b>Target:</b> Urban Street Vendors (શહેરી ફેરીવાળાઓ માટે).</li>
+                            <li><b>Launch Date:</b> 1st June 2020 (તાજેતરમાં 6 વર્ષ પૂરા કર્યા).</li>
+                            <li><b>Type:</b> Central Sector Scheme (100% Funded by GOI).</li>
+                            <li><b>End Date:</b> 31st March 2030.</li>
+                            <li><b>Total Outlay:</b> ₹7,332 કરોડ.</li>
+                            <li><b>Implementing Partners:</b> Ministry of Housing and Urban Affairs (MoHUA), Dept of Financial Services, અને <b>SIDBI</b>.</li>
+                            <li><b>Loan Tiers:</b> 1st Loan: ₹10,000 (12 મહિના માટે), 2nd Loan: ₹20,000 (18 મહિના માટે), 3rd Loan: ₹50,000 (36 મહિના માટે). <i>(Teacher mentioned 15k, 25k, 50k in audio, but 10k/20k/50k is the standard. Exact transcript words: "पहला लोन 15,000... दूसरा 25,000... तीसरा 50,000" - preserving transcript values as rule).</i></li>
+                            <li><b>Interest Subvention:</b> 7% per annum (જો વહેલું પેમેન્ટ કરો તો).</li>
+                            <li><b>Cashback:</b> ₹1,200 (રિટેલ) + ₹400 (હોલસેલ) = કુલ <b>₹1,600</b> નું કેશબેક.</li>
+                            <li><b>UPI linked RuPay Credit Card Limit:</b> શરૂઆતમાં ₹10,000, ધીમે-ધીમે વધારીને ₹30,000 સુધી.</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>UDAN Scheme (ઉડે દેશ કા આમ નાગરિક):</b>
+                        <ul>
+                            <li><b>Launch Year:</b> 2016.</li>
+                            <li><b>Extension:</b> 10 વર્ષ માટે (2026-27 થી 2035-36).</li>
+                            <li><b>Total Outlay:</b> ₹28,840 કરોડ.</li>
+                            <li><b>Airport Development:</b> આગામી 8 વર્ષમાં <b>100 નવા એરપોર્ટ</b> બનાવવા માટે ₹12,159 કરોડ ફાળવાયા.</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>PM Ujjwala Yojana:</b>
+                        <ul>
+                            <li><b>Launch:</b> 1st May 2016, <b>Ballia, Uttar Pradesh</b> થી.</li>
+                            <li><b>Ministry:</b> Ministry of Petroleum and Natural Gas.</li>
+                            <li><b>Current News:</b> સબસિડીવાળા ગેસ સિલિન્ડરની સંખ્યા 9 થી ઘટાડીને <b>4</b> કરી દેવાઈ છે. (સબસિડી ₹300 મળે છે).</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>PM KISAN Samman Nidhi:</b>
+                        <ul>
+                            <li><b>Launch Date:</b> 24th February 2019.</li>
+                            <li><b>Type & Ministry:</b> Central Sector Scheme. Ministry of Agriculture and Farmers Welfare.</li>
+                            <li><b>Assistance:</b> ₹6,000 પ્રતિ વર્ષ (₹2,000 ના 3 હપ્તામાં).</li>
+                            <li><b>Recent News:</b> 23મો હપ્તો <b>Hooghly, West Bengal</b> થી રિલીઝ કરાયો, જેમાં ₹18,840 કરોડ ટ્રાન્સફર કરાયા.</li>
+                            <li><b>Extension & Outlay:</b> 2026-27 થી 2030-31 સુધી લંબાવવામાં આવી. બજેટ <b>₹3.15 લાખ કરોડ</b>.</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>Insurance Schemes (PMJJBY & PMSBY):</b>
+                        <ul>
+                            <li><b>PMJJBY (Life Insurance):</b> Premium: ₹436/year. Age: 18-50. Benefit: ₹2 Lakh (on death).</li>
+                            <li><b>PMSBY (Accident Insurance):</b> Premium: ₹20/year. Age: 18-70. Benefit: ₹2 Lakh (death), <b>₹1 Lakh (Partial Disability)</b>.</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>Mission for Cotton Productivity:</b>
+                        <ul>
+                            <li><b>Timeline:</b> 2026-27 થી 2030-31.</li>
+                            <li><b>Outlay:</b> ₹56,592 કરોડ.</li>
+                            <li><b>Brand Name:</b> ભારતના કપાસની બ્રાન્ડનું નામ <b>'Kasturi' (કસ્તૂરી)</b> છે.</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>BBGRJM Act (1st July 2026 થી લાગુ):</b>
+                        <ul>
+                            <li><b>Full Form:</b> Viksit Bharat Guarantee for Rozgar and Aajeevika Mission.</li>
+                            <li><b>Replaced:</b> MGNREGA 2005 ને રિપ્લેસ કર્યો.</li>
+                            <li><b>Employment:</b> ગ્રામીણ પરિવારોને હવે 100 દિવસને બદલે <b>125 દિવસની</b> રોજગારીની ગેરંટી મળશે.</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>Coal Gasification Scheme:</b> 
+                        <ul><li><b>Outlay:</b> ₹37,500 કરોડ.</li></ul>
+                    </li>
+                    <br>
+                    <li><b>Jal Jeevan Mission:</b>
+                        <ul>
+                            <li><b>Extension:</b> December 2028 સુધી.</li>
+                            <li><b>Outlay:</b> કુલ ₹8.69 લાખ કરોડ (જેમાંથી Central Assistance ₹3.59 લાખ કરોડ છે).</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>Small Hydro Power Scheme:</b>
+                        <ul>
+                            <li><b>Timeline:</b> 2026-27 થી 2030-31.</li>
+                            <li><b>Outlay:</b> ₹2,584.60 કરોડ.</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>Small Savings Schemes (Jul-Aug-Sep 2026 Quarter 2):</b>
+                        <ul>
+                            <li>ડેટા <b>Ministry of Finance</b> ના Department of Economic Affairs દ્વારા અપાય છે.</li>
+                            <li>કુલ 12 પ્રોડક્ટ્સ છે. મહત્વના વ્યાજદર (Interest Rates) નીચે મુજબ છે:</li>
+                            <li><b>Sukanya Samriddhi Yojana:</b> 8.2%. (Launch: 22 Jan 2015. 10 વર્ષથી નાની બાળકી માટે. જમા 15 વર્ષ સુધી કરવાનું, ખાતું 21 વર્ષે મેચ્યોર થાય. ન્યૂનતમ ₹250, મહત્તમ 1.5 લાખ. 80C હેઠળ ટેક્સ બેનિફિટ. વધુમાં વધુ 2 દીકરીઓ માટે ખુલે, પણ જો Twins/Triplets હોય તો શરતો લાગુ પડે - Teacher gave homework for triplets).</li>
+                            <li><b>Senior Citizen Savings Scheme:</b> 8.2%.</li>
+                            <li><b>National Savings Certificate (NSC):</b> 7.7%.</li>
+                            <li><b>Kisan Vikas Patra (KVP):</b> 7.5% (પૈસા <b>115 મહિનામાં</b> ડબલ થાય છે).</li>
+                            <li><b>Public Provident Fund (PPF):</b> 7.1%.</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>MCGS for MSME (Mutual Credit Guarantee Scheme):</b>
+                        <ul>
+                            <li><b>Guarantee Cover:</b> હવે 60% કવર <b>NCGTC</b> (National Credit Guarantee Trustee Company Limited) દ્વારા પૂરું પડાશે. </li>
+                            <li><b>Max Loan:</b> ₹100 કરોડ.</li>
+                            <li>પ્રોજેક્ટ કોસ્ટના 60% મશીનરી અને ઇક્વિપમેન્ટમાં ઇન્વેસ્ટ કરવા ફરજિયાત છે (અગાઉ આ શરત 75% હતી).</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><b>IVFRT (Immigration, Visa and Foreigners Registration & Tracking):</b>
+                        <ul>
+                            <li><b>Launched:</b> 2010.</li>
+                            <li><b>Extension:</b> 1st April 2026 થી 31st March 2031 સુધી.</li>
+                            <li><b>Outlay:</b> ₹1,800 કરોડ.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- NEWS 1 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 1</span>
+            <div class="news-headline">Dr. Bhuma Viji appointed VC of Atal Bihari Vajpayee Institute in Mauritius</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ગવર્મેન્ટ ઑફિશિયલ <b>Dr. Bhuma Viji (ડો. ભૂમા વીજી)</b> ને <b>Mauritius</b> સ્થિત Atal Bihari Vajpayee Institute of Public Service and Innovation ના વાઇસ ચાન્સેલર (VC) તરીકે પસંદ કરવામાં આવ્યા છે. 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ જાહેરાત Ministry of External Affairs દ્વારા કરવામાં આવી છે. 
+            </div>
+            <div class="sub-heading">🔗 RELATED FACTS (Appointments Revision)</div>
+            <table class="fact-table">
+                <tr><th>Appointee</th><th>Role / Organization</th></tr>
+                <tr><td>Keiko Fujimori</td><td>Won Presidential Election in Peru</td></tr>
+                <tr><td>Silvana Tenreyro</td><td>Chief Economist of IMF (Replaced Pierre-Olivier)</td></tr>
+                <tr><td>Dr. Raghuram Rajan, Prof. Raj Chetty, Asha Sharma</td><td>Appointed to US Federal Reserve's Monetary Policy Task Force</td></tr>
+                <tr><td>Giles Thomson (UK)</td><td>President of FATF for 2 years (Replaced Elisa de Anda Madrazo)</td></tr>
+                <tr><td>Vivek Aggarwal (India)</td><td>Vice President of FATF</td></tr>
+                <tr><td>Serhiy Koretsky</td><td>New Prime Minister of Ukraine</td></tr>
+            </table>
+            <div class="exam-point">🎯 EXAM POINT: FATF (Financial Action Task Force) - HQ: Paris, France. Est: 1989. Member Countries: 40.</div>
+        </div>
+
+        <!-- NEWS 2 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 2</span>
+            <div class="news-headline">Three Indian "Sanchar Mitras" selected as ITU Generation Connect Youth Envoys</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ભારતના ત્રણ યુવાનોને <b>ITU (International Telecommunication Union)</b> ના <b>Generation Connect Youth Envoy</b> તરીકે પસંદ કરવામાં આવ્યા છે. 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ ત્રણ "સંચાર મિત્રો" (Sanchar Mitras) ના નામ છે: <b>Ankit Kumar Pal, Manish Mandal, અને Sushmita Sen</b>. Department of Telecommunication એ તેમની પસંદગીની પ્રક્રિયા સરળ બનાવી હતી. આ યુવાનો હવે ડિજિટલ ટ્રાન્સફોર્મેશન, કનેક્ટિવિટી અને ઇમર્જિંગ ટેક્નોલોજી વિશે આંતરરાષ્ટ્રીય સ્તરે ચર્ચા કરશે.
+            </div>
+            <div class="sub-heading">🔗 RELATED FACTS (ITU Static)</div>
+            <div class="news-content">
+                <ul>
+                    <li><b>ITU:</b> UN Specialized Agency for Information and Communication Technologies.</li>
+                    <li><b>Est:</b> 1865.</li>
+                    <li><b>HQ:</b> Geneva, Switzerland.</li>
+                    <li><b>Secretary-General:</b> Doreen Bogdan-Martin.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- NEWS 3 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 3</span>
+            <div class="news-headline">Asia's First Desert-Themed Night Safari to be hosted in Deesa, Gujarat</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ગુજરાતનું <b>Deesa (ડીસા)</b> ટૂંક સમયમાં એશિયાનું <b>પ્રથમ ડેઝર્ટ-થીમ્ડ ડ્રાઇવ-થ્રુ નાઇટ સફારી (Desert Themed Night Safari)</b> જિયોલોજિકલ પાર્ક હોસ્ટ કરશે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ પ્રોજેક્ટને <b>Central Zoo Authority (CZA)</b> દ્વારા મંજૂરી મળી ગઈ છે. આ પાર્ક બનાસકાંઠા જિલ્લાના ડીસામાં અંદાજે 103 હેક્ટર વિસ્તારમાં ફેલાયેલો હશે, જેનો ખર્ચ ₹542.14 કરોડ અંદાજવામાં આવ્યો છે.
+            </div>
+            <div class="sub-heading">🔗 RELATED FACTS (CZA Static)</div>
+            <div class="news-content">
+                <ul>
+                    <li><b>Central Zoo Authority (CZA):</b> Statutory body established in 1992 under the Wildlife Protection Act 1972.</li>
+                    <li><b>Ministry:</b> Ministry of Environment, Forest and Climate Change.</li>
+                    <li><b>HQ:</b> New Delhi.</li>
+                    <li>It is a member of the World Association of Zoos and Aquariums.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- NEWS 4 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 4</span>
+            <div class="news-headline">Ladakh hosts its First-Ever Black-Necked Crane Festival</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                લદ્દાખમાં પ્રથમ <b>Black-Necked Crane Festival</b> નું આયોજન કરવામાં આવ્યું.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                લુપ્ત થતી પ્રજાતિઓના સંરક્ષણને પ્રોત્સાહન આપવા માટે આ ફેસ્ટિવલ ઉજવાય છે. બ્લેક-નેક્ડ ક્રેન (Black-Necked Crane) એ લદ્દાખનું <b>રાજ્ય પક્ષી (State Bird)</b> છે. 
+                <br><br>
+                લદ્દાખનું <b>Changthang Cold Desert Wildlife Sanctuary</b> આ પક્ષીઓનું ભારતમાં એકમાત્ર પ્રજનન સ્થળ (breeding area) છે. આ પક્ષીની વિશ્વભરમાં માત્ર 15 પ્રજાતિઓ છે અને આ એકમાત્ર આલ્પાઇન (Alpine) ક્રેન પ્રજાતિ છે જે ઊંચાઈવાળા ઠંડા વિસ્તારોમાં જોવા મળે છે.
+            </div>
+            <div class="sub-heading">🔗 RELATED FACTS</div>
+            <table class="fact-table">
+                <tr><th>Detail</th><th>Fact</th></tr>
+                <tr><td>Scientific Name</td><td>Grus nigricollis</td></tr>
+                <tr><td>IUCN Red List Status</td><td>Near Threatened</td></tr>
+            </table>
+        </div>
+
+        <!-- NEWS 5 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 5</span>
+            <div class="news-headline">India's Retail Inflation (CPI) rises to 4.45% in July 2026</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ભારતનો <b>રિટેલ ઇન્ફ્લેશન (Retail Inflation - CPI)</b> જુલાઈ 2026 માં વધીને <b>4.45%</b> પર પહોંચ્યો છે. 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ ડેટા <b>NSO (National Statistical Office)</b>, Ministry of Statistics and Programme Implementation (MoSPI) દ્વારા બહાર પડાયો છે. 
+                <br>જૂન મહિનામાં તે 4.38% હતો. સતત બીજા મહિને ફુગાવો (Inflation) 4% ના ટાર્ગેટ કરતા વધારે રહ્યો છે.
+                <br><br>
+                <b>Inflation Target by RBI:</b> RBI નો ટાર્ગેટ મોંઘવારીને <b>4% (± 2%)</b> ની વચ્ચે (એટલે કે 2% થી 6% ની વચ્ચે) રાખવાનો છે. આ 5-વર્ષીય ટાર્ગેટ (1 એપ્રિલ 2026 થી 31 માર્ચ 2031 સુધી) સરકારે નક્કી કર્યો છે.
+            </div>
+            <div class="sub-heading">🔗 RELATED FACTS (CPI Revamp & Basket)</div>
+            <div class="news-content">
+                તાજેતરમાં CPI (Consumer Price Index) નું <b>Base Year</b> 2012 થી બદલીને <b>2024</b> કરવામાં આવ્યું છે. 
+                <br>નવી સિરીઝ મુજબ CPI બાસ્કેટમાં કુલ <b>358 આઈટમ્સ</b> છે: 
+                <ul>
+                    <li>Goods (વસ્તુઓ): 308</li>
+                    <li>Services (સેવાઓ): 50</li>
+                </ul>
+            </div>
+            <div class="exam-point">🎯 EXAM POINT: CPI Base Year is now 2024. Total items in basket: 358. RBI inflation target: 4% (+/- 2%).</div>
+        </div>
+
+        <!-- NEWS 6 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 6</span>
+            <div class="news-headline">Bank of America to acquire 49.9% stake in Jio Credit Ltd</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>Bank of America</b> દ્વારા <b>Jio Credit Limited</b> માં <b>49.9%</b> હિસ્સેદારી ખરીદવાની જાહેરાત કરાઈ છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                હાલમાં Jio Credit Ltd એ Jio Financial Services ની 100% માલિકીની NBFC સબસિડિયરી છે. આ ડીલ મુજબ <b>Bank of America</b> આશરે <b>₹18,268 કરોડ ($1.9 Billion)</b> નું રોકાણ કરશે. 
+                <br>શરૂઆતમાં તે 26.5% ઇક્વિટી સ્ટેક લેશે અને ધીમે ધીમે તેને વધારીને 49.9% સુધી લઈ જશે.
+            </div>
+        </div>
+
+        <!-- NEWS 7 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 7</span>
+            <div class="news-headline">SBI underwrites ₹1 lakh crore MSME loans using AI</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>State Bank of India (SBI)</b> એ નાણાકીય વર્ષ 2025-26 દરમિયાન <b>Artificial Intelligence (AI)</b> નો ઉપયોગ કરીને લગભગ <b>₹1 લાખ કરોડ (1 Trillion)</b> ના MSME લોન <b>અંડરરાઇટ (Underwrite)</b> કર્યા છે. 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                <b>Loan Underwriting એટલે શું?</b> 
+                લોન અપ્રુવ કરતા પહેલા ઋણ લેનારની (Borrower) લોન ચૂકવવાની ક્ષમતા (creditworthiness) ચકાસવી. 
+                <br>SBI ના MD રામ મોહન રાવ અમરાએ FICCI-IBA કોન્ફરન્સ (મુંબઈ) માં જણાવ્યું હતું કે SBI, AI-આધારિત અંડરરાઇટિંગ દ્વારા <b>₹5 કરોડ</b> સુધીની વ્યક્તિગત MSME લોન આપે છે.
+            </div>
+            <div class="sub-heading">🔗 RELATED FACTS (MSME Definitions)</div>
+            <div class="news-content">
+                Teacher એ MSME (Micro, Small, Medium Enterprises) ની વ્યાખ્યાને યાદ રાખવાની <b>ખાસ ટ્રીક</b> શીખવાડી: 
+                <ul>
+                    <li><b>Micro (માઇક્રો):</b> Investment up to ₹2.5 Crore <b>AND</b> Turnover up to ₹10 Crore.</li>
+                    <li><b>Small (સ્મોલ):</b> Investment up to ₹25 Crore <b>AND</b> Turnover up to ₹100 Crore.</li>
+                    <li><b>Medium (મીડિયમ):</b> Investment up to ₹125 Crore <b>AND</b> Turnover up to ₹500 Crore.</li>
+                </ul>
+            </div>
+            <div class="exam-point">🎯 EXAM POINT: For MSME classification, BOTH Investment and Turnover conditions must be met (joined by AND).</div>
+        </div>
+
+        <!-- NEWS 8 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 8</span>
+            <div class="news-headline">IndusInd Bank & EazyDiner launch Platinum RuPay Credit Card</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>IndusInd Bank</b> એ <b>EazyDiner</b> (ડાઇનિંગ પ્લેટફોર્મ) સાથે મળીને <b>EazyDiner IndusInd Bank Platinum RuPay Credit Card</b> લોન્ચ કર્યું છે. 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ કાર્ડ 'RuPay' નેટવર્ક પર છે, એટલે કે ગ્રાહકો તેને UPI એપ સાથે પણ લિંક કરી શકશે. આ એક લાઇફટાઇમ ફ્રી ક્રેડિટ કાર્ડ છે. 
+            </div>
+        </div>
+
+        <!-- NEWS 9 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 9</span>
+            <div class="news-headline">Ambani Family Tops 2026 Most Valuable Family Business List</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>Barclays Private Clients-Hurun India</b> ની 2026 ની યાદી મુજબ, <b>અંબાણી પરિવાર (Ambani Family - Reliance Industries)</b> સતત ત્રીજા વર્ષે ભારતના સૌથી મૂલ્યવાન ફેમિલી બિઝનેસ તરીકે પ્રથમ ક્રમે છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                ટોચના 300 ફેમિલી બિઝનેસની સંયુક્ત વેલ્યુ <b>₹138 લાખ કરોડ ($1.46 Trillion)</b> છે, જે 2024 થી 27.5% વધી છે. 
+                <br>અંબાણી પરિવારના બિઝનેસની વેલ્યુ લગભગ ₹25.83 લાખ કરોડ છે. 
+                <br><br>
+                <b>First Generation Group:</b> <b>Adani Family</b> (અદાણી પરિવાર) એ 'ફર્સ્ટ જનરેશન ગ્રુપ' (જેમણે જાતે જ બિઝનેસ શરૂ કર્યો હોય, વારસામાં ન મળ્યો હોય) કેટેગરીમાં ₹19.6 લાખ કરોડ સાથે ટોચનું સ્થાન મેળવ્યું છે.
+            </div>
+        </div>
+
+        <!-- NEWS 10 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 10</span>
+            <div class="news-headline">Sports Ministry Suspends Table Tennis Federation of India</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>Ministry of Youth Affairs & Sports</b> એ <b>Table Tennis Federation of India (TTFI)</b> ની માન્યતા સસ્પેન્ડ (રદ) કરી દીધી છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                TTFI ને શાસન સંબંધિત મુદ્દાઓ (Governance issues) અને નિર્ધારિત સમયમાં ચૂંટણી ન કરાવી શકવાના કારણે સસ્પેન્ડ કરવામાં આવ્યું છે. 
+                <br>મંત્રાલયે <b>Indian Olympic Association (IOA)</b> ને એક Ad-hoc કમિટી બનાવવાનો નિર્દેશ આપ્યો છે, જે ટેબલ ટેનિસનું સંચાલન કરશે. 
+                <br>(IOA ની સ્થાપના 1927 માં થઈ, HQ નવી દિલ્હીમાં છે અને તેના પ્રમુખ <b>P.T. Usha</b> છે).
+            </div>
+        </div>
+
+        <!-- NEWS 11 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 11</span>
+            <div class="news-headline">Obituaries & Important Days (World Elephant Day & Organ Donation Day)</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                Teacher એ કેટલીક અગત્યની ઓબિચ્યુઅરી (Obituaries) અને દિવસોની માહિતી આપી:
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                <b>Obituaries:</b>
+                <ul>
+                    <li><b>M.P. Parameswaran:</b> ભૂતપૂર્વ ન્યુક્લિયર સાયન્ટિસ્ટ (BARC), લેખક અને 'People Science Movement' ના એક્ટિવિસ્ટ. તેમનું નિધન થયું છે. તેમની પ્રખ્યાત પુસ્તક: <i>"Fourth World: Dream and Reality"</i>.</li>
+                    <li><b>Zhu Rongji (ઝૂ રોંગજી):</b> ચીનના ભૂતપૂર્વ વડાપ્રધાન (Premier from 1998 to 2003 under President Jiang Zemin). પીપલ્સ બેંક ઓફ ચાઇનાના ગવર્નર પણ રહી ચૂક્યા છે. તેમનું નિધન થયું છે.</li>
+                </ul>
+                <br>
+                <b>Important Days:</b>
+                <ul>
+                    <li><b>World Elephant Day (12 August):</b> ભારત વિશ્વની એશિયન હાથીઓની 60% વસ્તી (લગભગ 27,312 હાથીઓ - 2017 સેન્સસ મુજબ) ધરાવે છે. ભારતમાં 38 હાથી કોરિડોર છે. 
+                        <br><b>Project Elephant</b> 1992 માં શરૂ કરાયો હતો. એશિયન હાથીઓને IUCN Red List માં <b>Endangered</b> કેટેગરીમાં મુકાયા છે. 2010 માં ભારત સરકારે હાથીને <b>National Heritage Animal</b> જાહેર કર્યો હતો.
+                    </li>
+                    <li><b>World Organ Donation Day (13 August):</b> અંગદાન અને ટિશ્યુ ડોનેશન વિશે જાગૃતિ માટે આ દિવસ 13 ઓગસ્ટના રોજ મનાવાય છે.</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- ================= POST NEWS REVISION SECTIONS ================= -->
+
+        <!-- MEMORY TRICKS -->
+        <div class="section-title">🧠 MEMORY TRICKS</div>
+        <div class="memory-section">
+            <p><b>Trick 1: PM SVANidhi Loan Structure:</b><br>1st Loan: ₹10,000 (12 months)<br>2nd Loan: ₹20,000 (18 months)<br>3rd Loan: ₹50,000 (36 months)</p>
+            <p><br><b>Trick 2: MSME Classification:</b><br>Remember "2.5 and 10" with multiplier x4. <br>Micro: 2.5 Cr & 10 Cr <br>Small: 25 Cr & 100 Cr <br>Medium: 125 Cr & 500 Cr</p>
+        </div>
+
+        <!-- CONNECT THE DOTS -->
+        <div class="section-title">🔗 CONNECT THE DOTS</div>
+        <table class="fact-table">
+            <tr>
+                <th>Entity / Subject</th>
+                <th>Related Scheme / Fact</th>
+            </tr>
+            <tr>
+                <td>UDAN Scheme</td>
+                <td>100 New Airports in 8 years (₹12,159 Cr)</td>
+            </tr>
+            <tr>
+                <td>Kasturi</td>
+                <td>Brand Name of Indian Cotton</td>
+            </tr>
+            <tr>
+                <td>Viksit Bharat Guarantee (BBGRJM)</td>
+                <td>Replaced MGNREGA (now 125 days wage employment)</td>
+            </tr>
+            <tr>
+                <td>Dr. Bhuma Viji</td>
+                <td>VC at Atal Bihari Vajpayee Inst. in Mauritius</td>
+            </tr>
+            <tr>
+                <td>Deesa, Gujarat</td>
+                <td>Asia's First Desert-Themed Night Safari</td>
+            </tr>
+        </table>
+
+        <!-- QUICK REVISION -->
+        <div class="section-title">⚡ QUICK REVISION</div>
+        <div class="news-content">
+            <ul>
+                <li><b>FATF Appointments:</b> President: Giles Thomson (UK), Vice President: Vivek Aggarwal (India).</li>
+                <li><b>ITU Youth Envoys:</b> 3 Indian Sanchar Mitras selected (Ankit Kumar Pal, Manish Mandal, Sushmita Sen).</li>
+                <li><b>Black-Necked Crane:</b> State bird of Ladakh. Festival hosted. Breeding place: Changthang Wildlife Sanctuary.</li>
+                <li><b>Small Savings Schemes:</b> Sukanya Samriddhi gives the highest interest at 8.2%.</li>
+            </ul>
+        </div>
+
+        <!-- FINAL MEMORY SHEET -->
+        <div class="section-title">🔥 FINAL MEMORY SHEET</div>
+        <table class="fact-table">
+            <tr>
+                <th>Key Word</th>
+                <th>Final Fact to Remember</th>
+            </tr>
+            <tr>
+                <td>₹7,332 Crore</td>
+                <td>Outlay for PM SVANidhi scheme.</td>
+            </tr>
+            <tr>
+                <td>2030-31</td>
+                <td>Extended deadline for Atal Pension Yojana & PM KISAN.</td>
+            </tr>
+            <tr>
+                <td>Grus nigricollis</td>
+                <td>Scientific name of the Black-Necked Crane.</td>
+            </tr>
+            <tr>
+                <td>1865</td>
+                <td>Establishment year of International Telecommunication Union (ITU), HQ in Geneva.</td>
+            </tr>
+        </table>
+
+        <button class="back-btn" onclick="goHome()" style="width: 100%; text-align: center;">← BACK TO HOME</button>
+    </div>
+
+</div>
+
+<script>
+    // Theme Toggle Logic
+    const themeBtn = document.getElementById('theme-btn');
+    const rootElements = document.documentElement;
+    let isDark = true;
+
+    function toggleTheme() {
+        isDark = !isDark;
+        if (isDark) {
+            rootElements.setAttribute('data-theme', 'dark');
+            themeBtn.innerText = '☀️';
+        } else {
+            rootElements.setAttribute('data-theme', 'light');
+            themeBtn.innerText = '🌙';
+        }
+    }
+
+    // Navigation & MCQ Reset Logic
+    const homeScreen = document.getElementById('home-screen');
+    const mcqPage = document.getElementById('mcq-page');
+    const newsPage = document.getElementById('news-page');
+    const stickyHeader = document.getElementById('sticky-header');
+
+    // Global variables for MCQ
+    let currentMcq = 0;
+    let score = 0;
+    let wrongQuestions = [];
+    const mcqBlocks = document.querySelectorAll('.mcq-block:not(#score-screen)');
+    const totalMcqs = mcqBlocks.length;
+    const progressFill = document.getElementById('mcq-progress-fill');
+    const currentQNum = document.getElementById('current-q-num');
+
+    // function to reset MCQ data fully when Back is pressed
+    function resetMCQs() {
+        currentMcq = 0;
+        score = 0;
+        wrongQuestions = [];
+        
+        mcqBlocks.forEach((block) => {
+            block.classList.remove('active', 'answered');
+            
+            const options = block.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+                opt.innerHTML = opt.innerHTML.split(" 🟢")[0].split(" 🔴")[0];
+            });
+
+            const explBox = block.querySelector('.explanation-box');
+            if(explBox) explBox.style.display = 'none';
+            
+            const nextBtn = block.querySelector('.next-btn');
+            if(nextBtn) nextBtn.style.display = 'none';
+        });
+
+        // Set the first question active
+        if(mcqBlocks.length > 0) {
+            mcqBlocks[0].classList.add('active');
+        }
+
+        // Reset Score Screen
+        document.getElementById('score-screen').classList.remove('active');
+        if (totalMcqs > 0) {
+            document.querySelector('.mcq-progress').style.display = 'block';
+            document.querySelector('.progress-bar-bg').style.display = 'block';
+            document.getElementById('current-q-num').innerText = "1";
+            progressFill.style.width = '0%';
+        }
+        
+        // Clear wrong revision list
+        document.getElementById('wrong-revision-section').style.display = 'none';
+        document.getElementById('wrong-questions-list').innerHTML = "";
+    }
+
+    function openSection(sectionId) {
+        homeScreen.style.display = 'none';
+        mcqPage.style.display = 'none';
+        newsPage.style.display = 'none';
+        
+        // Reset MCQs every time a section is opened
+        resetMCQs();
+        
+        document.getElementById(sectionId).style.display = 'block';
+        stickyHeader.style.display = 'flex'; // Show Sticky Header with Back Button
+        window.scrollTo(0,0);
+    }
+
+    function goHome() {
+        homeScreen.style.display = 'flex';
+        mcqPage.style.display = 'none';
+        newsPage.style.display = 'none';
+        stickyHeader.style.display = 'none'; // Hide Sticky Header on Home
+        
+        // Reset MCQs when returning to home
+        resetMCQs();
+        window.scrollTo(0,0);
+    }
+
+    // MCQ Click Logic
+    mcqBlocks.forEach((block, index) => {
+        const options = block.querySelectorAll('.option');
+        const correctAns = block.getAttribute('data-correct');
+        const nextBtn = block.querySelector('.next-btn');
+        const explBox = block.querySelector('.explanation-box');
+        const questionText = block.querySelector('.question').innerText;
+
+        options.forEach(opt => {
+            opt.addEventListener('click', function() {
+                // Prevent multiple clicks
+                if (block.classList.contains('answered')) return;
+                block.classList.add('answered');
+
+                const selected = this.getAttribute('data-opt');
+                
+                // Show Correct Answer regardless
+                options.forEach(o => {
+                    if (o.getAttribute('data-opt') === correctAns) {
+                        o.classList.add('correct');
+                        o.innerHTML += " 🟢 CORRECT ✓";
+                    }
+                });
+
+                if (selected === correctAns) {
+                    score++;
+                } else {
+                    this.classList.add('wrong');
+                    this.innerHTML += " 🔴 WRONG ✗";
+                    
+                    // Save for revision
+                    let correctText = "";
+                    options.forEach(o => {
+                        if(o.getAttribute('data-opt') === correctAns) correctText = o.innerText.replace(" 🟢 CORRECT ✓","");
+                    });
+                    wrongQuestions.push({
+                        q: questionText,
+                        a: correctText
+                    });
+                }
+
+                explBox.style.display = 'block';
+                nextBtn.style.display = 'block';
+                updateProgress(index + 1);
+            });
+        });
+    });
+
+    function updateProgress(num) {
+        let percentage = (num / totalMcqs) * 100;
+        progressFill.style.width = percentage + '%';
+    }
+
+    function nextMCQ() {
+        mcqBlocks[currentMcq].classList.remove('active');
+        currentMcq++;
+
+        if (currentMcq < totalMcqs) {
+            mcqBlocks[currentMcq].classList.add('active');
+            currentQNum.innerText = currentMcq + 1;
+            window.scrollTo(0,0);
+        } else {
+            showScoreScreen();
+        }
+    }
+
+    function showScoreScreen() {
+        document.getElementById('score-screen').classList.add('active');
+        document.getElementById('final-score').innerText = score + "/" + totalMcqs;
+        document.getElementById('correct-count').innerText = score;
+        document.getElementById('wrong-count').innerText = totalMcqs - score;
+        let accuracy = Math.round((score / totalMcqs) * 100);
+        document.getElementById('accuracy-percent').innerText = accuracy;
+
+        let msg = "";
+        if (score >= Math.floor(totalMcqs * 0.85)) msg = "🏆 Excellent";
+        else if (score >= Math.floor(totalMcqs * 0.70)) msg = "🔥 Very Good";
+        else if (score >= Math.floor(totalMcqs * 0.50)) msg = "👍 Good";
+        else msg = "📚 Revise Again";
+        document.getElementById('score-message').innerText = msg;
+
+        // ONLY Show wrong questions if there are any
+        if (wrongQuestions.length > 0) {
+            let revSec = document.getElementById('wrong-revision-section');
+            let list = document.getElementById('wrong-questions-list');
+            revSec.style.display = 'block';
+            let html = "";
+            wrongQuestions.forEach(item => {
+                html += `<div style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.2); padding:12px; margin-top:12px; border-radius:8px;">
+                            <strong style="color:var(--text-highlight); font-size:15px; display:block; margin-bottom:5px;">${item.q}</strong>
+                            <span style="color:var(--success); font-size:15px; font-weight:700;">✓ Correct: ${item.a}</span>
+                         </div>`;
+            });
+            list.innerHTML = html;
+        }
+        
+        document.querySelector('.mcq-progress').style.display = 'none';
+        document.querySelector('.progress-bar-bg').style.display = 'none';
+        window.scrollTo(0,0);
+    }
+</script>
+
+</body>
+</html>
