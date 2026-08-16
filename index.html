@@ -400,8 +400,47 @@
             }
         }
 
+        // Computer Sets: 1-10 (RRB PO Clerk) & 11-60 (Bundle PDF Course)
         function showComputer() {
-            renderDynamicList("Computer Sets", 60, "computer_set", (i) => `comp-${i}.html`, "Set");
+            showScreen('list-screen');
+            document.getElementById('list-title').innerText = "Computer Sets";
+            const container = document.getElementById('list-container');
+            container.innerHTML = "";
+
+            for (let i = 1; i <= 60; i++) {
+                let card = document.createElement('div');
+                card.className = "day-card";
+
+                let btn = document.createElement('button');
+                btn.className = "day-btn-glass";
+                btn.innerText = `Set ${i}`;
+
+                let fileName = "";
+                if (i <= 10) {
+                    fileName = `Computer Awareness for RRB PO Clerk Set ${i}.html`;
+                } else {
+                    fileName = `Computer Awareness Bundle PDF Course 2025 Set-${i}.html`;
+                }
+
+                btn.onclick = function() { openFile(fileName); };
+
+                let checkbox = document.createElement('input');
+                checkbox.type = "checkbox";
+                checkbox.className = "day-checkbox";
+                
+                let storageKey = `computer_set_item_${i}`;
+                if (localStorage.getItem(storageKey) === 'true') {
+                    checkbox.checked = true;
+                }
+
+                checkbox.addEventListener('change', (function(key, chk) {
+                    return function() { localStorage.setItem(key, chk.checked); };
+                })(storageKey, checkbox));
+
+                card.appendChild(btn);
+                card.appendChild(checkbox);
+                container.appendChild(card);
+            }
         }
 
         function openPracticeDayList(subject) {
@@ -428,7 +467,7 @@
                 filePrefix = "Full_Length_Test_SBI_Clerk_2025_Prelims_Mock_Test_";
             } else if (examName === 'ibps-clerk') {
                 titleText = "IBPS Clerk Prelims Mocks";
-                filePrefix = "Full_Length_Test_IBPS_Clerk_2025_Mock_Test_";
+                filePrefix = "Full_Length_Test_IBPS_Clerk_2025_Prelims_Mock_Test_";
             } else {
                 titleText = "Mock Tests";
                 totalTests = 20;
