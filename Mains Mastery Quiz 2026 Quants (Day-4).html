@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Mains Mastery Quiz 2026 Quants (Day-4) Quiz | MockTest Buddy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --bg: #f3f4f6;
+    --card-bg: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --danger: #ef4444;
+    --success: #22c55e;
+    --marked: #7c3aed;
+    --correct-bg: #ecfdf3;
+    --wrong-bg: #fef2f2;
+    --marked-bg: #f3e8ff;
+}
+
+/* Reset-ish */
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top left, #dbeafe, #eff6ff 40%, #f9fafb 80%);
+    color: var(--text);
+}
+
+/* Instruction header (brand only) */
+.brand-header {
+    background: linear-gradient(90deg, #0f172a, #111827);
+    color: #fff;
+    padding: 14px 16px;
+    text-align: center;
+}
+.brand-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+.brand-sub {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 4px;
+}
+
+/* Test header (only after start) */
+.header-test {
+    background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+    color: #fff;
+    padding: 10px 16px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-test.hidden {
+    display: none !important;
+}
+
+.header-test.show {
+    display: flex !important;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+}
+.header-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+.header-subtitle {
+    font-size: 12px;
+    opacity: 0.9;
+}
+.header-right {
+    font-size: 12px;
+    text-align: right;
+}
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    font-size: 11px;
+}
+
+/* Layout */
+.main {
+    max-width: 1000px;
+    margin: 16px auto 28px;
+    padding: 0 12px;
+}
+.card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+    padding: 18px 16px 16px;
+}
+
+/* Instructions */
+#instructions-container {
+    display: block;
+}
+.instructions-layout {
+    display: flex;
+    gap: 16px;
+}
+.instructions-main {
+    flex: 1;
+}
+.instructions-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.instructions-list {
+    font-size: 14px;
+    margin-left: 16px;
+    margin-bottom: 12px;
+}
+.instructions-list li {
+    margin-bottom: 4px;
+}
+.instructions-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 10px 0 16px;
+}
+.instructions-summary-item {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #f9fafb;
+    padding: 8px;
+    font-size: 13px;
+}
+.instructions-summary-label {
+    font-size: 11px;
+    color: var(--muted);
+}
+.instructions-summary-value {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Instruction candidate box (right side) */
+.instructions-side {
+    width: 230px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #f1f5f9;
+    padding: 10px;
+    font-size: 13px;
+}
+.instructions-side-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.instructions-side-row {
+    margin-bottom: 4px;
+}
+.instructions-side-label {
+    color: var(--muted);
+    font-size: 12px;
+}
+.instructions-side-value {
+    font-weight: 500;
+}
+
+/* Test layout */
+#quiz-container {
+    display: none;
+}
+
+.test-layout {
+    display: flex;
+    gap: 16px;
+}
+.test-main {
+    flex: 1;
+}
+.test-side {
+    width: 300px;
+}
+
+/* Question header */
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: var(--muted);
+}
+.q-progress {
+    font-weight: 500;
+}
+.marks-info {
+    font-size: 12px;
+}
+.marks-info span {
+    margin-left: 8px;
+}
+.marks-pos {
+    color: var(--success);
+}
+.marks-neg {
+    color: var(--danger);
+}
+
+/* Question body */
+.question-body {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 12px 10px;
+    background: #f9fafb;
+    margin-bottom: 12px;
+    font-size: 17px;
+	line-height: 1.5;
+}
+.question-body p {
+    margin: 4px 0;
+}
+
+/* Options */
+.options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.option {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    transition: background 0.12s ease, border-color 0.12s ease, transform 0.08s ease;
+}
+.option:hover {
+    background: #eff6ff;
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+.option input {
+    margin-top: 3px;
+}
+.option-text {
+    font-size: 17px;
+	line-height: 1.4;
+}
+
+.question-body img,
+.option-text img,
+.solution-question img,
+.solution-text img,
+.solution-explanation img {
+    max-width: 100% !important;
+    width: auto !important;
+    height: auto !important;
+
+    /* IMPORTANT: prevent huge images */
+    max-height: 450px;
+
+    object-fit: contain;
+    display: block;
+    margin: 12px auto;
+    border-radius: 8px;
+}
+
+/* Prevent image overflow */
+.question-body {
+    overflow-x: hidden;
+}
+
+/* ===== Prevent table overflow on small screens ===== */
+.question-body table,
+.solution-question table,
+.solution-text table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+.solution-explanation {
+    max-width: 100%;
+    overflow-x: auto;   /* allow scroll, NOT crop */
+}
+.question-body table td,
+.question-body table th,
+.solution-text table td,
+.solution-text table th {
+    word-break: break-word;
+}
+
+/* Nav buttons */
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.nav-left,
+.nav-right {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.btn {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.12s ease, transform 0.08s ease, box-shadow 0.12s ease;
+}
+.btn:active {
+    transform: translateY(1px);
+}
+.btn-primary {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+}
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+.btn-secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+.btn-danger {
+    background: var(--danger);
+    color: #fff;
+}
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+/* Side panel (palette only during test) */
+.sidebar-card {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #f9fafb;
+    padding: 10px;
+    font-size: 12px;
+}
+
+/* Palette */
+.palette {
+    margin-top: 0;
+}
+.palette-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.palette-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.palette-item {
+    min-width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 2px solid #d1d5db;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.15s;
+}
+.palette-item:hover {
+    transform: scale(1.08);
+    border-color: #3b82f6;
+}
+.palette-item.current {
+    outline: 2px solid var(--primary);
+}
+
+/* Palette colors per your request */
+.palette-item.state-notVisited {
+    background: #9ca3af;  /* darker grey */
+    color: #ffffff;
+}
+.palette-item.state-notAnswered {
+    background: #ef4444;  /* red */
+    color: #ffffff;
+}
+.palette-item.state-answered {
+    background: #22c55e;  /* green */
+    color: #ffffff;
+}
+.palette-item.state-marked {
+    background: #8b5cf6;  /* strong purple */
+    color: #ffffff;
+}
+
+/* Palette legend */
+.palette-legend {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--muted);
+}
+.palette-legend-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 2px;
+}
+.legend-box {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+}
+.legend-notVisited { background: #e5e7eb; }
+.legend-notAnswered { background: #fee2e2; border-color:#fecaca; }
+.legend-answered { background: #dcfce7; border-color:#bbf7d0; }
+.legend-marked { background: #e9d5ff; border-color:#c4b5fd; }
+
+/* Solutions page */
+#solutions-container {
+    display: none;
+}
+.solutions-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.solutions-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 10px;
+}
+.solution-item {
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+    margin-top: 10px;
+}
+.solution-item:first-child {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+.solution-question {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+.solution-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+.solution-option {
+    display: flex;
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+}
+.solution-option.correct {
+    background: var(--correct-bg);
+    border-color: var(--success);
+}
+.solution-option.wrong {
+    background: var(--wrong-bg);
+    border-color: var(--danger);
+}
+.solution-label {
+    font-size: 13px;
+    font-weight: 600;
+}
+.solution-text {
+    flex: 1;
+    font-size: 13px;
+}
+.solution-explanation {
+    font-size: 13px;
+    background: #eef2ff;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.55);
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.overlay.hidden {
+    display: none !important;
+}
+
+.overlay.show {
+    display: flex !important;
+}
+
+.overlay-content {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 16px 16px 14px;
+    width: 94%;
+    max-width: 430px;
+    box-shadow: 0 26px 50px rgba(15,23,42,0.4);
+}
+.overlay-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+.overlay-body {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 8px 0 10px;
+}
+.overlay-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 13px;
+}
+.metric-card {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 8px;
+    background: #f9fafb;
+}
+.metric-label {
+    font-size: 11px;
+    color: var(--muted);
+}
+.metric-value {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 2px;
+}
+.overlay-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+/* Utils */
+.hidden {
+    display: none !important;
+}
+
+/* Responsive: hide side panels & palette on phones */
+@media (max-width: 768px) {
+    .instructions-layout,
+    .test-layout {
+        flex-direction: column;
+    }
+    .instructions-side,
+    .test-side {
+        display: none;
+    }
+    .card {
+        padding: 16px 12px 14px;
+    }
+}
+
+/* >>> ADD NEW CODE BELOW <<< */
+
+/* Expand quiz layout width */
+.main {
+    max-width: 1400px !important;
+}
+
+/* Expand quiz card width */
+#quiz-container.card {
+    width: 100% !important;
+    padding: 20px !important;
+}
+
+/* Reduce left+right margin */
+.main {
+    margin: 10px auto !important;
+    padding: 0px 5px !important;
+}
+
+/* Ensure question+palette stay visible side by side */
+.test-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 16px;
+}
+
+/* Reduce question padding */
+.question-body {
+    padding: 12px !important;
+}
+
+/* Keep buttons in one row */
+.nav-bar {
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+}
+
+.nav-left button,
+.nav-right button {
+    white-space: nowrap !important;
+}
+
+/* Medium screen adjustments */
+@media (max-width: 1100px) {
+    .test-layout {
+        display: block !important;
+    }
+    .test-side {
+        display: none !important;
+    }
+    #quiz-container.card {
+        padding: 10px !important;
+    }
+    .question-body {
+        font-size: 18px !important;
+    }
+    .btn {
+        font-size: 16px !important;
+    }
+}
+
+/* Small screen adjustments */
+@media (max-width: 600px) {
+    body {
+        font-size: 16px !important;
+    }
+    .btn {
+        padding: 10px 16px !important;
+        font-size: 15px !important;
+    }
+    .option-text {
+        font-size: 18px !important;
+    }
+	.question-body img,
+    .solution-explanation img {
+        max-height: 300px !important;
+    }
+}
+/* Buttons shown on desktop */
+.nav-right .btn-submit {
+    display: inline-flex;
+}
+
+/* Buttons shown on mobile */
+@media (max-width: 600px) {
+    .btn-submit {
+        display: none !important;
+    }
+
+    .btn-mark {
+        display: inline-flex !important;
+    }
+
+    .btn-clear {
+        display: inline-flex !important;
+    }
+
+    .btn-save {
+        display: inline-flex !important;
+    }
+
+    /* Change button labels visually */
+    .btn-mark::after {
+        content: "Mark";
+    }
+    .btn-clear::after {
+        content: "Clear";
+    }
+    .btn-save::after {
+        content: "Save & Next";
+    }
+
+    /* hide original text inside buttons */
+    .btn-mark span,
+    .btn-clear span,
+    .btn-save span {
+        display: none;
+    }
+
+    /* Make buttons larger and easier to tap */
+    .nav-left button,
+    .nav-right button {
+        padding: 14px 20px;
+        font-size: 18px;
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 600px) {
+    .header-test {
+        flex-wrap: wrap;
+        padding: 8px 10px;
+        gap: 6px;
+    }
+
+    .header-left {
+        flex: 1 1 100%;
+    }
+
+    .header-title {
+        font-size: 14px;
+        line-height: 1.2;
+    }
+
+    .header-subtitle {
+        font-size: 11px;
+    }
+
+    .header-right {
+        flex: 1 1 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+    }
+
+    .badge {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+}
+/* ===== HAMBURGER MENU ===== */
+.menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .menu-btn {
+        display: block;
+    }
+}
+
+/* ===== PALETTE DRAWER ===== */
+.palette-drawer {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 300px;
+    height: 100dvh; /* mobile safe height */
+    background: #ffffff;
+    box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+    z-index: 100;
+    padding: 12px;
+    transition: left 0.3s ease;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.palette-drawer.open {
+    left: 0;
+}
+
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    z-index: 90;
+}
+
+.drawer-overlay.show {
+    display: block;
+}
+#palette-drawer-container {
+    flex: 0 0 auto;          
+    max-height: calc(100dvh - 170px); 
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* Improve scroll on mobile */
+#palette-drawer-container::-webkit-scrollbar {
+    width: 6px;
+}
+#palette-drawer-container::-webkit-scrollbar-thumb {
+    background: #c7d2fe;
+    border-radius: 6px;
+}
+/* Keep legend always visible */
+.palette-drawer .palette-legend {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+body.drawer-open {
+    overflow: hidden;
+}
+
+#free-test-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.75); /* darker, premium */
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 16px;
+}
+
+/* Card */
+#free-test-popup .overlay-content {
+    width: 100%;
+    max-width: 520px;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 20px 18px 18px;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.45);
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+#free-test-popup .overlay-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+#free-test-popup .overlay-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+    color: #0f172a;
+}
+
+/* Body */
+#free-test-popup .overlay-body {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #334155;
+    margin-top: 8px;
+}
+
+/* Highlight box */
+#free-test-popup .notice-box {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #7f1d1d;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Footer */
+#free-test-popup .overlay-footer {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Button */
+#free-test-popup .btn {
+    padding: 12px 22px;
+    font-size: 15px;
+    border-radius: 999px;
+}
+
+/* ---------------- SMALL DEVICES ---------------- */
+@media (max-width: 480px) {
+    #free-test-popup .overlay-content {
+        padding: 16px 14px;
+        border-radius: 14px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    #free-test-popup .overlay-header h2 {
+        font-size: 18px;
+    }
+
+    #free-test-popup .overlay-body {
+        font-size: 13px;
+    }
+
+    #free-test-popup .overlay-footer {
+        justify-content: center;
+    }
+
+    #free-test-popup .btn {
+        width: 100%;
+        font-size: 16px;
+        padding: 14px;
+		justify-content: center;
+		text-align: center;
+    }
+}
+
+/* ---------------- LARGE SCREENS ---------------- */
+@media (min-width: 1200px) {
+    #free-test-popup .overlay-content {
+        max-width: 580px;
+    }
+}
+
+.brand-sub a {
+    color: #38bdf8;            
+    text-decoration: none; 
+    font-weight: 600;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.brand-sub a:hover {
+    color: #7dd3fc; 
+    text-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+    .brand-sub a {
+        font-size: 12px;
+    }
+}
+#free-test-popup.hidden {
+    display: none !important;
+}
+
+.language-box {
+    margin: 14px 0 16px;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #f8fafc;
+}
+
+.language-title {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.language-select-wrapper {
+    position: relative;
+}
+
+#languageSelect {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 15px;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+}
+
+/* Dropdown arrow */
+.language-select-wrapper::after {
+    content: "▾";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #64748b;
+    pointer-events: none;
+}
+
+#languageSelect:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 2px rgba(56,189,248,0.25);
+}
+
+.language-warning {
+    font-size: 12px;
+    color: var(--danger);
+    margin-top: 8px;
+}
+
+/* Extra polish for small screens */
+@media (max-width: 480px) {
+    #languageSelect {
+        font-size: 16px; /* prevents iOS zoom */
+        padding: 14px;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div id="drawer-overlay" class="drawer-overlay"></div>
+
+<div id="palette-drawer" class="palette-drawer">
+    <h3 style="margin:6px 0 10px;font-size:14px;">Question Palette</h3>
+
+    <div id="palette-drawer-container" class="palette-grid"></div>
+
+    <!-- LEGEND FOR MOBILE -->
+    <div class="palette-legend">
+        <div class="palette-legend-row">
+            <span class="legend-box legend-notVisited"></span> Not visited
+        </div>
+        <div class="palette-legend-row">
+            <span class="legend-box legend-notAnswered"></span> Not answered
+        </div>
+        <div class="palette-legend-row">
+            <span class="legend-box legend-answered"></span> Answered
+        </div>
+        <div class="palette-legend-row">
+            <span class="legend-box legend-marked"></span> Marked for review
+        </div>
+    </div>
+</div>
+
+<!-- INSTRUCTION HEADER (BRAND ONLY) -->
+<div id="instruction-header" class="brand-header">
+    <div class="brand-title">MockTest Buddy</div>
+    <div class="brand-sub">by Team <a href="https://t.me/+kH41Q_IiTKljZmM1" target="_blank" rel="noopener">RankZenBanker</a></div>
+</div>
+
+<!-- TEST HEADER (ONLY AFTER START) -->
+<div id="quiz-header" class="header-test hidden">
+    <button id="menu-btn" class="menu-btn">☰</button>
+    <div class="header-left">
+        <span class="header-title">Mains Mastery Quiz 2026 Quants (Day-4)</span>
+        <span class="header-subtitle">Single-correct MCQ • One question per screen</span>
+    </div>
+    <div class="header-right">
+        <span class="badge">Quiz Mode</span><br />
+        <span style="font-size: 11px;">Marks: +1 / −0.25</span><br />
+        <span id="timer-label" style="font-size: 11px;">Time: 00:00:00</span>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- INSTRUCTIONS SCREEN -->
+    <div class="card" id="instructions-container">
+        <div class="instructions-layout">
+            <div class="instructions-main">
+                <div class="instructions-title">Instructions</div>
+                <p style="font-size:14px;margin-bottom:6px;">
+                    Read the instructions carefully before starting. Once started, the timer will not stop.
+                </p>
+
+                <div class="instructions-summary">
+                    <div class="instructions-summary-item">
+                        <div class="instructions-summary-label">Total Questions</div>
+                        <div class="instructions-summary-value" id="inst-total-questions">25</div>
+                    </div>
+                    <div class="instructions-summary-item">
+                        <div class="instructions-summary-label">Marks / Q</div>
+                        <div class="instructions-summary-value">+1</div>
+                    </div>
+                    <div class="instructions-summary-item">
+                        <div class="instructions-summary-label">Negative</div>
+                        <div class="instructions-summary-value">−0.25</div>
+                    </div>
+                </div>
+
+                <ul class="instructions-list">
+                    <li>Each question has a single correct answer.</li>
+                    <li>Use the palette on the right to move between questions or sections.</li>
+                    <li>Use <strong>Mark for Review &amp; Next</strong> to mark questions you want to review later.</li>
+                    <li>You can submit the test anytime using the <strong>Submit</strong> button.</li>
+                </ul>
+				<div class="language-box">
+					<label for="languageSelect" class="language-title">
+						Select Test Language
+					</label>
+
+					<div class="language-select-wrapper">
+						<select id="languageSelect">
+							<option value="">-- Choose Language --</option>
+							<option value="en">English</option>
+							<option value="hi">हिन्दी</option>
+						</select>
+					</div>
+
+					<div class="language-warning hidden" id="language-warning">
+						⚠️ Please select a language to start the test
+					</div>
+				</div>
+                <button type="button" id="start-test-btn" class="btn btn-primary">Start Test</button>
+            </div>
+
+            <div class="instructions-side">
+                <div class="instructions-side-title">Details</div>
+                <div class="instructions-side-row">
+                    <div class="instructions-side-label">Canditate</div>
+                    <div class="instructions-side-value">Guest User</div>
+                </div>
+                <div class="instructions-side-row">
+                    <div class="instructions-side-label">Section</div>
+                    <div class="instructions-side-value" id="inst-section-name">Mains Mastery Quiz 2026 Quants (Day-4)</div>
+                </div>
+                <div class="instructions-side-row">
+                    <div class="instructions-side-label">Questions</div>
+                    <div class="instructions-side-value" id="inst-side-total">25</div>
+                </div>
+                <div class="instructions-side-row">
+                    <div class="instructions-side-label">Marks</div>
+                    <div class="instructions-side-value">+1 / −0.25</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div class="card" id="quiz-container">
+        <div class="test-layout">
+            <div class="test-main">
+                <div class="question-header">
+                    <div class="q-progress" id="q-progress">Question 1 of 25</div>
+                    <div class="marks-info">
+                        <span class="marks-pos">+1 mark</span>
+                        <span class="marks-neg">−0.25 negative</span>
+                    </div>
+                </div>
+                <div class="question-body" id="question-text"></div>
+                <div class="options-group" id="options-container"></div>
+
+                <div class="nav-bar">
+					<div class="nav-left">
+						<button class="btn btn-secondary" id="clear-btn">
+							<svg width="18" height="18" viewBox="0 0 24 24" class="btn-icon"><path d="M6 19L19 6" stroke="currentColor" stroke-width="2"/><path d="M6 6L19 19" stroke="currentColor" stroke-width="2"/></svg>
+							<span class="btn-text">Clear Response</span>
+						</button>
+						<button class="btn btn-secondary" id="mark-btn">
+							<svg width="18" height="18" viewBox="0 0 24 24" class="btn-icon"><path d="M6 3h12v18l-6-4-6 4V3z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+							<span class="btn-text">Mark for Review & Next</span>
+						</button>
+					</div>
+					<div class="nav-right">
+						<button class="btn btn-primary" id="next-btn">
+							<svg width="18" height="18" viewBox="0 0 24 24" class="btn-icon"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+							<span class="btn-text">Save & Next</span>
+						</button>
+						<button class="btn btn-danger" id="submit-btn">
+							<svg width="18" height="18" viewBox="0 0 24 24" class="btn-icon"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+							<span class="btn-text">Submit</span>
+						</button>
+					</div>
+				</div>
+
+            </div>
+
+            <aside class="test-side">
+                <div class="sidebar-card palette">
+                    <div class="palette-title">Question Palette</div>
+                    <div class="palette-grid" id="palette-container"></div>
+                    <div class="palette-legend">
+                        <div class="palette-legend-row">
+                            <span class="legend-box legend-notVisited"></span> Not visited
+                        </div>
+                        <div class="palette-legend-row">
+                            <span class="legend-box legend-notAnswered"></span> Not answered
+                        </div>
+                        <div class="palette-legend-row">
+                            <span class="legend-box legend-answered"></span> Answered
+                        </div>
+                        <div class="palette-legend-row">
+                            <span class="legend-box legend-marked"></span> Marked for review
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- SOLUTIONS SCREEN -->
+    <div class="card" id="solutions-container">
+        <div class="solutions-title">Solutions – Mains Mastery Quiz 2026 Quants (Day-4)</div>
+        <div class="solutions-sub">
+            Correct options are highlighted in <span style="color:var(--success);font-weight:600;">green</span>.
+            Your wrong selections (if any) are highlighted in <span style="color:var(--danger);font-weight:600;">red</span>.
+        </div>
+        <div id="solutions-list"></div>
+        <div style="margin-top:12px; display:flex; justify-content:flex-end; gap:8px;">
+            <button class="btn btn-secondary" id="solutions-back-btn">&larr; Back to Result</button>
+        </div>
+    </div>
+</div>
+
+<!-- RESULT OVERLAY -->
+<div class="overlay hidden" id="result-overlay">
+    <div class="overlay-content">
+        <div class="overlay-header">
+            <h2>Quiz Summary</h2>
+        </div>
+        <div class="overlay-body">
+            Here is your performance analytics for this test.
+        </div>
+        <div class="overlay-metrics">
+            <div class="metric-card">
+                <div class="metric-label">Total Marks</div>
+                <div class="metric-value" id="metric-marks">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Correct Answers</div>
+                <div class="metric-value" id="metric-correct">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Wrong Answers</div>
+                <div class="metric-value" id="metric-wrong">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Questions Attempted</div>
+                <div class="metric-value" id="metric-attempted">0</div>
+            </div>
+			<div class="metric-card">
+				<div class="metric-label">Accuracy</div>
+				<div class="metric-value" id="metric-accuracy">0%</div>
+			</div>
+			<div class="metric-card">
+				<div class="metric-label">Avg Time / Question</div>
+				<div class="metric-value" id="metric-avgtime">0</div>
+			</div>
+        </div>
+        <div class="overlay-footer">
+            <button class="btn btn-secondary" id="home-btn">Home</button>
+            <button class="btn btn-primary" id="view-solutions-btn">View Solutions</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let questions = [];
+let currentIndex = 0;
+let userAnswers = [];
+let questionStates = [];
+let timerInterval = null;
+
+
+const QUESTIONS_BY_LANGUAGE = {
+    en: [{"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The pie chart given below shows the percentage distribution of the income of five different manufacturing firms,namely A, B, C, D and E- in the year 2025.</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131322613.png\" title=\"49.png\"/></p>\n<p><strong>Note:  </strong></p>\n<p><strong>i).</strong> Profit % = [Income – Expenditure] *100/Expenditure.</p>\n<p><strong>ii).</strong> Loss % = [Expenditure - Income] *100/Expenditure.</p>\n<p><strong>iii).</strong> The income of Manufacturing firm D in 2025 is Rs.150 lakh.</p>\n<p><strong>iv).</strong> The profit percentage of the Manufacturing firms A, B, C, D and E in 2025 is 25%, 40%, 20%, 25% and 28% respectively.</p><br><p><strong>The expenditure of manufacturing firm F in 2025 is 20% more than that of firm C in 2025. The expenditure of manufacturing firm G in 2025 is 25% more than that of firm A in 2025. If the profit percentage of manufacturing firms F and G in 2025 is 20% and 25% respectively, then find the difference between the income of manufacturing firms G and F.</strong></p>", "options": ["<p>66 lakhs</p>", "<p>67 lakhs</p>", "<p>44 lakhs</p>", "<p>78 lakhs</p>", "<p>98 lakhs</p>"], "correctIndex": 2, "solution": "<p>The income of manufacturing firm D in the year 2025= 150 lakhs.</p>\n<p>The total income of all manufacturing firms = 150*100/30 = 500 lakhs</p>\n<p><strong>Manufacturing firm A:</strong></p>\n<p>The income = 500 * 16/100 = 80 lakhs</p>\n<p>The expenditure = 80*100/125 = 64 lakhs</p>\n<p>The profit = 80 – 64 = 16 lakhs</p>\n<p><strong>Manufacturing firm B:</strong></p>\n<p>The income = 500 * 14/100 = 70 lakhs</p>\n<p>The expenditure = 70*100/140 = 50 lakhs</p>\n<p>The profit = 70 – 50 = 20 lakhs</p>\n<p><strong>Manufacturing firm C:</strong></p>\n<p>The income = 500 * 24/100 = 120 lakhs</p>\n<p>The expenditure = 120*100/120 = 100 lakhs</p>\n<p>The profit = 120 – 100 = 20 lakhs</p>\n<p><strong>Manufacturing firm D:</strong></p>\n<p>The income = 500 * 30/100 = 150 lakhs</p>\n<p>The expenditure = 150*100/125 = 120 lakhs</p>\n<p>The profit = 150 – 120 = 30 lakhs</p>\n<p><strong>Manufacturing firm E:</strong></p>\n<p>The income = 500 * 16/100 = 80 lakhs</p>\n<p>The expenditure = 80*100/128 = 62.5 lakhs</p>\n<p>The profit = 80 – 62.5 = 17.5 lakhs</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131332239.png\" title=\"50.png\"/></p>\n<p><strong>Answer: C</strong></p>\n<p>The income of manufacturing firm F is = [100*120/100] *[120/100] = 120 * 120/100 = 144 lakhs</p>\n<p>The income of manufacturing firm G is = [64*125/100] *[125/100] = 80*125/100 = 100 lakhs</p>\n<p>So, the difference between the income manufacturing firm G and F is 144 -100 = 44 lakhs</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The pie chart given below shows the percentage distribution of the income of five different manufacturing firms,namely A, B, C, D and E- in the year 2025.</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131322613.png\" title=\"49.png\"/></p>\n<p><strong>Note:  </strong></p>\n<p><strong>i).</strong> Profit % = [Income – Expenditure] *100/Expenditure.</p>\n<p><strong>ii).</strong> Loss % = [Expenditure - Income] *100/Expenditure.</p>\n<p><strong>iii).</strong> The income of Manufacturing firm D in 2025 is Rs.150 lakh.</p>\n<p><strong>iv).</strong> The profit percentage of the Manufacturing firms A, B, C, D and E in 2025 is 25%, 40%, 20%, 25% and 28% respectively.</p><br><p><strong>The profit of Manufacturing firm A, B and E is x+8, y+4 and z+16 respectively. Find the 16.66% of the income of manufacturing firm D.</strong></p>\n<p><strong>I). </strong>3x-8</p>\n<p><strong>II). </strong>2y - 7</p>\n<p><strong>III). </strong>5z+6</p>", "options": ["<p>Only II is true</p>", "<p>Only I is false</p>", "<p>All are false</p>", "<p>All are true</p>", "<p>Only III is false</p>"], "correctIndex": 0, "solution": "<p>The income of manufacturing firm D in the year 2025= 150 lakhs.</p>\n<p>The total income of all manufacturing firms = 150*100/30 = 500 lakhs</p>\n<p><strong>Manufacturing firm A:</strong></p>\n<p>The income = 500 * 16/100 = 80 lakhs</p>\n<p>The expenditure = 80*100/125 = 64 lakhs</p>\n<p>The profit = 80 – 64 = 16 lakhs</p>\n<p><strong>Manufacturing firm B:</strong></p>\n<p>The income = 500 * 14/100 = 70 lakhs</p>\n<p>The expenditure = 70*100/140 = 50 lakhs</p>\n<p>The profit = 70 – 50 = 20 lakhs</p>\n<p><strong>Manufacturing firm C:</strong></p>\n<p>The income = 500 * 24/100 = 120 lakhs</p>\n<p>The expenditure = 120*100/120 = 100 lakhs</p>\n<p>The profit = 120 – 100 = 20 lakhs</p>\n<p><strong>Manufacturing firm D:</strong></p>\n<p>The income = 500 * 30/100 = 150 lakhs</p>\n<p>The expenditure = 150*100/125 = 120 lakhs</p>\n<p>The profit = 150 – 120 = 30 lakhs</p>\n<p><strong>Manufacturing firm E:</strong></p>\n<p>The income = 500 * 16/100 = 80 lakhs</p>\n<p>The expenditure = 80*100/128 = 62.5 lakhs</p>\n<p>The profit = 80 – 62.5 = 17.5 lakhs</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131332239.png\" title=\"50.png\"/></p>\n<p><strong>Answer: A</strong></p>\n<p>So, x= [80-64] – 8=8,</p>\n<p>So, y= [70-50] – 4=16</p>\n<p>So, z= [80 - 62.5] - 16 = 1.5</p>\n<p>16.66% of the income of manufacturing firm D in 2023 = 16.66% of 150 = 25 lakhs</p>\n<p><strong>I).</strong> 3x-8 = 3 *8 - 8 = 24 - 8 = 16.</p>\n<p>Statement I is false.</p>\n<p><strong>II).</strong> 2y - 7 = 2*16 - 7 = 32 - 7 = 25.</p>\n<p>Statement II is true</p>\n<p><strong>III).</strong> 5z+6 = 5*1.5 +6 = 13.5.</p>\n<p>Statement III is false.</p>\n<p>Hence, only option A is true</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The pie chart given below shows the percentage distribution of the income of five different manufacturing firms,namely A, B, C, D and E- in the year 2025.</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131322613.png\" title=\"49.png\"/></p>\n<p><strong>Note:  </strong></p>\n<p><strong>i).</strong> Profit % = [Income – Expenditure] *100/Expenditure.</p>\n<p><strong>ii).</strong> Loss % = [Expenditure - Income] *100/Expenditure.</p>\n<p><strong>iii).</strong> The income of Manufacturing firm D in 2025 is Rs.150 lakh.</p>\n<p><strong>iv).</strong> The profit percentage of the Manufacturing firms A, B, C, D and E in 2025 is 25%, 40%, 20%, 25% and 28% respectively.</p><br><p><strong>The ratio of the income of manufacturing firm C in 2025 and 2023 is 5:6. The ratio of the income of manufacturing firms C and D in 2023 is 6:5. The profit percentage of manufacturing firms C and D in 2023 is 20% and 25% respectively. Find the sum of the expenditure of manufacturing firms C and D together in the year 2023.</strong></p>", "options": ["<p>216 lakhs</p>", "<p>268 lakhs</p>", "<p>288 lakhs</p>", "<p>295 lakhs</p>", "<p>272 lakhs</p>"], "correctIndex": 0, "solution": "<p>The income of manufacturing firm D in the year 2025= 150 lakhs.</p>\n<p>The total income of all manufacturing firms = 150*100/30 = 500 lakhs</p>\n<p><strong>Manufacturing firm A:</strong></p>\n<p>The income = 500 * 16/100 = 80 lakhs</p>\n<p>The expenditure = 80*100/125 = 64 lakhs</p>\n<p>The profit = 80 – 64 = 16 lakhs</p>\n<p><strong>Manufacturing firm B:</strong></p>\n<p>The income = 500 * 14/100 = 70 lakhs</p>\n<p>The expenditure = 70*100/140 = 50 lakhs</p>\n<p>The profit = 70 – 50 = 20 lakhs</p>\n<p><strong>Manufacturing firm C:</strong></p>\n<p>The income = 500 * 24/100 = 120 lakhs</p>\n<p>The expenditure = 120*100/120 = 100 lakhs</p>\n<p>The profit = 120 – 100 = 20 lakhs</p>\n<p><strong>Manufacturing firm D:</strong></p>\n<p>The income = 500 * 30/100 = 150 lakhs</p>\n<p>The expenditure = 150*100/125 = 120 lakhs</p>\n<p>The profit = 150 – 120 = 30 lakhs</p>\n<p><strong>Manufacturing firm E:</strong></p>\n<p>The income = 500 * 16/100 = 80 lakhs</p>\n<p>The expenditure = 80*100/128 = 62.5 lakhs</p>\n<p>The profit = 80 – 62.5 = 17.5 lakhs</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131332239.png\" title=\"50.png\"/></p>\n<p><strong>Answer: A</strong></p>\n<p>The income of manufacturing firm C in 2023 = 120*6/5=144 lakhs</p>\n<p>The income of manufacturing firm D in 2023 = 144*5/6=120 lakhs</p>\n<p>The Expenditure of manufacturing firm C in 2023 = 144*100/120=120 lakhs</p>\n<p>The Expenditure of manufacturing firm D in 2023 = 120*100/125=96 lakhs</p>\n<p>So, the required sum = 120 + 96 = 216 lakhs</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The pie chart given below shows the percentage distribution of the income of five different manufacturing firms,namely A, B, C, D and E- in the year 2025.</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131322613.png\" title=\"49.png\"/></p>\n<p><strong>Note:  </strong></p>\n<p><strong>i).</strong> Profit % = [Income – Expenditure] *100/Expenditure.</p>\n<p><strong>ii).</strong> Loss % = [Expenditure - Income] *100/Expenditure.</p>\n<p><strong>iii).</strong> The income of Manufacturing firm D in 2025 is Rs.150 lakh.</p>\n<p><strong>iv).</strong> The profit percentage of the Manufacturing firms A, B, C, D and E in 2025 is 25%, 40%, 20%, 25% and 28% respectively.</p><br><p><strong>Quantity I: </strong>The expenditure of manufacturing firm C in 2021 is 20 lakhs more than the expenditure of manufacturing firm C in 2025. If the profit percentage is 20% then find the income of Manufacturing firm C in 2021.</p>\n<p><strong>Quantity II: </strong>The expenditure of Manufacturing firm D in 2021 is 16 lakhs more than the expenditure of Manufacturing firm D in 2025. If the loss percentage is 10% then find the income of Manufacturing firm D in 2021.</p>", "options": ["<p>Quantity I&nbsp;&lt;&nbsp;Quantity II</p>", "<p>Quantity I &ge; Quantity II</p>", "<p>Quantity II&nbsp;&ge;&nbsp;Quantity I</p>", "<p>Quantity I &gt; Quantity II</p>", "<p>Quantity I = Quantity II or relation can't be established&nbsp;</p>"], "correctIndex": 3, "solution": "<p>The income of manufacturing firm D in the year 2025= 150 lakhs.</p>\n<p>The total income of all manufacturing firms = 150*100/30 = 500 lakhs</p>\n<p><strong>Manufacturing firm A:</strong></p>\n<p>The income = 500 * 16/100 = 80 lakhs</p>\n<p>The expenditure = 80*100/125 = 64 lakhs</p>\n<p>The profit = 80 – 64 = 16 lakhs</p>\n<p><strong>Manufacturing firm B:</strong></p>\n<p>The income = 500 * 14/100 = 70 lakhs</p>\n<p>The expenditure = 70*100/140 = 50 lakhs</p>\n<p>The profit = 70 – 50 = 20 lakhs</p>\n<p><strong>Manufacturing firm C:</strong></p>\n<p>The income = 500 * 24/100 = 120 lakhs</p>\n<p>The expenditure = 120*100/120 = 100 lakhs</p>\n<p>The profit = 120 – 100 = 20 lakhs</p>\n<p><strong>Manufacturing firm D:</strong></p>\n<p>The income = 500 * 30/100 = 150 lakhs</p>\n<p>The expenditure = 150*100/125 = 120 lakhs</p>\n<p>The profit = 150 – 120 = 30 lakhs</p>\n<p><strong>Manufacturing firm E:</strong></p>\n<p>The income = 500 * 16/100 = 80 lakhs</p>\n<p>The expenditure = 80*100/128 = 62.5 lakhs</p>\n<p>The profit = 80 – 62.5 = 17.5 lakhs</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131332239.png\" title=\"50.png\"/></p>\n<p><strong>Answer: D</strong></p>\n<p><strong>Quantity I:</strong></p>\n<p>TheExpenditure of Manufacturing firm C in 2021 = 100 + 20 = 120 lakhs</p>\n<p>So, the Income of Manufacturing firm C in 2021 = 120*120/100 = 144 lakhs</p>\n<p><strong>Quantity II:</strong></p>\n<p>The Expenditure of Manufacturing firm D in 2021 = 120 + 16 = 136 lakhs</p>\n<p>The Income of Manufacturing firm D in 2021 = 136*90/100 = 122.4 lakhs</p>\n<p>Quantity I &gt; Quantity II</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The pie chart given below shows the percentage distribution of the income of five different manufacturing firms,namely A, B, C, D and E- in the year 2025.</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131322613.png\" title=\"49.png\"/></p>\n<p><strong>Note:  </strong></p>\n<p><strong>i).</strong> Profit % = [Income – Expenditure] *100/Expenditure.</p>\n<p><strong>ii).</strong> Loss % = [Expenditure - Income] *100/Expenditure.</p>\n<p><strong>iii).</strong> The income of Manufacturing firm D in 2025 is Rs.150 lakh.</p>\n<p><strong>iv).</strong> The profit percentage of the Manufacturing firms A, B, C, D and E in 2025 is 25%, 40%, 20%, 25% and 28% respectively.</p><br><p><strong>The average expenditure of Manufacturing firms B, C and D in 2025 is equal to 5p. Find the value of 7p/2.</strong></p>", "options": ["<p>56</p>", "<p>54</p>", "<p>63</p>", "<p>59</p>", "<p>45</p>"], "correctIndex": 2, "solution": "<p>The income of manufacturing firm D in the year 2025= 150 lakhs.</p>\n<p>The total income of all manufacturing firms = 150*100/30 = 500 lakhs</p>\n<p><strong>Manufacturing firm A:</strong></p>\n<p>The income = 500 * 16/100 = 80 lakhs</p>\n<p>The expenditure = 80*100/125 = 64 lakhs</p>\n<p>The profit = 80 – 64 = 16 lakhs</p>\n<p><strong>Manufacturing firm B:</strong></p>\n<p>The income = 500 * 14/100 = 70 lakhs</p>\n<p>The expenditure = 70*100/140 = 50 lakhs</p>\n<p>The profit = 70 – 50 = 20 lakhs</p>\n<p><strong>Manufacturing firm C:</strong></p>\n<p>The income = 500 * 24/100 = 120 lakhs</p>\n<p>The expenditure = 120*100/120 = 100 lakhs</p>\n<p>The profit = 120 – 100 = 20 lakhs</p>\n<p><strong>Manufacturing firm D:</strong></p>\n<p>The income = 500 * 30/100 = 150 lakhs</p>\n<p>The expenditure = 150*100/125 = 120 lakhs</p>\n<p>The profit = 150 – 120 = 30 lakhs</p>\n<p><strong>Manufacturing firm E:</strong></p>\n<p>The income = 500 * 16/100 = 80 lakhs</p>\n<p>The expenditure = 80*100/128 = 62.5 lakhs</p>\n<p>The profit = 80 – 62.5 = 17.5 lakhs</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131332239.png\" title=\"50.png\"/></p>\n<p><strong>Answer: C</strong></p>\n<p>The average expenditure of all five Manufacturing firms in 2025 = (50 + 100 + 120)/3</p>\n<p>= 270/3 = 90</p>\n<p>So, 5p = 90</p>\n<p>Or p =90/5</p>\n<p>p = 18</p>\n<p>So, 7p/2 = (7*18)/2</p>\n<p>= 126/2 = 63</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The table given below shows the cumulative percentage of total number of pens and notebooks sold in five stationery stores and the ratio of the number of notebooks to that of pens sold in those respective five stationery stores.</p>\n<p><strong>Note:</strong> The number of pens sold in stationery store B is 40</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131499182.png\" title=\"51.png\"/></p><br><p><strong>The average price of each notebook is Rs.60 and average price of each pen is Rs.20, then find the total revenue earned by stationery store A.</strong></p>", "options": ["<p>Rs.3300</p>", "<p>Rs.4520</p>", "<p>Rs.4650</p>", "<p>Rs.3520</p>", "<p>Rs.4750</p>"], "correctIndex": 0, "solution": "<p>Percentage distribution of the total number of pens and notebooks sold in Stores A, B, C, D, and E:</p>\n<p>Store A = 15%</p>\n<p>Store B = 25% − 15% = 10%</p>\n<p>Store C = 55% − 25% = 30%</p>\n<p>Store D = 80% − 55% = 25%</p>\n<p>Store E = 100% − 80% = 20%</p>\n<p>Let the total number of pens and notebooks sold in five stores together be 100x.</p>\n<p>So, the total number of pens and notebooks sold in Store B = 10x</p>\n<p>Given ratio of notebooks to pens in Store B = 1 : 4</p>\n<p>So, number of pens sold in Store B = 10x * (4 / 5) = 8x</p>\n<p>Given that the number of pens sold in Store B = 40</p>\n<p>So,<br/>8x = 40<br/>x = 5</p>\n<p>Therefore,</p>\n<p>The total number of pens and notebooks sold in five stores together = 100 * 5 = 500</p>\n<p><strong>Store A:</strong></p>\n<p>Total number of pens and notebooks sold = 15x = 15 * 5 = 75</p>\n<p>Number of notebooks sold = 75 * 3/5 = 45</p>\n<p>Number of pens sold = 75 * 2/5 = 30</p>\n<p><strong>Store B:</strong></p>\n<p>Total number of pens and notebooks sold = 10x = 10 * 5 = 50</p>\n<p>Number of notebooks sold = 50 * 1/5 = 10</p>\n<p>Number of pens sold = 40</p>\n<p><strong>Store C:</strong></p>\n<p>Total number of pens and notebooks sold = 30x = 30 * 5 = 150</p>\n<p>Number of notebooks sold = 150 * 2/3 = 100</p>\n<p>Number of pens sold = 150* 1/3 = 50</p>\n<p><strong>Store D:</strong></p>\n<p>Total number of pens and notebooks sold = 25x = 25* 5 = 125</p>\n<p>Number of notebooks sold = 125 * 3/5 = 75</p>\n<p>Number of pens sold = 125 * 2/5 = 50</p>\n<p><strong>Store E:</strong></p>\n<p>Total number of pens and notebooks sold = 20x = 20 * 5 = 100</p>\n<p>Number of notebooks sold = 100 * 2/5 = 40</p>\n<p>Number of pens sold = 100 * 3/5 = 60</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131503215.png\" title=\"52.png\"/></p>\n<p><strong>Answer: A</strong></p>\n<p>Revenue generated in notebooks = 45*60 = Rs. 2700</p>\n<p>Revenue generated in pens = 30*20 = Rs. 600</p>\n<p>Total revenue earned by store A = 2700 + 600 = Rs.3300</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The table given below shows the cumulative percentage of total number of pens and notebooks sold in five stationery stores and the ratio of the number of notebooks to that of pens sold in those respective five stationery stores.</p>\n<p><strong>Note:</strong> The number of pens sold in stationery store B is 40</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131499182.png\" title=\"51.png\"/></p><br><p><strong>The number of pens sold in store F is 1/2 of the number of pens sold in the store C and the number of notebooks sold in store F is 3/4 of the number of notebooks sold in store E. Find the total number of pens and notebooks sold in the store F.</strong></p>", "options": ["<p>40</p>", "<p>80</p>", "<p>55</p>", "<p>60</p>", "<p>70</p>"], "correctIndex": 2, "solution": "<p>Percentage distribution of the total number of pens and notebooks sold in Stores A, B, C, D, and E:</p>\n<p>Store A = 15%</p>\n<p>Store B = 25% − 15% = 10%</p>\n<p>Store C = 55% − 25% = 30%</p>\n<p>Store D = 80% − 55% = 25%</p>\n<p>Store E = 100% − 80% = 20%</p>\n<p>Let the total number of pens and notebooks sold in five stores together be 100x.</p>\n<p>So, the total number of pens and notebooks sold in Store B = 10x</p>\n<p>Given ratio of notebooks to pens in Store B = 1 : 4</p>\n<p>So, number of pens sold in Store B = 10x * (4 / 5) = 8x</p>\n<p>Given that the number of pens sold in Store B = 40</p>\n<p>So,<br/>8x = 40<br/>x = 5</p>\n<p>Therefore,</p>\n<p>The total number of pens and notebooks sold in five stores together = 100 * 5 = 500</p>\n<p><strong>Store A:</strong></p>\n<p>Total number of pens and notebooks sold = 15x = 15 * 5 = 75</p>\n<p>Number of notebooks sold = 75 * 3/5 = 45</p>\n<p>Number of pens sold = 75 * 2/5 = 30</p>\n<p><strong>Store B:</strong></p>\n<p>Total number of pens and notebooks sold = 10x = 10 * 5 = 50</p>\n<p>Number of notebooks sold = 50 * 1/5 = 10</p>\n<p>Number of pens sold = 40</p>\n<p><strong>Store C:</strong></p>\n<p>Total number of pens and notebooks sold = 30x = 30 * 5 = 150</p>\n<p>Number of notebooks sold = 150 * 2/3 = 100</p>\n<p>Number of pens sold = 150* 1/3 = 50</p>\n<p><strong>Store D:</strong></p>\n<p>Total number of pens and notebooks sold = 25x = 25* 5 = 125</p>\n<p>Number of notebooks sold = 125 * 3/5 = 75</p>\n<p>Number of pens sold = 125 * 2/5 = 50</p>\n<p><strong>Store E:</strong></p>\n<p>Total number of pens and notebooks sold = 20x = 20 * 5 = 100</p>\n<p>Number of notebooks sold = 100 * 2/5 = 40</p>\n<p>Number of pens sold = 100 * 3/5 = 60</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131503215.png\" title=\"52.png\"/></p>\n<p><strong>Answer: C</strong></p>\n<p>The Number of pens sold in stationery store F = 50 * 1/2 = 25</p>\n<p>The Number of notebooks sold in stationery store F = 40 * 3/4 =30</p>\n<p>Total number of pens and notebooks sold in stationery store F = 25 + 30 = 55</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The table given below shows the cumulative percentage of total number of pens and notebooks sold in five stationery stores and the ratio of the number of notebooks to that of pens sold in those respective five stationery stores.</p>\n<p><strong>Note:</strong> The number of pens sold in stationery store B is 40</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131499182.png\" title=\"51.png\"/></p><br><p><strong>Find the ratio between the number of pens sold in stationery stores A and C together and the total number of notebooks sold in stationery stores B and D together.</strong></p>", "options": ["<p>16:17</p>", "<p>15:17</p>", "<p>16:13</p>", "<p>4:3</p>", "<p>5:7</p>"], "correctIndex": 0, "solution": "<p>Percentage distribution of the total number of pens and notebooks sold in Stores A, B, C, D, and E:</p>\n<p>Store A = 15%</p>\n<p>Store B = 25% − 15% = 10%</p>\n<p>Store C = 55% − 25% = 30%</p>\n<p>Store D = 80% − 55% = 25%</p>\n<p>Store E = 100% − 80% = 20%</p>\n<p>Let the total number of pens and notebooks sold in five stores together be 100x.</p>\n<p>So, the total number of pens and notebooks sold in Store B = 10x</p>\n<p>Given ratio of notebooks to pens in Store B = 1 : 4</p>\n<p>So, number of pens sold in Store B = 10x * (4 / 5) = 8x</p>\n<p>Given that the number of pens sold in Store B = 40</p>\n<p>So,<br/>8x = 40<br/>x = 5</p>\n<p>Therefore,</p>\n<p>The total number of pens and notebooks sold in five stores together = 100 * 5 = 500</p>\n<p><strong>Store A:</strong></p>\n<p>Total number of pens and notebooks sold = 15x = 15 * 5 = 75</p>\n<p>Number of notebooks sold = 75 * 3/5 = 45</p>\n<p>Number of pens sold = 75 * 2/5 = 30</p>\n<p><strong>Store B:</strong></p>\n<p>Total number of pens and notebooks sold = 10x = 10 * 5 = 50</p>\n<p>Number of notebooks sold = 50 * 1/5 = 10</p>\n<p>Number of pens sold = 40</p>\n<p><strong>Store C:</strong></p>\n<p>Total number of pens and notebooks sold = 30x = 30 * 5 = 150</p>\n<p>Number of notebooks sold = 150 * 2/3 = 100</p>\n<p>Number of pens sold = 150* 1/3 = 50</p>\n<p><strong>Store D:</strong></p>\n<p>Total number of pens and notebooks sold = 25x = 25* 5 = 125</p>\n<p>Number of notebooks sold = 125 * 3/5 = 75</p>\n<p>Number of pens sold = 125 * 2/5 = 50</p>\n<p><strong>Store E:</strong></p>\n<p>Total number of pens and notebooks sold = 20x = 20 * 5 = 100</p>\n<p>Number of notebooks sold = 100 * 2/5 = 40</p>\n<p>Number of pens sold = 100 * 3/5 = 60</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131503215.png\" title=\"52.png\"/></p>\n<p><strong>Answer: A</strong></p>\n<p>The number of pens sold in stationery stores A and C together = 30 + 50 = 80</p>\n<p>The total number of notebooks sold in stationery stores B and D together = 10 + 75 = 85</p>\n<p>Required ratio =80:85 = 16:17</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The table given below shows the cumulative percentage of total number of pens and notebooks sold in five stationery stores and the ratio of the number of notebooks to that of pens sold in those respective five stationery stores.</p>\n<p><strong>Note:</strong> The number of pens sold in stationery store B is 40</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131499182.png\" title=\"51.png\"/></p><br><p><strong>Out of the total number of notebooks sold in stationery store C, 40% are damaged. Find the number of damaged notebooks sold in stationery store C is what percentage of the total number of items [notebooks + pens] sold in stationery store C?</strong></p>", "options": ["<p>3.33%</p>", "<p>18.5%</p>", "<p>7.28%</p>", "<p>16.66%</p>", "<p>26.67%</p>"], "correctIndex": 4, "solution": "<p>Percentage distribution of the total number of pens and notebooks sold in Stores A, B, C, D, and E:</p>\n<p>Store A = 15%</p>\n<p>Store B = 25% − 15% = 10%</p>\n<p>Store C = 55% − 25% = 30%</p>\n<p>Store D = 80% − 55% = 25%</p>\n<p>Store E = 100% − 80% = 20%</p>\n<p>Let the total number of pens and notebooks sold in five stores together be 100x.</p>\n<p>So, the total number of pens and notebooks sold in Store B = 10x</p>\n<p>Given ratio of notebooks to pens in Store B = 1 : 4</p>\n<p>So, number of pens sold in Store B = 10x * (4 / 5) = 8x</p>\n<p>Given that the number of pens sold in Store B = 40</p>\n<p>So,<br/>8x = 40<br/>x = 5</p>\n<p>Therefore,</p>\n<p>The total number of pens and notebooks sold in five stores together = 100 * 5 = 500</p>\n<p><strong>Store A:</strong></p>\n<p>Total number of pens and notebooks sold = 15x = 15 * 5 = 75</p>\n<p>Number of notebooks sold = 75 * 3/5 = 45</p>\n<p>Number of pens sold = 75 * 2/5 = 30</p>\n<p><strong>Store B:</strong></p>\n<p>Total number of pens and notebooks sold = 10x = 10 * 5 = 50</p>\n<p>Number of notebooks sold = 50 * 1/5 = 10</p>\n<p>Number of pens sold = 40</p>\n<p><strong>Store C:</strong></p>\n<p>Total number of pens and notebooks sold = 30x = 30 * 5 = 150</p>\n<p>Number of notebooks sold = 150 * 2/3 = 100</p>\n<p>Number of pens sold = 150* 1/3 = 50</p>\n<p><strong>Store D:</strong></p>\n<p>Total number of pens and notebooks sold = 25x = 25* 5 = 125</p>\n<p>Number of notebooks sold = 125 * 3/5 = 75</p>\n<p>Number of pens sold = 125 * 2/5 = 50</p>\n<p><strong>Store E:</strong></p>\n<p>Total number of pens and notebooks sold = 20x = 20 * 5 = 100</p>\n<p>Number of notebooks sold = 100 * 2/5 = 40</p>\n<p>Number of pens sold = 100 * 3/5 = 60</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131503215.png\" title=\"52.png\"/></p>\n<p><strong>Answer: E</strong></p>\n<p>The total number of damaged notebooks sold in stationery store C = 100 * 40/100 = 40</p>\n<p> The total number of items sold in stationery store C = 150</p>\n<p>So, required percentage = [40/150] * 100 = 26.67%</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The table given below shows the cumulative percentage of total number of pens and notebooks sold in five stationery stores and the ratio of the number of notebooks to that of pens sold in those respective five stationery stores.</p>\n<p><strong>Note:</strong> The number of pens sold in stationery store B is 40</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131499182.png\" title=\"51.png\"/></p><br><p><strong>Find the difference between the number of pens sold in stationery stores A and E together and the number of notebooks sold in stationery stores B and D together.</strong></p>", "options": ["<p>5</p>", "<p>10</p>", "<p>17</p>", "<p>8</p>", "<p>3</p>"], "correctIndex": 0, "solution": "<p>Percentage distribution of the total number of pens and notebooks sold in Stores A, B, C, D, and E:</p>\n<p>Store A = 15%</p>\n<p>Store B = 25% − 15% = 10%</p>\n<p>Store C = 55% − 25% = 30%</p>\n<p>Store D = 80% − 55% = 25%</p>\n<p>Store E = 100% − 80% = 20%</p>\n<p>Let the total number of pens and notebooks sold in five stores together be 100x.</p>\n<p>So, the total number of pens and notebooks sold in Store B = 10x</p>\n<p>Given ratio of notebooks to pens in Store B = 1 : 4</p>\n<p>So, number of pens sold in Store B = 10x * (4 / 5) = 8x</p>\n<p>Given that the number of pens sold in Store B = 40</p>\n<p>So,<br/>8x = 40<br/>x = 5</p>\n<p>Therefore,</p>\n<p>The total number of pens and notebooks sold in five stores together = 100 * 5 = 500</p>\n<p><strong>Store A:</strong></p>\n<p>Total number of pens and notebooks sold = 15x = 15 * 5 = 75</p>\n<p>Number of notebooks sold = 75 * 3/5 = 45</p>\n<p>Number of pens sold = 75 * 2/5 = 30</p>\n<p><strong>Store B:</strong></p>\n<p>Total number of pens and notebooks sold = 10x = 10 * 5 = 50</p>\n<p>Number of notebooks sold = 50 * 1/5 = 10</p>\n<p>Number of pens sold = 40</p>\n<p><strong>Store C:</strong></p>\n<p>Total number of pens and notebooks sold = 30x = 30 * 5 = 150</p>\n<p>Number of notebooks sold = 150 * 2/3 = 100</p>\n<p>Number of pens sold = 150* 1/3 = 50</p>\n<p><strong>Store D:</strong></p>\n<p>Total number of pens and notebooks sold = 25x = 25* 5 = 125</p>\n<p>Number of notebooks sold = 125 * 3/5 = 75</p>\n<p>Number of pens sold = 125 * 2/5 = 50</p>\n<p><strong>Store E:</strong></p>\n<p>Total number of pens and notebooks sold = 20x = 20 * 5 = 100</p>\n<p>Number of notebooks sold = 100 * 2/5 = 40</p>\n<p>Number of pens sold = 100 * 3/5 = 60</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131503215.png\" title=\"52.png\"/></p>\n<p><strong>Answer: A</strong></p>\n<p>The number of pens sold in stationery stores A and E together = 30+60 = 90</p>\n<p>The number of notebooks sold in stationery stores B and D together = 10+75 = 85</p>\n<p>Required difference = 90 - 85 = 5</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The table given below shows the number of girls and the percentage distribution of the boys and Staffs in five different sections of a college.</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177132040093.png\" title=\"53.png\"/></p>\n<p><strong>Note: </strong>Total number of persons = Number of boys + Number of girls + Number of Staffs</p><br><p><strong>The total number of boys in sections P and T together is approximately what percentage more than that of the total number of Staffs in sections R and S together?</strong></p>", "options": ["<p>98.89%</p>", "<p>164.45%</p>", "<p>159.54%</p>", "<p>144.44%</p>", "<p>127.74%</p>"], "correctIndex": 3, "solution": "<p><strong>Section P:</strong></p>\n<p>Total number of persons in section P = 100%</p>\n<p>Number of girls in section P = 100% - 50% - 10% = 40%</p>\n<p>(i.e.)., 40% = 80, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section P = 200</p>\n<p>Number of boys in section P = 200*50/100 = 100</p>\n<p>Number of Staffs in section P = 200*10/100 = 20</p>\n<p><strong>Section Q:</strong></p>\n<p>Total number of persons in section Q = 100%</p>\n<p>Number of girls in section Q = 100% - 30% - 20% = 50%</p>\n<p>(i.e.)., 50% = 100, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section Q = 200</p>\n<p>Number of boys in section Q = 200*30/100 = 60</p>\n<p>Number of Staffs in section Q = 200*20/100 = 40</p>\n<p><strong>Section R:</strong></p>\n<p>Total number of persons in section R = 100%</p>\n<p>Number of girls in section R = 100% - 40% - 15% = 45%</p>\n<p>(i.e.)., 45% = 90, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section R = 200</p>\n<p>Number of boys in section R = 200*40/100 = 80</p>\n<p>Number of Staffs in section R = 200*15/100 = 30</p>\n<p><strong>Section S:</strong></p>\n<p>Total number of persons in section S = 100%</p>\n<p>Number of girls in section S = 100% - 25% - 25% = 50%</p>\n<p>(i.e.)., 50% = 120, 100% = 240.</p>\n<p>Total number of persons in section S = 240</p>\n<p>Number of boys in section S = 240*25/100 = 60</p>\n<p>Number of Staffs in section S = 240*25/100 = 60</p>\n<p><strong>Section T:</strong></p>\n<p>Total number of persons in section T = 100%</p>\n<p>Number of girls in section T = 100% - 60% - 10% = 30%</p>\n<p>(i.e.)., 30% = 60, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section T = 200</p>\n<p>Number of boys in section T = 200*60/100 = 120</p>\n<p>Number of Staffs in section T = 200*10/100 = 20</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177132055994.png\" title=\"54.png\"/></p>\n<p><strong>Answer: D</strong></p>\n<p>Number of boys in sections P and T together = 100 + 120 = 220</p>\n<p>Number of Staffs in sections R and S together= 30 + 60 = 90</p>\n<p>Required Percentage = (220 – 90)/90 * 100 = 144.44% more</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The table given below shows the number of girls and the percentage distribution of the boys and Staffs in five different sections of a college.</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177132040093.png\" title=\"53.png\"/></p>\n<p><strong>Note: </strong>Total number of persons = Number of boys + Number of girls + Number of Staffs</p><br><p><strong>Find the difference between the average number of boys in sections Q and S together and the average number of girls in sections S and T together.</strong></p>", "options": ["<p>45</p>", "<p>30</p>", "<p>25</p>", "<p>47</p>", "<p>36</p>"], "correctIndex": 1, "solution": "<p><strong>Section P:</strong></p>\n<p>Total number of persons in section P = 100%</p>\n<p>Number of girls in section P = 100% - 50% - 10% = 40%</p>\n<p>(i.e.)., 40% = 80, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section P = 200</p>\n<p>Number of boys in section P = 200*50/100 = 100</p>\n<p>Number of Staffs in section P = 200*10/100 = 20</p>\n<p><strong>Section Q:</strong></p>\n<p>Total number of persons in section Q = 100%</p>\n<p>Number of girls in section Q = 100% - 30% - 20% = 50%</p>\n<p>(i.e.)., 50% = 100, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section Q = 200</p>\n<p>Number of boys in section Q = 200*30/100 = 60</p>\n<p>Number of Staffs in section Q = 200*20/100 = 40</p>\n<p><strong>Section R:</strong></p>\n<p>Total number of persons in section R = 100%</p>\n<p>Number of girls in section R = 100% - 40% - 15% = 45%</p>\n<p>(i.e.)., 45% = 90, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section R = 200</p>\n<p>Number of boys in section R = 200*40/100 = 80</p>\n<p>Number of Staffs in section R = 200*15/100 = 30</p>\n<p><strong>Section S:</strong></p>\n<p>Total number of persons in section S = 100%</p>\n<p>Number of girls in section S = 100% - 25% - 25% = 50%</p>\n<p>(i.e.)., 50% = 120, 100% = 240.</p>\n<p>Total number of persons in section S = 240</p>\n<p>Number of boys in section S = 240*25/100 = 60</p>\n<p>Number of Staffs in section S = 240*25/100 = 60</p>\n<p><strong>Section T:</strong></p>\n<p>Total number of persons in section T = 100%</p>\n<p>Number of girls in section T = 100% - 60% - 10% = 30%</p>\n<p>(i.e.)., 30% = 60, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section T = 200</p>\n<p>Number of boys in section T = 200*60/100 = 120</p>\n<p>Number of Staffs in section T = 200*10/100 = 20</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177132055994.png\" title=\"54.png\"/></p>\n<p><strong>Answer: B</strong></p>\n<p>Average number of boys in sections Q and S together = (60+60)/2 = 120/2 = 60</p>\n<p>Average number of girls in sections S and T together= (120 + 60)/2 = 90</p>\n<p>Required difference = 90 – 60 = 30</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The table given below shows the number of girls and the percentage distribution of the boys and Staffs in five different sections of a college.</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177132040093.png\" title=\"53.png\"/></p>\n<p><strong>Note: </strong>Total number of persons = Number of boys + Number of girls + Number of Staffs</p><br><p><strong>If the total number of girls in section U is 5/6 of the number of girls in section S and the number of Staffs in section U is four times of the number of Staffs in section T, then find the number of girls and Staffs in section U.</strong></p>", "options": ["<p>200</p>", "<p>250</p>", "<p>180</p>", "<p>220</p>", "<p>290</p>"], "correctIndex": 2, "solution": "<p><strong>Section P:</strong></p>\n<p>Total number of persons in section P = 100%</p>\n<p>Number of girls in section P = 100% - 50% - 10% = 40%</p>\n<p>(i.e.)., 40% = 80, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section P = 200</p>\n<p>Number of boys in section P = 200*50/100 = 100</p>\n<p>Number of Staffs in section P = 200*10/100 = 20</p>\n<p><strong>Section Q:</strong></p>\n<p>Total number of persons in section Q = 100%</p>\n<p>Number of girls in section Q = 100% - 30% - 20% = 50%</p>\n<p>(i.e.)., 50% = 100, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section Q = 200</p>\n<p>Number of boys in section Q = 200*30/100 = 60</p>\n<p>Number of Staffs in section Q = 200*20/100 = 40</p>\n<p><strong>Section R:</strong></p>\n<p>Total number of persons in section R = 100%</p>\n<p>Number of girls in section R = 100% - 40% - 15% = 45%</p>\n<p>(i.e.)., 45% = 90, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section R = 200</p>\n<p>Number of boys in section R = 200*40/100 = 80</p>\n<p>Number of Staffs in section R = 200*15/100 = 30</p>\n<p><strong>Section S:</strong></p>\n<p>Total number of persons in section S = 100%</p>\n<p>Number of girls in section S = 100% - 25% - 25% = 50%</p>\n<p>(i.e.)., 50% = 120, 100% = 240.</p>\n<p>Total number of persons in section S = 240</p>\n<p>Number of boys in section S = 240*25/100 = 60</p>\n<p>Number of Staffs in section S = 240*25/100 = 60</p>\n<p><strong>Section T:</strong></p>\n<p>Total number of persons in section T = 100%</p>\n<p>Number of girls in section T = 100% - 60% - 10% = 30%</p>\n<p>(i.e.)., 30% = 60, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section T = 200</p>\n<p>Number of boys in section T = 200*60/100 = 120</p>\n<p>Number of Staffs in section T = 200*10/100 = 20</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177132055994.png\" title=\"54.png\"/></p>\n<p><strong>Answer: C</strong></p>\n<p>Number of girls in section U = 5/6 * 120 = 100</p>\n<p>Number of Staffs in section U = 4 * (10/30 * 60) = 80</p>\n<p>Required total = 100 + 80 = 180</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The table given below shows the number of girls and the percentage distribution of the boys and Staffs in five different sections of a college.</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177132040093.png\" title=\"53.png\"/></p>\n<p><strong>Note: </strong>Total number of persons = Number of boys + Number of girls + Number of Staffs</p><br><p><strong>The total number of Staffs in section R is what percentage of the number of Staffs in section P and section Q together?</strong></p>", "options": ["<p>25%</p>", "<p>75%</p>", "<p>80%</p>", "<p>70%</p>", "<p>50%</p>"], "correctIndex": 4, "solution": "<p><strong>Section P:</strong></p>\n<p>Total number of persons in section P = 100%</p>\n<p>Number of girls in section P = 100% - 50% - 10% = 40%</p>\n<p>(i.e.)., 40% = 80, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section P = 200</p>\n<p>Number of boys in section P = 200*50/100 = 100</p>\n<p>Number of Staffs in section P = 200*10/100 = 20</p>\n<p><strong>Section Q:</strong></p>\n<p>Total number of persons in section Q = 100%</p>\n<p>Number of girls in section Q = 100% - 30% - 20% = 50%</p>\n<p>(i.e.)., 50% = 100, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section Q = 200</p>\n<p>Number of boys in section Q = 200*30/100 = 60</p>\n<p>Number of Staffs in section Q = 200*20/100 = 40</p>\n<p><strong>Section R:</strong></p>\n<p>Total number of persons in section R = 100%</p>\n<p>Number of girls in section R = 100% - 40% - 15% = 45%</p>\n<p>(i.e.)., 45% = 90, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section R = 200</p>\n<p>Number of boys in section R = 200*40/100 = 80</p>\n<p>Number of Staffs in section R = 200*15/100 = 30</p>\n<p><strong>Section S:</strong></p>\n<p>Total number of persons in section S = 100%</p>\n<p>Number of girls in section S = 100% - 25% - 25% = 50%</p>\n<p>(i.e.)., 50% = 120, 100% = 240.</p>\n<p>Total number of persons in section S = 240</p>\n<p>Number of boys in section S = 240*25/100 = 60</p>\n<p>Number of Staffs in section S = 240*25/100 = 60</p>\n<p><strong>Section T:</strong></p>\n<p>Total number of persons in section T = 100%</p>\n<p>Number of girls in section T = 100% - 60% - 10% = 30%</p>\n<p>(i.e.)., 30% = 60, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section T = 200</p>\n<p>Number of boys in section T = 200*60/100 = 120</p>\n<p>Number of Staffs in section T = 200*10/100 = 20</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177132055994.png\" title=\"54.png\"/></p>\n<p><strong>Answer: E</strong></p>\n<p>Number of Staffs in sectionR = 30</p>\n<p>Number of Staffs in section P and section Q = 20 + 40 = 60</p>\n<p>Required Percentage = 30/60 * 100 = 50%</p>"}, {"question": "<p><strong>Study the following information carefully and answer the questions given below.</strong></p>\n<p>The table given below shows the number of girls and the percentage distribution of the boys and Staffs in five different sections of a college.</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177132040093.png\" title=\"53.png\"/></p>\n<p><strong>Note: </strong>Total number of persons = Number of boys + Number of girls + Number of Staffs</p><br><p><strong>Find the ratio of the total number of persons in sections R and T together to the total number of persons in sections P and S together.</strong></p>", "options": ["<p>5:9</p>", "<p>10:11</p>", "<p>11:13</p>", "<p>2:3</p>", "<p>1:2</p>"], "correctIndex": 1, "solution": "<p><strong>Section P:</strong></p>\n<p>Total number of persons in section P = 100%</p>\n<p>Number of girls in section P = 100% - 50% - 10% = 40%</p>\n<p>(i.e.)., 40% = 80, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section P = 200</p>\n<p>Number of boys in section P = 200*50/100 = 100</p>\n<p>Number of Staffs in section P = 200*10/100 = 20</p>\n<p><strong>Section Q:</strong></p>\n<p>Total number of persons in section Q = 100%</p>\n<p>Number of girls in section Q = 100% - 30% - 20% = 50%</p>\n<p>(i.e.)., 50% = 100, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section Q = 200</p>\n<p>Number of boys in section Q = 200*30/100 = 60</p>\n<p>Number of Staffs in section Q = 200*20/100 = 40</p>\n<p><strong>Section R:</strong></p>\n<p>Total number of persons in section R = 100%</p>\n<p>Number of girls in section R = 100% - 40% - 15% = 45%</p>\n<p>(i.e.)., 45% = 90, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section R = 200</p>\n<p>Number of boys in section R = 200*40/100 = 80</p>\n<p>Number of Staffs in section R = 200*15/100 = 30</p>\n<p><strong>Section S:</strong></p>\n<p>Total number of persons in section S = 100%</p>\n<p>Number of girls in section S = 100% - 25% - 25% = 50%</p>\n<p>(i.e.)., 50% = 120, 100% = 240.</p>\n<p>Total number of persons in section S = 240</p>\n<p>Number of boys in section S = 240*25/100 = 60</p>\n<p>Number of Staffs in section S = 240*25/100 = 60</p>\n<p><strong>Section T:</strong></p>\n<p>Total number of persons in section T = 100%</p>\n<p>Number of girls in section T = 100% - 60% - 10% = 30%</p>\n<p>(i.e.)., 30% = 60, 1% = 2, 100% = 200.</p>\n<p>Total number of persons in section T = 200</p>\n<p>Number of boys in section T = 200*60/100 = 120</p>\n<p>Number of Staffs in section T = 200*10/100 = 20</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177132055994.png\" title=\"54.png\"/></p>\n<p><strong>Answer: B</strong></p>\n<p>The total number of persons in sections R and T together= 200 + 200 = 400</p>\n<p>The total number of persons in sections P and S together = 200 + 240 = 440</p>\n<p>Required ratio = 400:440 = 10:11</p>"}, {"question": "<p><strong>In each of these questions a number series is given. In each series only one number is wrong. Find out the wrong number.</strong></p><br><p><strong>20, 32, 68, 128, 212, 310</strong></p>", "options": ["<p>310</p>", "<p>32</p>", "<p>68</p>", "<p>128</p>", "<p>212</p>"], "correctIndex": 0, "solution": "<p><strong>Answer: A</strong></p>\n<p>20 + (1 * 12) = 32</p>\n<p>32 + (3 * 12) = 68</p>\n<p>68 + (5 * 12) = 128</p>\n<p>128 + (7 * 12) = 212</p>\n<p>212 + (9 * 12) = <strong>320 (310 wrong term)</strong></p>\n<p>So, the wrong term is 310</p>"}, {"question": "<p><strong>In each of these questions a number series is given. In each series only one number is wrong. Find out the wrong number.</strong></p><br><p><strong>864, 456, 252, 125, 99, 73.5</strong></p>", "options": ["<p>252</p>", "<p>864</p>", "<p>125</p>", "<p>73.5</p>", "<p>99</p>"], "correctIndex": 2, "solution": "<p><strong>Answer: C</strong></p>\n<p>864/2 + 24 = 456</p>\n<p>456/2 + 24 = 252</p>\n<p>252/2 + 24 = <strong>150(125</strong>wrong term<strong>)</strong></p>\n<p>150/2 + 24 = 99</p>\n<p>99/2 + 24 = 73.5</p>\n<p>So, the wrong term is 125</p>"}, {"question": "<p><strong>In each of these questions a number series is given. In each series only one number is wrong. Find out the wrong number.</strong></p><br><p><strong>228, 246, 219, 237, 210, 242</strong></p>", "options": ["<p>246</p>", "<p>210</p>", "<p>228</p>", "<p>242</p>", "<p>219</p>"], "correctIndex": 3, "solution": "<p><strong>Answer: D</strong></p>\n<p>228 + 18 = 246</p>\n<p>246 – 27 = 219</p>\n<p>219 + 18 = 237</p>\n<p>237 – 27 = 210</p>\n<p>210 + 18 = <strong>228(242</strong>wrong term<strong>)</strong></p>\n<p>So, the wrong term is 242</p>"}, {"question": "<p><strong>In each of these questions a number series is given. In each series only one number is wrong. Find out the wrong number.</strong></p><br><p><strong>11, 14, 20, 38, 110, 474</strong></p>", "options": ["<p>474</p>", "<p>14</p>", "<p>38</p>", "<p>110</p>", "<p>20</p>"], "correctIndex": 0, "solution": "<p><strong>Answer: A</strong></p>\n<p>11          14            20             38              110            <strong>470</strong>                </p>\n<p>       3             6              18               72             360</p>\n<p>             *2            *3                *4                *5</p>\n<p>So, the wrong term is 470.</p>"}, {"question": "<p><strong>In each of these questions a number series is given. In each series only one number is wrong. Find out the wrong number.</strong></p><br><p><strong>10, 18, 45, 110, 234, 450</strong></p>", "options": ["<p>450</p>", "<p>234</p>", "<p>110</p>", "<p>45</p>", "<p>18</p>"], "correctIndex": 2, "solution": "<p><strong>Answer: C</strong></p>\n<p>10 + 2<sup>3</sup> = 18</p>\n<p>18 + 3<sup>3</sup> = 45</p>\n<p>45 + 4<sup>3</sup> =<strong> 109(110</strong>wrong term<strong>)</strong></p>\n<p>109 + 5<sup>3</sup> = 234</p>\n<p>234 + 6<sup>3</sup> = 450</p>\n<p>So, the wrong term is 110</p>"}, {"question": "<p><strong>The following questions contain equations I and II, andyou have to solve both equations to determine the relationship between them and give an answer as,</strong></p><br><p><strong>I). </strong>x<sup>2</sup> + 30x + 221 = 0</p>\n<p><strong>II). </strong>y<sup>2</sup> + 15y + 56 = 0</p>", "options": ["<p>x &gt; y</p>", "<p>x &ge; y</p>", "<p>x = y or the relationship can&rsquo;t be determined</p>", "<p>x &lt; y</p>", "<p>x &le; y</p>"], "correctIndex": 3, "solution": "<p><strong>Answer: D</strong></p>\n<p><strong>i).</strong> x<sup>2</sup> + 30x + 221 = 0</p>\n<p>x<sup>2</sup> + 17x + 13x + 221 =0</p>\n<p>(x+17) (x + 13) =0</p>\n<p>x = -17, -13</p>\n<p><strong>ii).</strong> y<sup>2</sup> + 15y + 56 = 0</p>\n<p>y<sup>2</sup> + 7y + 8y + 56 =0</p>\n<p>(y+7) (y+8) =0</p>\n<p>y = -7, -8</p>\n<p>Hence, x &lt; y</p>"}, {"question": "<p><strong>The following questions contain equations I and II, andyou have to solve both equations to determine the relationship between them and give an answer as,</strong></p><br><p><strong>I). </strong>x<sup>2</sup> – 30x + 216 = 0</p>\n<p><strong>II). </strong>y<sup>2</sup> - 26y + 169 = 0</p>", "options": ["<p>x &gt; y</p>", "<p>x &ge; y</p>", "<p>x = y or the relationship can&rsquo;t be determined</p>", "<p>x &lt; y</p>", "<p>x &le; y</p>"], "correctIndex": 2, "solution": "<p><strong>Answer: C</strong></p>\n<p><strong>i).</strong> x<sup>2</sup> – 30x + 216 = 0</p>\n<p>x<sup>2</sup> – 12x – 18x + 168 =0</p>\n<p>x (x – 12) – 18(x – 12) =0</p>\n<p>(x – 12) (x – 18) = 0</p>\n<p>x = 18, 12</p>\n<p><strong>ii).</strong> y<sup>2</sup> – 26y + 169 = 0</p>\n<p>y<sup>2</sup> – 13y – 13y + 169 = 0</p>\n<p>y (y – 13) -13(y – 13) = 0</p>\n<p>(y – 13) (y – 13) = 0</p>\n<p>y = 13, 13</p>\n<p>Hence, x = y or the relationship can’t be determined.</p>"}, {"question": "<p><strong>The following questions contain equations I and II, andyou have to solve both equations to determine the relationship between them and give an answer as,</strong></p><br><p><strong>I). </strong>3x<sup>2</sup> + 27 =18x</p>\n<p><strong>II). </strong>y<sup>2</sup> - 18y + 17 = 0</p>", "options": ["<p>x &gt; y</p>", "<p>x &ge; y</p>", "<p>x = y or the relationship can&rsquo;t be determined</p>", "<p>x &lt; y</p>", "<p>x &le; y</p>"], "correctIndex": 2, "solution": "<p><strong>Answer: C</strong></p>\n<p><strong>i). </strong>3x<sup>2</sup> -18x + 27 =0</p>\n<p>3x<sup>2</sup> –9x -9x + 27 =0</p>\n<p>(3x-9) (3x -9) =0</p>\n<p>x = 3, 3</p>\n<p><strong>ii).</strong> y<sup>2</sup> – 18y + 17 = 0</p>\n<p>y<sup>2</sup> -17y -y + 12 =0</p>\n<p>(y - 17) (y - 1) =0</p>\n<p>y = 17, 1</p>\n<p>Hence, x = y or the relationship can’t be determined.</p>"}, {"question": "<p><strong>The following questions contain equations I and II, andyou have to solve both equations to determine the relationship between them and give an answer as,</strong></p><br><p><strong>I). </strong>x<sup>2</sup> + 21x + 108 = 0</p>\n<p><strong>II). </strong>9y<sup>2</sup> + 91 = 820</p>", "options": ["<p>x &gt; y</p>", "<p>x &ge; y</p>", "<p>x = y or the relationship can&rsquo;t be determined</p>", "<p>x &lt; y</p>", "<p>x &le; y</p>"], "correctIndex": 4, "solution": "<p><strong>Answer: E</strong></p>\n<p><strong>i).</strong> x<sup>2</sup> + 21x + 108 = 0</p>\n<p>x<sup>2</sup>+ 12x +9x + 108 =0</p>\n<p>(x + 9) (x +12) =0</p>\n<p>x = -9, -12</p>\n<p><strong>ii).</strong> 9y<sup>2</sup> + 91 = 820</p>\n<p>9y<sup>2</sup> = 729</p>\n<p>y<sup>2</sup> = 81</p>\n<p>y = 9, -9</p>\n<p>Hence, y ≥ x</p>"}, {"question": "<p><strong>The following questions contain equations I and II, andyou have to solve both equations to determine the relationship between them and give an answer as,</strong></p><br><p><strong>I). </strong>x<sup>2 </sup>+ 29x + 204=0</p>\n<p><strong>II). </strong>5y<sup>2 </sup>- 30y + 25=0</p>", "options": ["<p>x &gt; y</p>", "<p>x &ge; y</p>", "<p>x = y or the relationship can&rsquo;t be determined</p>", "<p>x &lt; y</p>", "<p>x &le; y</p>"], "correctIndex": 3, "solution": "<p><strong>Answer: D</strong></p>\n<p><strong>i).</strong> x<sup>2</sup> + 29x + 204 = 0</p>\n<p>x<sup>2</sup>+ 12x+ 17x + 204=0</p>\n<p>(x+12) (x+ 17) = 0</p>\n<p>x = -12, -17</p>\n<p><strong>ii).</strong> 5y<sup>2</sup>–30y + 25 = 0</p>\n<p>5y<sup>2</sup> – 25y–5y+25=0</p>\n<p>(5y-25) (5y - 5) =0</p>\n<p>y = 5, 1</p>\n<p>Hence, x &lt; y</p>"}] ,
+    hi: [{"question": "<p><strong>निम्नलिखित जानकारी का ध्यानपूर्वक अध्ययन करें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दिया गया पाई चार्ट वर्ष 2025 में पांच अलग-अलग विनिर्माण फर्मों, अर्थात् A, B, C, D और E की आय के प्रतिशत वितरण को दर्शाता है।</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131322613.png\" title=\"49.png\"/></p>\n<p><strong>नोट</strong><strong>:</strong></p>\n<p><strong>i). </strong>लाभ % = [आय – व्यय] * 100 / व्यय</p>\n<p><strong>ii).</strong> हानि % = [व्यय - आय] *100/व्यय</p>\n<p><strong>iii).</strong> 2025 में विनिर्माण फर्म D की आय 150 लाख रुपये है।</p>\n<p><strong>iv).</strong> विनिर्माण फर्मों A, B, C, D और E का 2025 में लाभ प्रतिशत क्रमशः 25%, 40%, 20%, 25% और 28% है।</p><br><p><strong>2025 में विनिर्माण फर्म F का व्यय 2025 में फर्म C के व्यय से 20% अधिक है। 2025 में विनिर्माण फर्म G का व्यय 2025 में फर्म A के व्यय से 25% अधिक है। यदि 2025 में विनिर्माण फर्म F और G का लाभ प्रतिशत क्रमशः 20% और 25% है, तो विनिर्माण फर्म G और F की आय के बीच का अंतर ज्ञात कीजिए। </strong></p>", "options": ["<p>66 लाख</p>", "<p>67 लाख</p>", "<p>44 लाख</p>", "<p>78 लाख</p>", "<p>98 लाख</p>"], "correctIndex": 2, "solution": "<p>वर्ष 2025 में विनिर्माण फर्म D की आय= 150 लाख</p>\n<p>सभी विनिर्माण फर्मों की कुल आय = 150*100/30 = 500 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>A</strong><strong>:</strong></p>\n<p>आय = 500 * 16/100 = 80 लाख</p>\n<p>व्यय = 80*100/125 = 64 लाख</p>\n<p>लाभ = 80 – 64 = 16 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>B</strong><strong>:</strong></p>\n<p>आय = 500 * 14/100 = 70 लाख</p>\n<p>व्यय = 70*100/140 = 50 लाख</p>\n<p>लाभ = 70 – 50 = 20 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>C</strong><strong>:</strong></p>\n<p>आय = 500 * 24/100 = 120 लाख</p>\n<p>व्यय = 120*100/120 = 100 लाख</p>\n<p>लाभ = 120 – 100 = 20 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>D</strong><strong>:</strong></p>\n<p>आय = 500 * 30/100 = 150 लाख</p>\n<p>व्यय = 150*100/125 = 120 लाख</p>\n<p>लाभ = 150 – 120 = 30 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>E</strong><strong>:</strong></p>\n<p>आय = 500 * 16/100 = 80 लाख</p>\n<p>व्यय = 80*100/128 = 62.5 लाख</p>\n<p>लाभ = 80 – 62.5 = 17.5 लाख</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150235336.png\" title=\"22.png\"/></p>\n<p><strong>उत्तर</strong><strong>: C</strong></p>\n<p>विनिर्माण फर्म F की आय = [100*120/100] *[120/100] = 120 * 120/100 = 144 लाख</p>\n<p>विनिर्माण फर्म G की आय =[64*125/100] *[125/100] =80*125/100=100 लाख</p>\n<p>अतः, विनिर्माण फर्म G और F की आय के बीच का अंतर 144-100 = 44 लाख है।</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी का ध्यानपूर्वक अध्ययन करें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दिया गया पाई चार्ट वर्ष 2025 में पांच अलग-अलग विनिर्माण फर्मों, अर्थात् A, B, C, D और E की आय के प्रतिशत वितरण को दर्शाता है।</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131322613.png\" title=\"49.png\"/></p>\n<p><strong>नोट</strong><strong>:</strong></p>\n<p><strong>i). </strong>लाभ % = [आय – व्यय] * 100 / व्यय</p>\n<p><strong>ii).</strong> हानि % = [व्यय - आय] *100/व्यय</p>\n<p><strong>iii).</strong> 2025 में विनिर्माण फर्म D की आय 150 लाख रुपये है।</p>\n<p><strong>iv).</strong> विनिर्माण फर्मों A, B, C, D और E का 2025 में लाभ प्रतिशत क्रमशः 25%, 40%, 20%, 25% और 28% है।</p><br><p><strong>विनिर्माण फर्म A, B और E का लाभ क्रमशः x+8, y+4 और z+16 है। विनिर्माण फर्म D की आय का 16.66% ज्ञात कीजिए।</strong></p>\n<p><strong>I). </strong>3x-8</p>\n<p><strong>II). </strong>2y - 7</p>\n<p><strong>III).</strong> 5z+6</p>", "options": ["<p>केवल II कथन सत्य है</p>", "<p>केवल I कथन असत्य है</p>", "<p>सभी कथन असत्य हैं</p>", "<p>सभी कथन सत्य हैं</p>", "<p>केवल III कथन असत्य है</p>"], "correctIndex": 0, "solution": "<p>वर्ष 2025 में विनिर्माण फर्म D की आय= 150 लाख</p>\n<p>सभी विनिर्माण फर्मों की कुल आय = 150*100/30 = 500 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>A</strong><strong>:</strong></p>\n<p>आय = 500 * 16/100 = 80 लाख</p>\n<p>व्यय = 80*100/125 = 64 लाख</p>\n<p>लाभ = 80 – 64 = 16 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>B</strong><strong>:</strong></p>\n<p>आय = 500 * 14/100 = 70 लाख</p>\n<p>व्यय = 70*100/140 = 50 लाख</p>\n<p>लाभ = 70 – 50 = 20 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>C</strong><strong>:</strong></p>\n<p>आय = 500 * 24/100 = 120 लाख</p>\n<p>व्यय = 120*100/120 = 100 लाख</p>\n<p>लाभ = 120 – 100 = 20 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>D</strong><strong>:</strong></p>\n<p>आय = 500 * 30/100 = 150 लाख</p>\n<p>व्यय = 150*100/125 = 120 लाख</p>\n<p>लाभ = 150 – 120 = 30 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>E</strong><strong>:</strong></p>\n<p>आय = 500 * 16/100 = 80 लाख</p>\n<p>व्यय = 80*100/128 = 62.5 लाख</p>\n<p>लाभ = 80 – 62.5 = 17.5 लाख</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150235336.png\" title=\"22.png\"/></p>\n<p><strong>उत्तर</strong><strong>: </strong><strong>A</strong></p>\n<p>इसलिए, x= [80-64] – 8=8,</p>\n<p>इसलिए, y= [70-50] – 4=16</p>\n<p>इसलिए, z= [80 - 62.5] - 16 = 1.5</p>\n<p>2023 में विनिर्माण फर्म D की आय का 16.66%=  150 का 16.66% = 25 लाख</p>\n<p><strong>I).</strong> 3x-8 = 3 *8 - 8 = 24 - 8 = 16.</p>\n<p>कथन 1 असत्य है।</p>\n<p><strong>II).</strong> 2y - 7 = 2*16 - 7 = 32 - 7 = 25.</p>\n<p>कथन II सत्य है</p>\n<p><strong>III).</strong> 5z+6 = 5*1.5 +6 = 13.5.</p>\n<p>कथन III असत्य है।</p>\n<p>इसलिए, केवल विकल्प A ही सत्य है।</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी का ध्यानपूर्वक अध्ययन करें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दिया गया पाई चार्ट वर्ष 2025 में पांच अलग-अलग विनिर्माण फर्मों, अर्थात् A, B, C, D और E की आय के प्रतिशत वितरण को दर्शाता है।</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131322613.png\" title=\"49.png\"/></p>\n<p><strong>नोट</strong><strong>:</strong></p>\n<p><strong>i). </strong>लाभ % = [आय – व्यय] * 100 / व्यय</p>\n<p><strong>ii).</strong> हानि % = [व्यय - आय] *100/व्यय</p>\n<p><strong>iii).</strong> 2025 में विनिर्माण फर्म D की आय 150 लाख रुपये है।</p>\n<p><strong>iv).</strong> विनिर्माण फर्मों A, B, C, D और E का 2025 में लाभ प्रतिशत क्रमशः 25%, 40%, 20%, 25% और 28% है।</p><br><p><strong>2025 और 2023 में विनिर्माण फर्म C की आय का अनुपात 5:6 है। 2023 में विनिर्माण फर्म C और D की आय का अनुपात 6:5 है। 2023 में विनिर्माण फर्म C और D का लाभ प्रतिशत क्रमशः 20% और 25% है। वर्ष 2023 में एकसाथ विनिर्माण फर्म C और D के कुल व्यय का योग ज्ञात कीजिए।   </strong></p>", "options": ["<p>216 लाख</p>", "<p>268 लाख</p>", "<p>288 लाख</p>", "<p>295 लाख</p>", "<p>272 लाख</p>"], "correctIndex": 0, "solution": "<p>वर्ष 2025 में विनिर्माण फर्म D की आय= 150 लाख</p>\n<p>सभी विनिर्माण फर्मों की कुल आय = 150*100/30 = 500 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>A</strong><strong>:</strong></p>\n<p>आय = 500 * 16/100 = 80 लाख</p>\n<p>व्यय = 80*100/125 = 64 लाख</p>\n<p>लाभ = 80 – 64 = 16 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>B</strong><strong>:</strong></p>\n<p>आय = 500 * 14/100 = 70 लाख</p>\n<p>व्यय = 70*100/140 = 50 लाख</p>\n<p>लाभ = 70 – 50 = 20 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>C</strong><strong>:</strong></p>\n<p>आय = 500 * 24/100 = 120 लाख</p>\n<p>व्यय = 120*100/120 = 100 लाख</p>\n<p>लाभ = 120 – 100 = 20 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>D</strong><strong>:</strong></p>\n<p>आय = 500 * 30/100 = 150 लाख</p>\n<p>व्यय = 150*100/125 = 120 लाख</p>\n<p>लाभ = 150 – 120 = 30 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>E</strong><strong>:</strong></p>\n<p>आय = 500 * 16/100 = 80 लाख</p>\n<p>व्यय = 80*100/128 = 62.5 लाख</p>\n<p>लाभ = 80 – 62.5 = 17.5 लाख</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150235336.png\" title=\"22.png\"/></p>\n<p><strong>उत्तर</strong><strong>: </strong><strong>A</strong></p>\n<p>2023 में विनिर्माण फर्म C की आय= 120*6/5=144 लाख</p>\n<p>2023 में विनिर्माण फर्म D की आय= 144*5/6=120 लाख</p>\n<p>2023 में विनिर्माण फर्म C का व्यय= 144*100/120=120 लाख</p>\n<p>2023 में विनिर्माण फर्म D का व्यय= 120*100/125=96 लाख</p>\n<p>अतः, आवश्यक योग = 120 + 96 = 216 लाख</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी का ध्यानपूर्वक अध्ययन करें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दिया गया पाई चार्ट वर्ष 2025 में पांच अलग-अलग विनिर्माण फर्मों, अर्थात् A, B, C, D और E की आय के प्रतिशत वितरण को दर्शाता है।</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131322613.png\" title=\"49.png\"/></p>\n<p><strong>नोट</strong><strong>:</strong></p>\n<p><strong>i). </strong>लाभ % = [आय – व्यय] * 100 / व्यय</p>\n<p><strong>ii).</strong> हानि % = [व्यय - आय] *100/व्यय</p>\n<p><strong>iii).</strong> 2025 में विनिर्माण फर्म D की आय 150 लाख रुपये है।</p>\n<p><strong>iv).</strong> विनिर्माण फर्मों A, B, C, D और E का 2025 में लाभ प्रतिशत क्रमशः 25%, 40%, 20%, 25% और 28% है।</p><br><p><strong>मात्रा I: </strong>2021 में विनिर्माण फर्म C का व्यय 2025 में विनिर्माण फर्म C के व्यय से 20 लाख रुपये अधिक है। यदि लाभ प्रतिशत 20% है, तो 2021 में विनिर्माण फर्म C की आय ज्ञात कीजिए।</p>\n<p><strong>मात्रा II: </strong>2021 में विनिर्माण फर्म D का व्यय, 2025 में विनिर्माण फर्म D के व्यय से 16 लाख रुपये अधिक है। यदि हानि प्रतिशत 10% है, तो 2021 में विनिर्माण फर्म D की आय ज्ञात कीजिए।</p>", "options": ["<p>मात्रा I&nbsp;&lt;&nbsp;मात्रा II</p>", "<p>मात्रा I&nbsp;&ge;&nbsp;मात्रा II&nbsp;</p>", "<p>मात्रा II&nbsp;&ge;&nbsp;मात्रा I</p>", "<p>मात्रा I &gt; मात्रा II&nbsp;</p>", "<p>मात्रा I = मात्रा II या संबंध स्थापित नहीं किया जा सकता</p>"], "correctIndex": 3, "solution": "<p>वर्ष 2025 में विनिर्माण फर्म D की आय= 150 लाख</p>\n<p>सभी विनिर्माण फर्मों की कुल आय = 150*100/30 = 500 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>A</strong><strong>:</strong></p>\n<p>आय = 500 * 16/100 = 80 लाख</p>\n<p>व्यय = 80*100/125 = 64 लाख</p>\n<p>लाभ = 80 – 64 = 16 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>B</strong><strong>:</strong></p>\n<p>आय = 500 * 14/100 = 70 लाख</p>\n<p>व्यय = 70*100/140 = 50 लाख</p>\n<p>लाभ = 70 – 50 = 20 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>C</strong><strong>:</strong></p>\n<p>आय = 500 * 24/100 = 120 लाख</p>\n<p>व्यय = 120*100/120 = 100 लाख</p>\n<p>लाभ = 120 – 100 = 20 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>D</strong><strong>:</strong></p>\n<p>आय = 500 * 30/100 = 150 लाख</p>\n<p>व्यय = 150*100/125 = 120 लाख</p>\n<p>लाभ = 150 – 120 = 30 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>E</strong><strong>:</strong></p>\n<p>आय = 500 * 16/100 = 80 लाख</p>\n<p>व्यय = 80*100/128 = 62.5 लाख</p>\n<p>लाभ = 80 – 62.5 = 17.5 लाख</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150235336.png\" title=\"22.png\"/></p>\n<p><strong>उत्तर</strong><strong>: D</strong></p>\n<p><strong>मात्रा</strong><strong> I:</strong></p>\n<p>2021 में विनिर्माण फर्म C का व्यय= 100 + 20 = 120 लाख</p>\n<p>अतः, 2021 में विनिर्माण फर्म C की आय= 120*120/100 = 144 लाख</p>\n<p><strong>मात्रा</strong><strong> II:</strong></p>\n<p>2021 में विनिर्माण फर्म D का व्यय= 120 + 16 = 136 लाख</p>\n<p>2021 में विनिर्माण फर्म D की आय= 136*90/100 = 122.4 लाख</p>\n<p>मात्रा I &gt; मात्रा II</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी का ध्यानपूर्वक अध्ययन करें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दिया गया पाई चार्ट वर्ष 2025 में पांच अलग-अलग विनिर्माण फर्मों, अर्थात् A, B, C, D और E की आय के प्रतिशत वितरण को दर्शाता है।</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177131322613.png\" title=\"49.png\"/></p>\n<p><strong>नोट</strong><strong>:</strong></p>\n<p><strong>i). </strong>लाभ % = [आय – व्यय] * 100 / व्यय</p>\n<p><strong>ii).</strong> हानि % = [व्यय - आय] *100/व्यय</p>\n<p><strong>iii).</strong> 2025 में विनिर्माण फर्म D की आय 150 लाख रुपये है।</p>\n<p><strong>iv).</strong> विनिर्माण फर्मों A, B, C, D और E का 2025 में लाभ प्रतिशत क्रमशः 25%, 40%, 20%, 25% और 28% है।</p><br><p><strong>विनिर्माण फर्मों B, C और D का वर्ष 2025 में औसत व्यय 5p है। 7p/2 का मान ज्ञात कीजिए।</strong></p>", "options": ["<p>56</p>", "<p>54</p>", "<p>63</p>", "<p>59</p>", "<p>45</p>"], "correctIndex": 2, "solution": "<p>वर्ष 2025 में विनिर्माण फर्म D की आय= 150 लाख</p>\n<p>सभी विनिर्माण फर्मों की कुल आय = 150*100/30 = 500 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>A</strong><strong>:</strong></p>\n<p>आय = 500 * 16/100 = 80 लाख</p>\n<p>व्यय = 80*100/125 = 64 लाख</p>\n<p>लाभ = 80 – 64 = 16 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>B</strong><strong>:</strong></p>\n<p>आय = 500 * 14/100 = 70 लाख</p>\n<p>व्यय = 70*100/140 = 50 लाख</p>\n<p>लाभ = 70 – 50 = 20 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>C</strong><strong>:</strong></p>\n<p>आय = 500 * 24/100 = 120 लाख</p>\n<p>व्यय = 120*100/120 = 100 लाख</p>\n<p>लाभ = 120 – 100 = 20 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>D</strong><strong>:</strong></p>\n<p>आय = 500 * 30/100 = 150 लाख</p>\n<p>व्यय = 150*100/125 = 120 लाख</p>\n<p>लाभ = 150 – 120 = 30 लाख</p>\n<p><strong>विनिर्माण</strong><strong> </strong><strong>फर्म</strong><strong> </strong><strong>E</strong><strong>:</strong></p>\n<p>आय = 500 * 16/100 = 80 लाख</p>\n<p>व्यय = 80*100/128 = 62.5 लाख</p>\n<p>लाभ = 80 – 62.5 = 17.5 लाख</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150235336.png\" title=\"22.png\"/></p>\n<p><strong>उत्तर</strong><strong>: C</strong></p>\n<p>वर्ष 2025 में सभी पांच विनिर्माण कंपनियों का औसत व्यय = (50 + 100 + 120)/3</p>\n<p>= 270/3</p>\n<p>= 90</p>\n<p>इसलिए, 5p = 90</p>\n<p>या p =90/5</p>\n<p>p = 18</p>\n<p>इसलिए, 7p/2 = (7*18)/2</p>\n<p>=126/2 =63</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी को ध्यानपूर्वक पढ़ें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दी गई तालिका में पाँच स्टेशनरी स्टोरों में बेचे गए कुल पेन और नोटबुक की संख्या का संचयी प्रतिशत और उन पाँचों स्टेशनरी स्टोरों में बेची गई नोटबुक से पेन की संख्या का अनुपात दर्शाया गया है।</p>\n<p>नोट: स्टेशनरी स्टोर B में बेचे गए पेनों की संख्या 40 है।  </p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150318713.png\" title=\"23.png\"/></p><br><p><strong>प्रत्येक नोटबुक की औसत कीमत 60 रुपये है और प्रत्येक पेन की औसत कीमत 20 रुपये है, तो स्टेशनरी स्टोर A द्वारा अर्जित कुल राजस्व ज्ञात कीजिए।</strong></p>", "options": ["<p>3300 रुपये</p>", "<p>4520 रुपये</p>", "<p>4650 रुपये</p>", "<p>3520 रुपये</p>", "<p>4750 रुपये</p>"], "correctIndex": 0, "solution": "<p>स्टोर A, B, C, D और E में बेचे गए कुल पेन और नोटबुक का प्रतिशत वितरण:</p>\n<p>स्टोर A = 15%</p>\n<p>स्टोर B = 25% − 15% = 10%</p>\n<p>स्टोर C = 55% − 25% = 30%</p>\n<p>स्टोर D = 80% − 55% = 25%</p>\n<p>स्टोर E = 100% − 80% = 20%</p>\n<p>मान लीजिए कि एकसाथ पाँच स्टोर में बेचे गए पेन और नोटबुक की कुल संख्या 100x है।</p>\n<p>अतः, स्टोर B में बेचे गए पेन और नोटबुक की कुल संख्या = 10x</p>\n<p>स्टोर B में नोटबुक से पेन का अनुपात दिया गया है। = 1 : 4</p>\n<p>अतः, स्टोर B में बेचे गए पेनों की संख्या = 10x * (4 / 5) = 8x</p>\n<p>स्टोर B में बेचे गए पेनों की संख्या = 40</p>\n<p>इसलिए,<br/>8x = 40<br/>x = 5</p>\n<p>इसलिए,</p>\n<p>एकसाथ पांचों स्टोर में बेचे गए पेन और नोटबुक की कुल संख्या = 100 * 5 = 500</p>\n<p><strong>स्टोर</strong><strong> </strong><strong>A:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 15x = 15 * 5 = 75</p>\n<p>बेची गई नोटबुक की संख्या = 75 * 3/5 = 45</p>\n<p>बेचे गए पेनों की संख्या = 75 * 2/5 = 30</p>\n<p><strong>स्टोर</strong><strong> B:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 10x = 10 * 5 = 50</p>\n<p>बेची गई नोटबुक की संख्या = 50 * 1/5 = 10</p>\n<p>बेचे गए पेनों की संख्या = 40</p>\n<p><strong>स्टोर</strong><strong> C:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 30x = 30 * 5 = 150</p>\n<p>बेची गई नोटबुक की संख्या = 150 * 2/3 = 100</p>\n<p>बेचे गए पेनों की संख्या = 150* 1/3 = 50</p>\n<p><strong>स्टोर</strong><strong> D:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 25x = 25* 5 = 125</p>\n<p>बेची गई नोटबुक की संख्या = 125 * 3/5 = 75</p>\n<p>बेचे गए पेनों की संख्या = 125 * 2/5 = 50</p>\n<p><strong>स्टोर</strong><strong> E:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 20x = 20 * 5 = 100</p>\n<p>बेची गई नोटबुक की संख्या = 100 * 2/5 = 40</p>\n<p>बेचे गए पेनों की संख्या = 100 * 3/5 = 60</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150338690.png\" title=\"24.png\"/></p>\n<p><strong>उत्तर</strong><strong>: </strong><strong>A</strong></p>\n<p>नोटबुक से उत्पन्न राजस्व = 45*60 =  2700 रुपये</p>\n<p>पेन से उत्पन्न राजस्व = 30*20 =  600 रुपये</p>\n<p>स्टोर A द्वारा अर्जित कुल राजस्व = 2700 + 600 = 3300 रुपये</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी को ध्यानपूर्वक पढ़ें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दी गई तालिका में पाँच स्टेशनरी स्टोरों में बेचे गए कुल पेन और नोटबुक की संख्या का संचयी प्रतिशत और उन पाँचों स्टेशनरी स्टोरों में बेची गई नोटबुक से पेन की संख्या का अनुपात दर्शाया गया है।</p>\n<p>नोट: स्टेशनरी स्टोर B में बेचे गए पेनों की संख्या 40 है।  </p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150318713.png\" title=\"23.png\"/></p><br><p><strong>स्टोर F में बेचे गए पेनों की संख्या स्टोर C में बेचे गए पेनों की संख्या की आधी है, और स्टोर F में बेची गई नोटबुकों की संख्या स्टोर E में बेची गई नोटबुकों की संख्या की तीन-चौथाई है। स्टोर F में बेचे गए पेनों और नोटबुकों की कुल संख्या ज्ञात कीजिए।</strong></p>", "options": ["<p>40</p>", "<p>80</p>", "<p>55</p>", "<p>60</p>", "<p>70</p>"], "correctIndex": 2, "solution": "<p>स्टोर A, B, C, D और E में बेचे गए कुल पेन और नोटबुक का प्रतिशत वितरण:</p>\n<p>स्टोर A = 15%</p>\n<p>स्टोर B = 25% − 15% = 10%</p>\n<p>स्टोर C = 55% − 25% = 30%</p>\n<p>स्टोर D = 80% − 55% = 25%</p>\n<p>स्टोर E = 100% − 80% = 20%</p>\n<p>मान लीजिए कि एकसाथ पाँच स्टोर में बेचे गए पेन और नोटबुक की कुल संख्या 100x है।</p>\n<p>अतः, स्टोर B में बेचे गए पेन और नोटबुक की कुल संख्या = 10x</p>\n<p>स्टोर B में नोटबुक से पेन का अनुपात दिया गया है। = 1 : 4</p>\n<p>अतः, स्टोर B में बेचे गए पेनों की संख्या = 10x * (4 / 5) = 8x</p>\n<p>स्टोर B में बेचे गए पेनों की संख्या = 40</p>\n<p>इसलिए,<br/>8x = 40<br/>x = 5</p>\n<p>इसलिए,</p>\n<p>एकसाथ पांचों स्टोर में बेचे गए पेन और नोटबुक की कुल संख्या = 100 * 5 = 500</p>\n<p><strong>स्टोर</strong><strong> </strong><strong>A:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 15x = 15 * 5 = 75</p>\n<p>बेची गई नोटबुक की संख्या = 75 * 3/5 = 45</p>\n<p>बेचे गए पेनों की संख्या = 75 * 2/5 = 30</p>\n<p><strong>स्टोर</strong><strong> B:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 10x = 10 * 5 = 50</p>\n<p>बेची गई नोटबुक की संख्या = 50 * 1/5 = 10</p>\n<p>बेचे गए पेनों की संख्या = 40</p>\n<p><strong>स्टोर</strong><strong> C:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 30x = 30 * 5 = 150</p>\n<p>बेची गई नोटबुक की संख्या = 150 * 2/3 = 100</p>\n<p>बेचे गए पेनों की संख्या = 150* 1/3 = 50</p>\n<p><strong>स्टोर</strong><strong> D:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 25x = 25* 5 = 125</p>\n<p>बेची गई नोटबुक की संख्या = 125 * 3/5 = 75</p>\n<p>बेचे गए पेनों की संख्या = 125 * 2/5 = 50</p>\n<p><strong>स्टोर</strong><strong> E:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 20x = 20 * 5 = 100</p>\n<p>बेची गई नोटबुक की संख्या = 100 * 2/5 = 40</p>\n<p>बेचे गए पेनों की संख्या = 100 * 3/5 = 60</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150338690.png\" title=\"24.png\"/></p>\n<p><strong>उत्तर</strong><strong>: C</strong></p>\n<p>स्टेशनरी स्टोर F में बेचे गए पेनों की संख्या = 50 * 1/2 = 25</p>\n<p>स्टेशनरी स्टोर F में बेची गई नोटबुक की संख्या = 40 * 3/4 =30</p>\n<p>स्टेशनरी स्टोर F में बेचे गए पेन और नोटबुक की कुल संख्या = 25 + 30 = 55</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी को ध्यानपूर्वक पढ़ें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दी गई तालिका में पाँच स्टेशनरी स्टोरों में बेचे गए कुल पेन और नोटबुक की संख्या का संचयी प्रतिशत और उन पाँचों स्टेशनरी स्टोरों में बेची गई नोटबुक से पेन की संख्या का अनुपात दर्शाया गया है।</p>\n<p>नोट: स्टेशनरी स्टोर B में बेचे गए पेनों की संख्या 40 है।  </p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150318713.png\" title=\"23.png\"/></p><br><p><strong>एकसाथ स्टेशनरी स्टोर A और C में बेचे गए पेनों की संख्या और एकसाथ स्टेशनरी स्टोर B और D में बेची गई नोटबुकों की कुल संख्या का अनुपात ज्ञात कीजिए।</strong></p>", "options": ["<p>16:17</p>", "<p>15:17</p>", "<p>16:13</p>", "<p>4:3</p>", "<p>5:7</p>"], "correctIndex": 0, "solution": "<p>स्टोर A, B, C, D और E में बेचे गए कुल पेन और नोटबुक का प्रतिशत वितरण:</p>\n<p>स्टोर A = 15%</p>\n<p>स्टोर B = 25% − 15% = 10%</p>\n<p>स्टोर C = 55% − 25% = 30%</p>\n<p>स्टोर D = 80% − 55% = 25%</p>\n<p>स्टोर E = 100% − 80% = 20%</p>\n<p>मान लीजिए कि एकसाथ पाँच स्टोर में बेचे गए पेन और नोटबुक की कुल संख्या 100x है।</p>\n<p>अतः, स्टोर B में बेचे गए पेन और नोटबुक की कुल संख्या = 10x</p>\n<p>स्टोर B में नोटबुक से पेन का अनुपात दिया गया है। = 1 : 4</p>\n<p>अतः, स्टोर B में बेचे गए पेनों की संख्या = 10x * (4 / 5) = 8x</p>\n<p>स्टोर B में बेचे गए पेनों की संख्या = 40</p>\n<p>इसलिए,<br/>8x = 40<br/>x = 5</p>\n<p>इसलिए,</p>\n<p>एकसाथ पांचों स्टोर में बेचे गए पेन और नोटबुक की कुल संख्या = 100 * 5 = 500</p>\n<p><strong>स्टोर</strong><strong> </strong><strong>A:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 15x = 15 * 5 = 75</p>\n<p>बेची गई नोटबुक की संख्या = 75 * 3/5 = 45</p>\n<p>बेचे गए पेनों की संख्या = 75 * 2/5 = 30</p>\n<p><strong>स्टोर</strong><strong> B:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 10x = 10 * 5 = 50</p>\n<p>बेची गई नोटबुक की संख्या = 50 * 1/5 = 10</p>\n<p>बेचे गए पेनों की संख्या = 40</p>\n<p><strong>स्टोर</strong><strong> C:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 30x = 30 * 5 = 150</p>\n<p>बेची गई नोटबुक की संख्या = 150 * 2/3 = 100</p>\n<p>बेचे गए पेनों की संख्या = 150* 1/3 = 50</p>\n<p><strong>स्टोर</strong><strong> D:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 25x = 25* 5 = 125</p>\n<p>बेची गई नोटबुक की संख्या = 125 * 3/5 = 75</p>\n<p>बेचे गए पेनों की संख्या = 125 * 2/5 = 50</p>\n<p><strong>स्टोर</strong><strong> E:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 20x = 20 * 5 = 100</p>\n<p>बेची गई नोटबुक की संख्या = 100 * 2/5 = 40</p>\n<p>बेचे गए पेनों की संख्या = 100 * 3/5 = 60</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150338690.png\" title=\"24.png\"/></p>\n<p><strong>उत्तर</strong><strong>: </strong><strong>A</strong></p>\n<p>एकसाथ स्टेशनरी स्टोर A और C में बेचे गए पेनों की संख्या = 30 + 50 = 80</p>\n<p>एकसाथ स्टेशनरी स्टोर B और D में बेची गई नोटबुक की कुल संख्या = 10 + 75 = 85</p>\n<p>आवश्यक अनुपात =80:85 = 16:17</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी को ध्यानपूर्वक पढ़ें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दी गई तालिका में पाँच स्टेशनरी स्टोरों में बेचे गए कुल पेन और नोटबुक की संख्या का संचयी प्रतिशत और उन पाँचों स्टेशनरी स्टोरों में बेची गई नोटबुक से पेन की संख्या का अनुपात दर्शाया गया है।</p>\n<p>नोट: स्टेशनरी स्टोर B में बेचे गए पेनों की संख्या 40 है।  </p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150318713.png\" title=\"23.png\"/></p><br><p><strong>स्टेशनरी स्टोर C में बेची गई कुल नोटबुकों में से 40% क्षतिग्रस्त हैं। स्टेशनरी स्टोर C में बेची गई क्षतिग्रस्त नोटबुकों की संख्या, स्टेशनरी स्टोर C में बेची गई कुल वस्तुओं (नोटबुक + पेन) का कितना प्रतिशत है?</strong></p>", "options": ["<p>3.33%</p>", "<p>18.5%</p>", "<p>7.28%</p>", "<p>16.66%</p>", "<p>26.67%</p>"], "correctIndex": 4, "solution": "<p>स्टोर A, B, C, D और E में बेचे गए कुल पेन और नोटबुक का प्रतिशत वितरण:</p>\n<p>स्टोर A = 15%</p>\n<p>स्टोर B = 25% − 15% = 10%</p>\n<p>स्टोर C = 55% − 25% = 30%</p>\n<p>स्टोर D = 80% − 55% = 25%</p>\n<p>स्टोर E = 100% − 80% = 20%</p>\n<p>मान लीजिए कि एकसाथ पाँच स्टोर में बेचे गए पेन और नोटबुक की कुल संख्या 100x है।</p>\n<p>अतः, स्टोर B में बेचे गए पेन और नोटबुक की कुल संख्या = 10x</p>\n<p>स्टोर B में नोटबुक से पेन का अनुपात दिया गया है। = 1 : 4</p>\n<p>अतः, स्टोर B में बेचे गए पेनों की संख्या = 10x * (4 / 5) = 8x</p>\n<p>स्टोर B में बेचे गए पेनों की संख्या = 40</p>\n<p>इसलिए,<br/>8x = 40<br/>x = 5</p>\n<p>इसलिए,</p>\n<p>एकसाथ पांचों स्टोर में बेचे गए पेन और नोटबुक की कुल संख्या = 100 * 5 = 500</p>\n<p><strong>स्टोर</strong><strong> </strong><strong>A:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 15x = 15 * 5 = 75</p>\n<p>बेची गई नोटबुक की संख्या = 75 * 3/5 = 45</p>\n<p>बेचे गए पेनों की संख्या = 75 * 2/5 = 30</p>\n<p><strong>स्टोर</strong><strong> B:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 10x = 10 * 5 = 50</p>\n<p>बेची गई नोटबुक की संख्या = 50 * 1/5 = 10</p>\n<p>बेचे गए पेनों की संख्या = 40</p>\n<p><strong>स्टोर</strong><strong> C:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 30x = 30 * 5 = 150</p>\n<p>बेची गई नोटबुक की संख्या = 150 * 2/3 = 100</p>\n<p>बेचे गए पेनों की संख्या = 150* 1/3 = 50</p>\n<p><strong>स्टोर</strong><strong> D:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 25x = 25* 5 = 125</p>\n<p>बेची गई नोटबुक की संख्या = 125 * 3/5 = 75</p>\n<p>बेचे गए पेनों की संख्या = 125 * 2/5 = 50</p>\n<p><strong>स्टोर</strong><strong> E:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 20x = 20 * 5 = 100</p>\n<p>बेची गई नोटबुक की संख्या = 100 * 2/5 = 40</p>\n<p>बेचे गए पेनों की संख्या = 100 * 3/5 = 60</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150338690.png\" title=\"24.png\"/></p>\n<p><strong>उत्तर</strong><strong>: E</strong></p>\n<p>स्टेशनरी स्टोर C में बेची गई क्षतिग्रस्त नोटबुक की कुल संख्या = 100 * 40/100 = 40</p>\n<p> स्टेशनरी स्टोर C में बेची गई वस्तुओं की कुल संख्या = 150</p>\n<p>तो, आवश्यक प्रतिशत = [40/150] * 100 = 26.67%</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी को ध्यानपूर्वक पढ़ें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दी गई तालिका में पाँच स्टेशनरी स्टोरों में बेचे गए कुल पेन और नोटबुक की संख्या का संचयी प्रतिशत और उन पाँचों स्टेशनरी स्टोरों में बेची गई नोटबुक से पेन की संख्या का अनुपात दर्शाया गया है।</p>\n<p>नोट: स्टेशनरी स्टोर B में बेचे गए पेनों की संख्या 40 है।  </p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150318713.png\" title=\"23.png\"/></p><br><p><strong>एकसाथ स्टेशनरी स्टोर A और E में बेचे गए पेनों की संख्या और एकसाथ स्टेशनरी स्टोर B और D में बेची गई नोटबुकों की संख्या के बीच का अंतर ज्ञात कीजिए।</strong></p>", "options": ["<p>5</p>", "<p>10</p>", "<p>17</p>", "<p>8</p>", "<p>3</p>"], "correctIndex": 0, "solution": "<p>स्टोर A, B, C, D और E में बेचे गए कुल पेन और नोटबुक का प्रतिशत वितरण:</p>\n<p>स्टोर A = 15%</p>\n<p>स्टोर B = 25% − 15% = 10%</p>\n<p>स्टोर C = 55% − 25% = 30%</p>\n<p>स्टोर D = 80% − 55% = 25%</p>\n<p>स्टोर E = 100% − 80% = 20%</p>\n<p>मान लीजिए कि एकसाथ पाँच स्टोर में बेचे गए पेन और नोटबुक की कुल संख्या 100x है।</p>\n<p>अतः, स्टोर B में बेचे गए पेन और नोटबुक की कुल संख्या = 10x</p>\n<p>स्टोर B में नोटबुक से पेन का अनुपात दिया गया है। = 1 : 4</p>\n<p>अतः, स्टोर B में बेचे गए पेनों की संख्या = 10x * (4 / 5) = 8x</p>\n<p>स्टोर B में बेचे गए पेनों की संख्या = 40</p>\n<p>इसलिए,<br/>8x = 40<br/>x = 5</p>\n<p>इसलिए,</p>\n<p>एकसाथ पांचों स्टोर में बेचे गए पेन और नोटबुक की कुल संख्या = 100 * 5 = 500</p>\n<p><strong>स्टोर</strong><strong> </strong><strong>A:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 15x = 15 * 5 = 75</p>\n<p>बेची गई नोटबुक की संख्या = 75 * 3/5 = 45</p>\n<p>बेचे गए पेनों की संख्या = 75 * 2/5 = 30</p>\n<p><strong>स्टोर</strong><strong> B:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 10x = 10 * 5 = 50</p>\n<p>बेची गई नोटबुक की संख्या = 50 * 1/5 = 10</p>\n<p>बेचे गए पेनों की संख्या = 40</p>\n<p><strong>स्टोर</strong><strong> C:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 30x = 30 * 5 = 150</p>\n<p>बेची गई नोटबुक की संख्या = 150 * 2/3 = 100</p>\n<p>बेचे गए पेनों की संख्या = 150* 1/3 = 50</p>\n<p><strong>स्टोर</strong><strong> D:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 25x = 25* 5 = 125</p>\n<p>बेची गई नोटबुक की संख्या = 125 * 3/5 = 75</p>\n<p>बेचे गए पेनों की संख्या = 125 * 2/5 = 50</p>\n<p><strong>स्टोर</strong><strong> E:</strong></p>\n<p>बेचे गए पेन और नोटबुक की कुल संख्या = 20x = 20 * 5 = 100</p>\n<p>बेची गई नोटबुक की संख्या = 100 * 2/5 = 40</p>\n<p>बेचे गए पेनों की संख्या = 100 * 3/5 = 60</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150338690.png\" title=\"24.png\"/></p>\n<p><strong>उत्तर</strong><strong>: </strong><strong>A</strong></p>\n<p>एकसाथ स्टेशनरी स्टोर A और E में बेचे गए पेनों की संख्या = 30+60 = 90</p>\n<p>एकसाथ स्टेशनरी स्टोर B और D में बेची गई नोटबुक की संख्या = 10+75 = 85</p>\n<p>आवश्यक अंतर = 90 - 85 = 5</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी का ध्यानपूर्वक अध्ययन करें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दी गई तालिका में एक कॉलेज के पाँच अलग-अलग सेक्शन में लड़कियों की संख्या और लड़कों तथा कर्मचारियों का प्रतिशत वितरण दर्शाया गया है।</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150396410.png\" title=\"25.png\"/></p>\n<p><strong>नोट</strong><strong>:</strong> कुल लोगों की संख्या = लड़कों की संख्या + लड़कियों की संख्या + कर्मचारियों की संख्या</p><br><p><strong>एकसाथ सेक्शन P और T में लड़कों की कुल संख्या, एकसाथ सेक्शन R और S में कर्मचारियों की कुल संख्या से लगभग कितने प्रतिशत अधिक है?</strong></p>", "options": ["<p>98.89%</p>", "<p>164.45%</p>", "<p>159.54%</p>", "<p>144.44%</p>", "<p>127.74%</p>"], "correctIndex": 3, "solution": "<p><strong>सेक्शन</strong><strong> </strong><strong>P</strong><strong>:</strong></p>\n<p>सेक्शन P में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन P में लड़कियों की संख्या = 100% - 50% - 10% = 40%</p>\n<p>(अर्थात्),40% = 80, 1% = 2, 100% = 200.</p>\n<p>सेक्शन P में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन P में लड़कों की संख्या = 200 * 50 / 100 = 100</p>\n<p>सेक्शन P में कर्मचारियों की संख्या = 200*10/100 = 20</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>Q</strong><strong>:</strong></p>\n<p>सेक्शन Q में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन Q में लड़कियों की संख्या = 100% - 30% - 20% = 50%</p>\n<p>(अर्थात्), 50% = 100, 1% = 2, 100% = 200.</p>\n<p>सेक्शन Q में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन Q में लड़कों की संख्या = 200 * 30 / 100 = 60</p>\n<p>सेक्शन Q में कर्मचारियों की संख्या = 200*20/100 = 40</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>R</strong><strong>:</strong></p>\n<p>सेक्शन R में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन R में लड़कियों की संख्या = 100% - 40% - 15% = 45%</p>\n<p>(अर्थात्), 45% = 90, 1% = 2, 100% = 200.</p>\n<p>सेक्शन R में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन R में लड़कों की संख्या = 200 * 40 / 100 = 80</p>\n<p>सेक्शन R में कर्मचारियों की संख्या = 200*15/100 = 30</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>S</strong><strong>:</strong></p>\n<p>सेक्शन S में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन S में लड़कियों की संख्या = 100% - 25% - 25% = 50%</p>\n<p>(अर्थात्), 50% = 120, 100% = 240.</p>\n<p>सेक्शन S में कुल लोगों की संख्या = 240</p>\n<p>सेक्शन S में लड़कों की संख्या = 240 * 25 / 100 = 60</p>\n<p>सेक्शन S में कर्मचारियों की संख्या = 240*25/100 = 60</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>T</strong><strong>:</strong></p>\n<p>सेक्शन T में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन T में लड़कियों की संख्या = 100% - 60% - 10% = 30%</p>\n<p>(अर्थात्), 30% = 60, 1% = 2, 100% = 200.</p>\n<p>सेक्शन T में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन T में लड़कों की संख्या = 200*60/100 = 120</p>\n<p>सेक्शन T में कर्मचारियों की संख्या = 200*10/100 = 20</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/1771504613100.png\" title=\"27.png\"/></p>\n<p><strong>उत्तर</strong><strong>: D</strong></p>\n<p>एकसाथ सेक्शन P और T में लड़कों की संख्या = 100 + 120 = 220</p>\n<p>एकसाथ सेक्शन R और S में कर्मचारियों की संख्या = 30 + 60 = 90</p>\n<p>आवश्यक प्रतिशत = (220 – 90)/90 * 100 = 144.44% अधिक</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी का ध्यानपूर्वक अध्ययन करें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दी गई तालिका में एक कॉलेज के पाँच अलग-अलग सेक्शन में लड़कियों की संख्या और लड़कों तथा कर्मचारियों का प्रतिशत वितरण दर्शाया गया है।</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150396410.png\" title=\"25.png\"/></p>\n<p><strong>नोट</strong><strong>:</strong> कुल लोगों की संख्या = लड़कों की संख्या + लड़कियों की संख्या + कर्मचारियों की संख्या</p><br><p><strong>एकसाथ सेक्शन Q और S में लड़कों की औसत संख्या और एकसाथ सेक्शन S और T में लड़कियों की औसत संख्या के बीच का अंतर ज्ञात कीजिए।</strong></p>", "options": ["<p>45</p>", "<p>30</p>", "<p>25</p>", "<p>47</p>", "<p>36</p>"], "correctIndex": 1, "solution": "<p><strong>सेक्शन</strong><strong> </strong><strong>P</strong><strong>:</strong></p>\n<p>सेक्शन P में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन P में लड़कियों की संख्या = 100% - 50% - 10% = 40%</p>\n<p>(अर्थात्),40% = 80, 1% = 2, 100% = 200.</p>\n<p>सेक्शन P में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन P में लड़कों की संख्या = 200 * 50 / 100 = 100</p>\n<p>सेक्शन P में कर्मचारियों की संख्या = 200*10/100 = 20</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>Q</strong><strong>:</strong></p>\n<p>सेक्शन Q में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन Q में लड़कियों की संख्या = 100% - 30% - 20% = 50%</p>\n<p>(अर्थात्), 50% = 100, 1% = 2, 100% = 200.</p>\n<p>सेक्शन Q में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन Q में लड़कों की संख्या = 200 * 30 / 100 = 60</p>\n<p>सेक्शन Q में कर्मचारियों की संख्या = 200*20/100 = 40</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>R</strong><strong>:</strong></p>\n<p>सेक्शन R में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन R में लड़कियों की संख्या = 100% - 40% - 15% = 45%</p>\n<p>(अर्थात्), 45% = 90, 1% = 2, 100% = 200.</p>\n<p>सेक्शन R में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन R में लड़कों की संख्या = 200 * 40 / 100 = 80</p>\n<p>सेक्शन R में कर्मचारियों की संख्या = 200*15/100 = 30</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>S</strong><strong>:</strong></p>\n<p>सेक्शन S में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन S में लड़कियों की संख्या = 100% - 25% - 25% = 50%</p>\n<p>(अर्थात्), 50% = 120, 100% = 240.</p>\n<p>सेक्शन S में कुल लोगों की संख्या = 240</p>\n<p>सेक्शन S में लड़कों की संख्या = 240 * 25 / 100 = 60</p>\n<p>सेक्शन S में कर्मचारियों की संख्या = 240*25/100 = 60</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>T</strong><strong>:</strong></p>\n<p>सेक्शन T में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन T में लड़कियों की संख्या = 100% - 60% - 10% = 30%</p>\n<p>(अर्थात्), 30% = 60, 1% = 2, 100% = 200.</p>\n<p>सेक्शन T में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन T में लड़कों की संख्या = 200*60/100 = 120</p>\n<p>सेक्शन T में कर्मचारियों की संख्या = 200*10/100 = 20</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/1771504613100.png\" title=\"27.png\"/></p>\n<p><strong>उत्तर</strong><strong>: B</strong></p>\n<p>एकसाथ सेक्शन Q और S में लड़कों की औसत संख्या = (60+60)/2 = 120/2 = 60</p>\n<p>एकसाथ सेक्शन S और T में लड़कियों की औसत संख्या = (120 + 60)/2 = 90</p>\n<p>आवश्यक अंतर = 90 – 60 = 30</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी का ध्यानपूर्वक अध्ययन करें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दी गई तालिका में एक कॉलेज के पाँच अलग-अलग सेक्शन में लड़कियों की संख्या और लड़कों तथा कर्मचारियों का प्रतिशत वितरण दर्शाया गया है।</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150396410.png\" title=\"25.png\"/></p>\n<p><strong>नोट</strong><strong>:</strong> कुल लोगों की संख्या = लड़कों की संख्या + लड़कियों की संख्या + कर्मचारियों की संख्या</p><br><p><strong>यदि सेक्शन U में लड़कियों की कुल संख्या सेक्शन S में लड़कियों की कुल संख्या का 5/6 है और सेक्शन U में कर्मचारियों की संख्या सेक्शन T में कर्मचारियों की संख्या का चार गुना है, तो सेक्शन U में लड़कियों और कर्मचारियों की कुल संख्या ज्ञात कीजिए।</strong></p>", "options": ["<p>200</p>", "<p>250</p>", "<p>180</p>", "<p>220</p>", "<p>290</p>"], "correctIndex": 2, "solution": "<p><strong>सेक्शन</strong><strong> </strong><strong>P</strong><strong>:</strong></p>\n<p>सेक्शन P में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन P में लड़कियों की संख्या = 100% - 50% - 10% = 40%</p>\n<p>(अर्थात्),40% = 80, 1% = 2, 100% = 200.</p>\n<p>सेक्शन P में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन P में लड़कों की संख्या = 200 * 50 / 100 = 100</p>\n<p>सेक्शन P में कर्मचारियों की संख्या = 200*10/100 = 20</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>Q</strong><strong>:</strong></p>\n<p>सेक्शन Q में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन Q में लड़कियों की संख्या = 100% - 30% - 20% = 50%</p>\n<p>(अर्थात्), 50% = 100, 1% = 2, 100% = 200.</p>\n<p>सेक्शन Q में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन Q में लड़कों की संख्या = 200 * 30 / 100 = 60</p>\n<p>सेक्शन Q में कर्मचारियों की संख्या = 200*20/100 = 40</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>R</strong><strong>:</strong></p>\n<p>सेक्शन R में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन R में लड़कियों की संख्या = 100% - 40% - 15% = 45%</p>\n<p>(अर्थात्), 45% = 90, 1% = 2, 100% = 200.</p>\n<p>सेक्शन R में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन R में लड़कों की संख्या = 200 * 40 / 100 = 80</p>\n<p>सेक्शन R में कर्मचारियों की संख्या = 200*15/100 = 30</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>S</strong><strong>:</strong></p>\n<p>सेक्शन S में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन S में लड़कियों की संख्या = 100% - 25% - 25% = 50%</p>\n<p>(अर्थात्), 50% = 120, 100% = 240.</p>\n<p>सेक्शन S में कुल लोगों की संख्या = 240</p>\n<p>सेक्शन S में लड़कों की संख्या = 240 * 25 / 100 = 60</p>\n<p>सेक्शन S में कर्मचारियों की संख्या = 240*25/100 = 60</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>T</strong><strong>:</strong></p>\n<p>सेक्शन T में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन T में लड़कियों की संख्या = 100% - 60% - 10% = 30%</p>\n<p>(अर्थात्), 30% = 60, 1% = 2, 100% = 200.</p>\n<p>सेक्शन T में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन T में लड़कों की संख्या = 200*60/100 = 120</p>\n<p>सेक्शन T में कर्मचारियों की संख्या = 200*10/100 = 20</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/1771504613100.png\" title=\"27.png\"/></p>\n<p><strong>उत्तर</strong><strong>: C</strong></p>\n<p>सेक्शन U में लड़कियों की संख्या = 5/6 * 120 = 100</p>\n<p>सेक्शन U में कर्मचारियों की संख्या = 4 * (10/30 * 60) = 80</p>\n<p>आवश्यक कुल संख्या = 100 + 80 = 180</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी का ध्यानपूर्वक अध्ययन करें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दी गई तालिका में एक कॉलेज के पाँच अलग-अलग सेक्शन में लड़कियों की संख्या और लड़कों तथा कर्मचारियों का प्रतिशत वितरण दर्शाया गया है।</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150396410.png\" title=\"25.png\"/></p>\n<p><strong>नोट</strong><strong>:</strong> कुल लोगों की संख्या = लड़कों की संख्या + लड़कियों की संख्या + कर्मचारियों की संख्या</p><br><p><strong>सेक्शन R में कर्मचारियों की कुल संख्या, एकसाथ सेक्शन P और सेक्शन Q में कर्मचारियों की कुल संख्या का कितना प्रतिशत है?</strong></p>", "options": ["<p>25%</p>", "<p>75%</p>", "<p>80%</p>", "<p>70%</p>", "<p>50%</p>"], "correctIndex": 4, "solution": "<p><strong>सेक्शन</strong><strong> </strong><strong>P</strong><strong>:</strong></p>\n<p>सेक्शन P में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन P में लड़कियों की संख्या = 100% - 50% - 10% = 40%</p>\n<p>(अर्थात्),40% = 80, 1% = 2, 100% = 200.</p>\n<p>सेक्शन P में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन P में लड़कों की संख्या = 200 * 50 / 100 = 100</p>\n<p>सेक्शन P में कर्मचारियों की संख्या = 200*10/100 = 20</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>Q</strong><strong>:</strong></p>\n<p>सेक्शन Q में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन Q में लड़कियों की संख्या = 100% - 30% - 20% = 50%</p>\n<p>(अर्थात्), 50% = 100, 1% = 2, 100% = 200.</p>\n<p>सेक्शन Q में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन Q में लड़कों की संख्या = 200 * 30 / 100 = 60</p>\n<p>सेक्शन Q में कर्मचारियों की संख्या = 200*20/100 = 40</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>R</strong><strong>:</strong></p>\n<p>सेक्शन R में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन R में लड़कियों की संख्या = 100% - 40% - 15% = 45%</p>\n<p>(अर्थात्), 45% = 90, 1% = 2, 100% = 200.</p>\n<p>सेक्शन R में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन R में लड़कों की संख्या = 200 * 40 / 100 = 80</p>\n<p>सेक्शन R में कर्मचारियों की संख्या = 200*15/100 = 30</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>S</strong><strong>:</strong></p>\n<p>सेक्शन S में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन S में लड़कियों की संख्या = 100% - 25% - 25% = 50%</p>\n<p>(अर्थात्), 50% = 120, 100% = 240.</p>\n<p>सेक्शन S में कुल लोगों की संख्या = 240</p>\n<p>सेक्शन S में लड़कों की संख्या = 240 * 25 / 100 = 60</p>\n<p>सेक्शन S में कर्मचारियों की संख्या = 240*25/100 = 60</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>T</strong><strong>:</strong></p>\n<p>सेक्शन T में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन T में लड़कियों की संख्या = 100% - 60% - 10% = 30%</p>\n<p>(अर्थात्), 30% = 60, 1% = 2, 100% = 200.</p>\n<p>सेक्शन T में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन T में लड़कों की संख्या = 200*60/100 = 120</p>\n<p>सेक्शन T में कर्मचारियों की संख्या = 200*10/100 = 20</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/1771504613100.png\" title=\"27.png\"/></p>\n<p><strong>उत्तर</strong><strong>: E</strong></p>\n<p>सेक्शन R में कर्मचारियों की संख्या = 30</p>\n<p>एकसाथ सेक्शन P और सेक्शन Q में कर्मचारियों की संख्या = 20 + 40 = 60</p>\n<p>आवश्यक प्रतिशत = 30/60 * 100 = 50%</p>"}, {"question": "<p><strong>निम्नलिखित जानकारी का ध्यानपूर्वक अध्ययन करें और नीचे दिए गए प्रश्नों के उत्तर दें।</strong></p>\n<p>नीचे दी गई तालिका में एक कॉलेज के पाँच अलग-अलग सेक्शन में लड़कियों की संख्या और लड़कों तथा कर्मचारियों का प्रतिशत वितरण दर्शाया गया है।</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/177150396410.png\" title=\"25.png\"/></p>\n<p><strong>नोट</strong><strong>:</strong> कुल लोगों की संख्या = लड़कों की संख्या + लड़कियों की संख्या + कर्मचारियों की संख्या</p><br><p><strong>एकसाथ सेक्शन R और T में लोगों की कुल संख्या से एकसाथ सेक्शन P और S में लोगों की कुल संख्या का अनुपात ज्ञात कीजिए।</strong></p>", "options": ["<p>5:9</p>", "<p>10:11</p>", "<p>11:13</p>", "<p>2:3</p>", "<p>1:2</p>"], "correctIndex": 1, "solution": "<p><strong>सेक्शन</strong><strong> </strong><strong>P</strong><strong>:</strong></p>\n<p>सेक्शन P में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन P में लड़कियों की संख्या = 100% - 50% - 10% = 40%</p>\n<p>(अर्थात्),40% = 80, 1% = 2, 100% = 200.</p>\n<p>सेक्शन P में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन P में लड़कों की संख्या = 200 * 50 / 100 = 100</p>\n<p>सेक्शन P में कर्मचारियों की संख्या = 200*10/100 = 20</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>Q</strong><strong>:</strong></p>\n<p>सेक्शन Q में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन Q में लड़कियों की संख्या = 100% - 30% - 20% = 50%</p>\n<p>(अर्थात्), 50% = 100, 1% = 2, 100% = 200.</p>\n<p>सेक्शन Q में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन Q में लड़कों की संख्या = 200 * 30 / 100 = 60</p>\n<p>सेक्शन Q में कर्मचारियों की संख्या = 200*20/100 = 40</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>R</strong><strong>:</strong></p>\n<p>सेक्शन R में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन R में लड़कियों की संख्या = 100% - 40% - 15% = 45%</p>\n<p>(अर्थात्), 45% = 90, 1% = 2, 100% = 200.</p>\n<p>सेक्शन R में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन R में लड़कों की संख्या = 200 * 40 / 100 = 80</p>\n<p>सेक्शन R में कर्मचारियों की संख्या = 200*15/100 = 30</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>S</strong><strong>:</strong></p>\n<p>सेक्शन S में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन S में लड़कियों की संख्या = 100% - 25% - 25% = 50%</p>\n<p>(अर्थात्), 50% = 120, 100% = 240.</p>\n<p>सेक्शन S में कुल लोगों की संख्या = 240</p>\n<p>सेक्शन S में लड़कों की संख्या = 240 * 25 / 100 = 60</p>\n<p>सेक्शन S में कर्मचारियों की संख्या = 240*25/100 = 60</p>\n<p><strong>सेक्शन</strong><strong> </strong><strong>T</strong><strong>:</strong></p>\n<p>सेक्शन T में कुल लोगों की संख्या = 100%</p>\n<p>सेक्शन T में लड़कियों की संख्या = 100% - 60% - 10% = 30%</p>\n<p>(अर्थात्), 30% = 60, 1% = 2, 100% = 200.</p>\n<p>सेक्शन T में कुल लोगों की संख्या = 200</p>\n<p>सेक्शन T में लड़कों की संख्या = 200*60/100 = 120</p>\n<p>सेक्शन T में कर्मचारियों की संख्या = 200*10/100 = 20</p>\n<p><img alt=\"\" class=\"imagepopup\" loading=\"lazy\" src=\"https://cdn.guidely.in/editor/practiceMockQuestions/1771504613100.png\" title=\"27.png\"/></p>\n<p><strong>उत्तर</strong><strong>: B</strong></p>\n<p>एकसाथ सेक्शन R और T में कुल लोगों की संख्या = 200 + 200 = 400</p>\n<p>एकसाथ सेक्शन P और S में कुल लोगों की संख्या = 200 + 240 = 440</p>\n<p>आवश्यक अनुपात = 400:440 = 10:11</p>"}, {"question": "<p><strong>इन सभी प्रश्नों में एक संख्या श्रृंखला दी गई है। प्रत्येक श्रृंखला में केवल एक संख्या गलत है। गलत संख्या ज्ञात कीजिए।</strong></p><br><p><strong>20, 32, 68, 128, 212, 310</strong></p>", "options": ["<p>310</p>", "<p>32</p>", "<p>68</p>", "<p>128</p>", "<p>212</p>"], "correctIndex": 0, "solution": "<p><strong>उत्तर</strong><strong>: </strong><strong>A</strong></p>\n<p>20 + (1 * 12) = 32</p>\n<p>32 + (3 * 12) = 68</p>\n<p>68 + (5 * 12) = 128</p>\n<p>128 + (7 * 12) = 212</p>\n<p>212 + (9 * 12) = 320 (310 गलत पद है)</p>\n<p>इसलिए, गलत पद 310 है।</p>"}, {"question": "<p><strong>इन सभी प्रश्नों में एक संख्या श्रृंखला दी गई है। प्रत्येक श्रृंखला में केवल एक संख्या गलत है। गलत संख्या ज्ञात कीजिए।</strong></p><br><p><strong>864, 456, 252, 125, 99, 73.5</strong></p>", "options": ["<p>252</p>", "<p>864</p>", "<p>125</p>", "<p>73.5</p>", "<p>99</p>"], "correctIndex": 2, "solution": "<p><strong>उत्तर</strong><strong>: C</strong></p>\n<p>864/2 + 24 = 456</p>\n<p>456/2 + 24 = 252</p>\n<p>252/2 + 24 = 150 (125 गलत पद)</p>\n<p>150/2 + 24 = 99</p>\n<p>99/2 + 24 = 73.5</p>\n<p>इसलिए, गलत पद 125 है।</p>"}, {"question": "<p><strong>इन सभी प्रश्नों में एक संख्या श्रृंखला दी गई है। प्रत्येक श्रृंखला में केवल एक संख्या गलत है। गलत संख्या ज्ञात कीजिए।</strong></p><br><p><strong>228, 246, 219, 237, 210, 242</strong></p>", "options": ["<p>246</p>", "<p>210</p>", "<p>228</p>", "<p>242</p>", "<p>219</p>"], "correctIndex": 3, "solution": "<p><strong>उत्तर</strong><strong>: D</strong></p>\n<p>228 + 18 = 246</p>\n<p>246 – 27 = 219</p>\n<p>219 + 18 = 237</p>\n<p>237 – 27 = 210</p>\n<p>210 + 18 = 228 (242 गलत पद)</p>\n<p>इसलिए, गलत पद 242 है।</p>"}, {"question": "<p><strong>इन सभी प्रश्नों में एक संख्या श्रृंखला दी गई है। प्रत्येक श्रृंखला में केवल एक संख्या गलत है। गलत संख्या ज्ञात कीजिए।</strong></p><br><p><strong>11, 14, 20, 38, 110, 474</strong></p>", "options": ["<p>474</p>", "<p>14</p>", "<p>38</p>", "<p>110</p>", "<p>20</p>"], "correctIndex": 0, "solution": "<p><strong>उत्तर</strong><strong>: </strong><strong>A</strong></p>\n<p>11      14             20             38             110           <strong>470</strong>                </p>\n<p>     3            6              18              72             360</p>\n<p>          *2             *3               *4               *5</p>\n<p>इसलिए, गलत शब्द 470 है।</p>"}, {"question": "<p><strong>इन सभी प्रश्नों में एक संख्या श्रृंखला दी गई है। प्रत्येक श्रृंखला में केवल एक संख्या गलत है। गलत संख्या ज्ञात कीजिए।</strong></p><br><p><strong>10, 18, 45, 110, 234, 450</strong></p>", "options": ["<p>450</p>", "<p>234</p>", "<p>110</p>", "<p>45</p>", "<p>18</p>"], "correctIndex": 2, "solution": "<p><strong>उत्तर</strong><strong>: C</strong></p>\n<p>10 + 2<sup>3</sup> = 18</p>\n<p>18 + 3<sup>3</sup> = 45</p>\n<p>45 + 43 = 109 (110 गलत पद)</p>\n<p>109 + 53 = 234</p>\n<p>234 + 63 = 450</p>\n<p>इसलिए, गलत शब्द 110 है।</p>"}, {"question": "<p><strong>निम्नलिखित प्रश्नों में समीकरण I और II शामिल हैं, और आपको इन दोनों समीकरणों को हल करके उनके बीच संबंध ज्ञात करना है और उत्तर देना है।</strong></p><br><p><strong>I). </strong>x<sup>2</sup> + 30x + 221 = 0</p>\n<p><strong>II). </strong>y<sup>2</sup> + 15y + 56 = 0</p>", "options": ["<p>x &gt; y</p>", "<p>x &ge; y</p>", "<p>x = y या फिर संबंध निर्धारित नहीं किया जा सकता।</p>", "<p>x &lt; y</p>", "<p>x &le; y</p>"], "correctIndex": 3, "solution": "<p><strong>उत्तर</strong><strong>: D</strong></p>\n<p><strong>i).</strong> x<sup>2</sup>+ 30x + 221 = 0</p>\n<p>x<sup>2</sup> + 17x + 13x + 221 =0</p>\n<p>(x+17) (x + 13) =0</p>\n<p>x = -17, -13</p>\n<p><strong>ii).</strong> y<sup>2</sup>+ 15y + 56 = 0</p>\n<p>y<sup>2</sup> + 7y + 8y + 56 =0</p>\n<p>(y+7) (y+8) =0</p>\n<p>y = -7, -8</p>\n<p>अतः, x &lt; y</p>"}, {"question": "<p><strong>निम्नलिखित प्रश्नों में समीकरण I और II शामिल हैं, और आपको इन दोनों समीकरणों को हल करके उनके बीच संबंध ज्ञात करना है और उत्तर देना है।</strong></p><br><p><strong>I). </strong>x<sup>2</sup> – 30x + 216 = 0</p>\n<p><strong>II). </strong>y<sup>2</sup> - 26y + 169 = 0</p>", "options": ["<p>x &gt; y</p>", "<p>x &ge; y</p>", "<p>x = y या फिर संबंध निर्धारित नहीं किया जा सकता।</p>", "<p>x &lt; y</p>", "<p>x &le; y</p>"], "correctIndex": 2, "solution": "<p><strong>उत्तर</strong><strong>: C</strong></p>\n<p><strong>i).</strong> x<sup>2</sup>– 30x + 216 = 0</p>\n<p>x<sup>2</sup> – 12x – 18x + 168 =0</p>\n<p>x (x – 12) – 18(x – 12) =0</p>\n<p>(x – 12) (x – 18) = 0</p>\n<p>x = 18, 12</p>\n<p><strong>ii). </strong>y<sup>2</sup>– 26y + 169 = 0</p>\n<p>y<sup>2</sup> – 13y – 13y + 169 = 0</p>\n<p>y (y – 13) -13(y – 13) = 0</p>\n<p>(y – 13) (y – 13) = 0</p>\n<p>y = 13, 13</p>\n<p>अतः, x = y या संबंध निर्धारित नहीं किया जा सकता।</p>"}, {"question": "<p><strong>निम्नलिखित प्रश्नों में समीकरण I और II शामिल हैं, और आपको इन दोनों समीकरणों को हल करके उनके बीच संबंध ज्ञात करना है और उत्तर देना है।</strong></p><br><p><strong>I). </strong>3x<sup>2</sup> + 27 =18x</p>\n<p><strong>II). </strong>y<sup>2</sup> - 18y + 17 =0</p>", "options": ["<p>x &gt; y</p>", "<p>x &ge; y</p>", "<p>x = y या फिर संबंध निर्धारित नहीं किया जा सकता।</p>", "<p>x &lt; y</p>", "<p>x &le; y</p>"], "correctIndex": 2, "solution": "<p><strong>उत्तर</strong><strong>: C</strong></p>\n<p><strong>i).</strong> 3x<sup>2</sup>-18x + 27 =0</p>\n<p>3x<sup>2</sup> –9x -9x + 27 =0</p>\n<p>(3x-9) (3x -9) =0</p>\n<p>x = 3, 3</p>\n<p><strong>ii). </strong>y<sup>2</sup>– 18y + 17 = 0</p>\n<p>y<sup>2</sup> -17y -y + 12 =0</p>\n<p>(y - 17) (y - 1) =0</p>\n<p>y = 17, 1</p>\n<p>अतः, x = y या फिर संबंध निर्धारित नहीं किया जा सकता।</p>"}, {"question": "<p><strong>निम्नलिखित प्रश्नों में समीकरण I और II शामिल हैं, और आपको इन दोनों समीकरणों को हल करके उनके बीच संबंध ज्ञात करना है और उत्तर देना है।</strong></p><br><p><strong>I). </strong>x<sup>2</sup> + 21x + 108 =0</p>\n<p><strong>II). </strong>9y<sup>2</sup> + 91 = 820</p>", "options": ["<p>x &gt; y</p>", "<p>x &ge; y</p>", "<p>x = y या फिर संबंध निर्धारित नहीं किया जा सकता।</p>", "<p>x &lt; y</p>", "<p>x &le; y</p>"], "correctIndex": 4, "solution": "<p><strong>उत्तर</strong><strong>: E</strong></p>\n<p><strong>i).</strong> x<sup>2</sup>+ 21x + 108 = 0</p>\n<p>x<sup>2</sup>+ 12x +9x + 108 =0</p>\n<p>(x + 9) (x +12) =0</p>\n<p>x = -9, -12</p>\n<p><strong>ii).</strong> 9y<sup>2</sup>+ 91 = 820</p>\n<p>9y<sup>2</sup> = 729</p>\n<p>y<sup>2</sup> = 81</p>\n<p>y = 9, -9</p>\n<p>अतः, y ≥ x</p>"}, {"question": "<p><strong>निम्नलिखित प्रश्नों में समीकरण I और II शामिल हैं, और आपको इन दोनों समीकरणों को हल करके उनके बीच संबंध ज्ञात करना है और उत्तर देना है।</strong></p><br><p><strong>I). </strong>x<sup>2 </sup>+ 29x + 204=0</p>\n<p><strong>II). </strong>5y<sup>2 </sup>- 30y + 25=0</p>", "options": ["<p>x &gt; y</p>", "<p>x &ge; y</p>", "<p>x = y या फिर संबंध निर्धारित नहीं किया जा सकता।</p>", "<p>x &lt; y</p>", "<p>x &le; y</p>"], "correctIndex": 3, "solution": "<p><strong>उत्तर</strong><strong>: D</strong></p>\n<p><strong>i). </strong>x<sup>2</sup>+ 29x + 204 = 0</p>\n<p>x<sup>2</sup>+ 12x+ 17x + 204=0</p>\n<p>(x+12) (x+ 17) = 0</p>\n<p>x = -12, -17</p>\n<p><strong>ii).</strong> 5y<sup>2</sup>–30y + 25 = 0</p>\n<p>5y<sup>2</sup> – 25y–5y+25=0</p>\n<p>(5y-25) (5y - 5) =0</p>\n<p>y = 5, 1</p>\n<p>अतः, x &lt; y</p>"}] 
+};
+
+
+
+let selectedLanguage = null;
+
+const HAS_ENGLISH = true;
+const HAS_HINDI = true;
+const TEST_DURATION_SECONDS = 1200;
+
+// Timer
+const timerLabel = document.getElementById('timer-label');
+let remainingSeconds = TEST_DURATION_SECONDS;
+
+// DOM elements
+const solutionsContainer = document.getElementById('solutions-container');
+
+const qProgress = document.getElementById('q-progress');
+const questionText = document.getElementById('question-text');
+const optionsContainer = document.getElementById('options-container');
+
+const clearBtn = document.getElementById('clear-btn');
+const markBtn = document.getElementById('mark-btn');
+const nextBtn = document.getElementById('next-btn');
+const submitBtn = document.getElementById('submit-btn');
+
+const paletteContainer = document.getElementById('palette-container');
+const solutionsList = document.getElementById('solutions-list');
+const solutionsBackBtn = document.getElementById('solutions-back-btn');
+
+const resultOverlay = document.getElementById('result-overlay');
+const metricMarks = document.getElementById('metric-marks');
+const metricCorrect = document.getElementById('metric-correct');
+const metricWrong = document.getElementById('metric-wrong');
+const metricAttempted = document.getElementById('metric-attempted');
+const viewSolutionsBtn = document.getElementById('view-solutions-btn');
+const homeBtn = document.getElementById('home-btn');
+
+const instTotalQuestions = document.getElementById('inst-total-questions');
+const instSideTotal = document.getElementById('inst-side-total');
+
+let questionStartTime = null;
+let questionTimes = [];
+let totalQuestions = 0;
+
+function formatTime(ms) {
+    const sec = Math.floor(ms / 1000);
+    return sec < 60 ? `${sec}s` : `${Math.floor(sec/60)}m ${sec % 60}s`;
+}
+
+// ===== TIMER FUNCTIONS =====
+function updateTimerLabel() {
+    const h = String(Math.floor(remainingSeconds / 3600)).padStart(2, '0');
+    const m = String(Math.floor((remainingSeconds % 3600) / 60)).padStart(2, '0');
+    const s = String(remainingSeconds % 60).padStart(2, '0');
+    timerLabel.textContent = `Time: ${h}:${m}:${s}`;
+}
+function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+
+    updateTimerLabel();
+
+    timerInterval = setInterval(() => {
+        remainingSeconds--;
+
+        if (remainingSeconds <= 0) {
+            remainingSeconds = 0;
+            updateTimerLabel();
+            clearInterval(timerInterval);
+
+            // AUTO SUBMIT
+            if (questionStartTime !== null) {
+                questionTimes[currentIndex] +=
+                    (Date.now() - questionStartTime);
+            }
+            saveAnswerForCurrent();
+            showResultOverlay();
+            return;
+        }
+
+        updateTimerLabel();
+    }, 1000);
+}
+
+function pauseTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+
+// ===== RENDERING =====
+function renderQuestion(index) {
+	if (questionStartTime !== null) {
+    questionTimes[currentIndex] += (Date.now() - questionStartTime);
+	}
+	questionStartTime = Date.now();
+
+    const q = questions[index];
+    qProgress.textContent = `Question ${index + 1} of ${totalQuestions}`;
+    questionText.innerHTML = q.question;
+    optionsContainer.innerHTML = '';
+
+    q.options.forEach((optHtml, optIndex) => {
+        const label = document.createElement('label');
+        label.className = 'option';
+
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'option';
+        input.value = optIndex;
+
+        if (userAnswers[index] === optIndex) {
+            input.checked = true;
+        }
+
+        const span = document.createElement('div');
+        span.className = 'option-text';
+        span.innerHTML = optHtml;
+
+        label.appendChild(input);
+        label.appendChild(span);
+
+        label.addEventListener('click', () => {
+            input.checked = true;
+        });
+
+        optionsContainer.appendChild(label);
+    });
+
+    // If first visit, mark as notAnswered for palette
+    if (questionStates[index] === "notVisited") {
+        questionStates[index] = (userAnswers[index] != null) ? "answered" : "notAnswered";
+    }
+
+    updatePalette();
+    updateNextButtonState();
+}
+
+function updatePalette() {
+    paletteContainer.innerHTML = '';
+
+    const drawerContainer =
+        document.getElementById('palette-drawer-container');
+    if (drawerContainer) drawerContainer.innerHTML = '';
+
+    for (let i = 0; i < totalQuestions; i++) {
+
+        function createBtn() {
+            const btn = document.createElement('div');
+            let cls = 'palette-item';
+
+            if (questionStates[i] === 'notVisited') cls += ' state-notVisited';
+            else if (questionStates[i] === 'notAnswered') cls += ' state-notAnswered';
+            else if (questionStates[i] === 'answered') cls += ' state-answered';
+            else if (questionStates[i] === 'marked') cls += ' state-marked';
+
+            if (i === currentIndex) cls += ' current';
+
+            btn.className = cls;
+            btn.textContent = i + 1;
+
+            btn.addEventListener('click', () => {
+                saveAnswerForCurrent();
+                currentIndex = i;
+                renderQuestion(currentIndex);
+                closeDrawer(); // safe on desktop
+            });
+
+            return btn;
+        }
+
+        paletteContainer.appendChild(createBtn());
+        if (drawerContainer) drawerContainer.appendChild(createBtn());
+    }
+}
+
+function getSelectedOptionIndex() {
+    const selected = document.querySelector('input[name="option"]:checked');
+    if (!selected) return null;
+    return parseInt(selected.value, 10);
+}
+
+function saveAnswerForCurrent() {
+    const selIndex = getSelectedOptionIndex();
+    if (selIndex !== null) {
+        userAnswers[currentIndex] = selIndex;
+        questionStates[currentIndex] = "answered";
+    } else {
+        // Only change to notAnswered if not marked
+        if (questionStates[currentIndex] !== "marked") {
+            questionStates[currentIndex] = "notAnswered";
+        }
+    }
+    updatePalette();
+}
+
+// ===== RESULT & SOLUTIONS =====
+function showResultOverlay() {
+    let correct = 0;
+    let attempted = 0;
+
+    const MARKS_PER_Q = 1;
+    const NEGATIVE_MARKS = 0.25;
+    const totalQuestions = questions.length;
+    const maxMarks = totalQuestions * MARKS_PER_Q;
+    let totalMarks = 0;
+
+    questions.forEach((q, i) => {
+        const ans = userAnswers[i];
+        if (ans !== null && ans !== undefined) {
+            attempted++;
+            if (ans === q.correctIndex) {
+                correct++;
+                totalMarks += MARKS_PER_Q;
+            } else {
+                totalMarks -= NEGATIVE_MARKS;
+            }
+        }
+    });
+
+    const wrong = attempted - correct;
+	
+    const accuracy =
+        attempted > 0 ? ((correct / attempted) * 100).toFixed(2) : "0.00";
+
+    metricMarks.textContent =
+        `${totalMarks.toFixed(2)} / ${maxMarks.toFixed(2)}`;
+    metricCorrect.textContent = correct;
+    metricWrong.textContent = wrong;
+    metricAttempted.textContent = attempted;
+
+    
+    document.getElementById("metric-accuracy").textContent = accuracy + "%";
+    const avgTime =
+		totalQuestions > 0
+			? questionTimes.reduce((a, b) => a + b, 0) / totalQuestions
+			: 0;
+
+    metricMarks.textContent =
+        `${totalMarks.toFixed(2)} / ${maxMarks.toFixed(2)}`;
+    metricCorrect.textContent = correct;
+    metricWrong.textContent = wrong;
+    metricAttempted.textContent = attempted;
+    document.getElementById("metric-avgtime").textContent =
+        formatTime(avgTime);
+
+    resultOverlay.classList.remove("hidden");
+	resultOverlay.classList.add("show");
+
+}
+
+function closeResultOverlay() {
+    resultOverlay.classList.remove("show");
+    resultOverlay.classList.add("hidden");
+}
+
+function buildSolutionsView() {
+    solutionsList.innerHTML = '';
+    questions.forEach((q, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'solution-item';
+
+        const qDiv = document.createElement('div');
+        qDiv.className = 'solution-question';
+        qDiv.innerHTML = `<strong>Q${index + 1}.</strong> ${q.question}`;
+        wrapper.appendChild(qDiv);
+
+        const optsDiv = document.createElement('div');
+        optsDiv.className = 'solution-options';
+
+        q.options.forEach((optHtml, optIndex) => {
+            const optDiv = document.createElement('div');
+            let cls = 'solution-option';
+            if (optIndex === q.correctIndex) {
+                cls += ' correct';
+            } else if (userAnswers[index] === optIndex) {
+                cls += ' wrong';
+            }
+            optDiv.className = cls;
+
+            const labelSpan = document.createElement('div');
+            labelSpan.className = 'solution-label';
+            labelSpan.textContent = String.fromCharCode(65 + optIndex) + '.';
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'solution-text';
+            textDiv.innerHTML = optHtml;
+
+            optDiv.appendChild(labelSpan);
+            optDiv.appendChild(textDiv);
+            optsDiv.appendChild(optDiv);
+        });
+
+        wrapper.appendChild(optsDiv);
+
+        const solDiv = document.createElement('div');
+        solDiv.className = 'solution-explanation';
+        const solutionHtml = (q.solution || '')
+			.replace(/\\"/g, '"')      // unescape quotes
+			.replace(/\\n/g, '')       // remove escaped newlines
+			.replace(/\\t/g, '');      // remove escaped tabs
+
+		solDiv.innerHTML = `<strong>Solution:</strong><br>${solutionHtml}`;
+        wrapper.appendChild(solDiv);
+
+        solutionsList.appendChild(wrapper);
+    });
+}
+
+
+
+clearBtn.addEventListener('click', () => {
+    // Clear selection & mark as "notAnswered" (red)
+    userAnswers[currentIndex] = null;
+    questionStates[currentIndex] = "notAnswered";
+    renderQuestion(currentIndex);
+});
+
+markBtn.addEventListener('click', () => {
+    // Option 2: DO NOT save answer when marking for review
+    userAnswers[currentIndex] = null;
+    questionStates[currentIndex] = "marked";
+    if (currentIndex < totalQuestions - 1) {
+        currentIndex++;
+        renderQuestion(currentIndex);
+    } else {
+        // stay on last, just refresh colors
+        renderQuestion(currentIndex);
+    }
+});
+
+nextBtn.addEventListener('click', () => {
+    saveAnswerForCurrent();
+
+    if (currentIndex < totalQuestions - 1) {
+        currentIndex++;
+    }
+
+    renderQuestion(currentIndex);
+    updateNextButtonState();
+});
+
+submitBtn.addEventListener('click', () => {
+    const overlay = document.getElementById("submit-confirm-overlay");
+    if (!overlay) return;
+
+    // ⏸️ Pause timer
+    pauseTimer();
+
+    overlay.classList.remove("hidden");
+    overlay.classList.add("show");
+});
+
+// ===== HAMBURGER MENU LOGIC =====
+const menuBtn = document.getElementById('menu-btn');
+const drawer = document.getElementById('palette-drawer');
+const drawerOverlay = document.getElementById('drawer-overlay');
+
+function openDrawer() {
+    if (!drawer || !drawerOverlay) return;
+    drawer.classList.add('open');
+    drawerOverlay.classList.add('show');
+    document.body.classList.add('drawer-open');
+}
+
+function closeDrawer() {
+    if (!drawer || !drawerOverlay) return;
+    drawer.classList.remove('open');
+    drawerOverlay.classList.remove('show');
+    document.body.classList.remove('drawer-open');
+}
+
+if (menuBtn) {
+    menuBtn.addEventListener('click', openDrawer);
+}
+
+if (drawerOverlay) {
+    drawerOverlay.addEventListener('click', closeDrawer);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const startTestBtn = document.getElementById("start-test-btn");
+    const languageSelect = document.getElementById("languageSelect");
+    const languageWarning = document.getElementById("language-warning");
+
+    const instructionsContainer = document.getElementById("instructions-container");
+    const quizContainer = document.getElementById("quiz-container");
+    const quizHeader = document.getElementById("quiz-header");
+    const instructionHeader = document.getElementById("instruction-header");
+
+    /* ===== AUTO LANGUAGE HANDLING (ON LOAD) ===== */
+    if (HAS_ENGLISH && HAS_HINDI) {
+        languageSelect.disabled = false;
+        languageSelect.value = "";
+    } else if (HAS_ENGLISH) {
+        languageSelect.value = "en";
+        languageSelect.disabled = true;
+    } else if (HAS_HINDI) {
+        languageSelect.value = "hi";
+        languageSelect.disabled = true;
+    }
+
+    /* ===== START TEST ===== */
+    startTestBtn.addEventListener("click", () => {
+
+        selectedLanguage = languageSelect.value;
+
+        // If only one language exists → auto select
+        if (!selectedLanguage) {
+            if (HAS_ENGLISH && !HAS_HINDI) selectedLanguage = "en";
+            if (HAS_HINDI && !HAS_ENGLISH) selectedLanguage = "hi";
+        }
+
+        // Bilingual → must select
+        if (HAS_ENGLISH && HAS_HINDI && !selectedLanguage) {
+            languageWarning.classList.remove("hidden");
+            return;
+        }
+
+        languageWarning.classList.add("hidden");
+
+        questions = QUESTIONS_BY_LANGUAGE[selectedLanguage];
+
+        if (!questions || questions.length === 0) {
+            alert("No questions available for selected language");
+            return;
+        }
+
+        /* ===== RESET STATE ===== */
+        currentIndex = 0;
+        totalQuestions = questions.length;
+		instTotalQuestions.textContent = questions.length;
+		instSideTotal.textContent = questions.length;
+        userAnswers = new Array(totalQuestions).fill(null);
+        questionStates = new Array(totalQuestions).fill("notVisited");
+        questionTimes = new Array(totalQuestions).fill(0);
+		remainingSeconds = TEST_DURATION_SECONDS;
+
+        /* ===== SWITCH UI ===== */
+        instructionHeader.style.display = "none";
+        instructionsContainer.style.display = "none";
+
+        quizHeader.classList.remove("hidden");
+        quizHeader.classList.add("show");
+        quizContainer.style.display = "block";
+
+        startTimer();
+        renderQuestion(0);
+        updatePalette();
+		updateNextButtonState();
+    });
+	
+	/* ===== CONFIRM SUBMISSION HANDLERS ===== */
+	const cancelSubmitBtn = document.getElementById("cancel-submit-btn");
+	const confirmSubmitBtn = document.getElementById("confirm-submit-btn");
+
+	if (cancelSubmitBtn) {
+		cancelSubmitBtn.addEventListener("click", () => {
+			const overlay = document.getElementById("submit-confirm-overlay");
+			if (!overlay) return;
+
+			overlay.classList.remove("show");
+			overlay.classList.add("hidden");
+
+			// ▶️ Resume timer
+			startTimer();
+		});
+	}
+
+	if (confirmSubmitBtn) {
+		confirmSubmitBtn.addEventListener("click", () => {
+			const overlay = document.getElementById("submit-confirm-overlay");
+			if (!overlay) return;
+
+			overlay.classList.remove("show");
+			overlay.classList.add("hidden");
+
+			// finalize time for current question
+			if (questionStartTime !== null) {
+				questionTimes[currentIndex] += (Date.now() - questionStartTime);
+				questionStartTime = null;
+			}
+
+			pauseTimer();
+			saveAnswerForCurrent();
+			showResultOverlay();   // ✅ Quiz Summary opens
+		});
+	}
+	/* ===== RESULT OVERLAY BUTTONS ===== */
+	const viewSolutionsBtn = document.getElementById('view-solutions-btn');
+	const homeBtn = document.getElementById('home-btn');
+	const solutionsBackBtn = document.getElementById('solutions-back-btn');
+
+	if (viewSolutionsBtn) {
+		viewSolutionsBtn.addEventListener('click', () => {
+			resultOverlay.classList.remove("show");
+			resultOverlay.classList.add("hidden");
+
+			quizContainer.style.display = 'none';
+			solutionsContainer.style.display = 'block';
+
+			buildSolutionsView();
+			window.scrollTo(0, 0);
+		});
+	}
+
+	if (solutionsBackBtn) {
+		solutionsBackBtn.addEventListener('click', () => {
+			solutionsContainer.style.display = 'none';
+
+			resultOverlay.classList.remove("hidden");
+			resultOverlay.classList.add("show");
+
+			window.scrollTo(0, 0);
+		});
+	}
+
+	if (homeBtn) {
+		homeBtn.addEventListener('click', () => {
+			resultOverlay.classList.remove("show");
+			resultOverlay.classList.add("hidden");
+
+			solutionsContainer.style.display = 'none';
+			quizContainer.style.display = 'none';
+			instructionsContainer.style.display = 'block';
+
+			instructionHeader.style.display = 'block';
+			quizHeader.classList.remove("show");
+			quizHeader.classList.add("hidden");
+
+			currentIndex = 0;
+			userAnswers.fill(null);
+			questionStates.fill("notVisited");
+
+			clearInterval(timerInterval);
+			timerInterval = null;
+
+			window.scrollTo(0, 0);
+		});
+	}
+});
+
+function updateNextButtonState() {
+    const nextBtn = document.getElementById("next-btn");
+
+    if (currentIndex >= questions.length - 1) {
+        nextBtn.disabled = true;
+        nextBtn.style.opacity = "0.5";
+        nextBtn.style.cursor = "not-allowed";
+    } else {
+        nextBtn.disabled = false;
+        nextBtn.style.opacity = "1";
+        nextBtn.style.cursor = "pointer";
+    }
+}
+
+</script>
+<script>
+
+(function () {
+    function closePopup() {
+		const popup = document.getElementById("free-test-popup");
+		if (popup) popup.classList.add("hidden");
+	}
+
+
+    // expose globally for onclick
+    window.closeFreePopup = closePopup;
+})();
+</script>
+
+<!-- FREE TEST WARNING POPUP -->
+<div class="overlay" id="free-test-popup">
+    <div class="overlay-content">
+        <div class="overlay-header">
+            <h2>⚠️ Important Notice</h2>
+        </div>
+
+        <div class="overlay-body">
+            This test is <strong>100% FREE</strong> and officially provided by
+            <strong>Team RankZenBanker</strong>.
+        </div>
+
+        <div class="notice-box">
+            🚫 Do <strong>NOT</strong> pay any amount to anyone for this test file.<br />
+            Anyone selling this test is a <strong>scammer</strong> and has
+            <strong>no authorization</strong>.
+        </div>
+
+        <div class="overlay-footer">
+            <button class="btn btn-primary" onclick="closeFreePopup()">
+                I Understand
+            </button>
+        </div>
+    </div>
+</div>
+<div class="overlay hidden" id="submit-confirm-overlay">
+    <div class="overlay-content">
+        <div class="overlay-header">
+            <h2>Confirm Submission</h2>
+        </div>
+        <div class="overlay-body">
+            Are you sure you want to submit the test?
+            <br>
+            You won’t be able to change your answers after submission.
+        </div>
+        <div class="overlay-footer">
+            <button class="btn btn-secondary" id="cancel-submit-btn">No</button>
+            <button class="btn btn-danger" id="confirm-submit-btn">Yes, Submit</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
