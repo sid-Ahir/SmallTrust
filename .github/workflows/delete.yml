@@ -1,10 +1,9 @@
-name: Delete Daywise Quiz Files
-
+name: Delete All Batch Files
 on:
   workflow_dispatch:
 
 jobs:
-  delete_quiz_files:
+  delete_all:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -12,18 +11,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Remove Quiz HTML files
+      - name: Remove multiple series files up to 200
         run: |
-          # ૧ થી ૨૦૦ સુધીના દિવસોની ફાઇલો ડિલીટ કરવા માટે (અહીં તમારી ફાઇલના નામની સાચી સ્પેલિંગ મુજબ પેટર્ન છે)
           for i in {1..200}; do
-            rm -f "Mains Mastery Quiz 2026 English (Day-$i).html"
-            rm -f "Mains Mastery Quiz 2026 English (Day - $i).html"
-            rm -f "Mains Mastery Quiz 2026 English (Day -૨૦૦).html"
+            rm -f "Mains master reasoning($i).html"
+            rm -f "mains master english($i).html"
+            rm -f "Reasoning Mock Pre($i).html"
+            rm -f "Reasoning Mains Mock($i).html"
+            rm -f "Mains Mastery Quiz 2026 Quants (Day-$i).html"
           done
           
-          # ફેરફારો ગિટમાં કમિટ કરવા
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Cleanup: Deleted Day 1 to Day 200 quiz files"
+          git commit -m "Cleanup: Deleted bulk files up to 200 across categories"
           git push
