@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPERMOCK - 1</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #e0e6ed;
+            --header-bg: #1a252f;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #333333;
+            --header-bg: #000000;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            padding-top: 60px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        #btn-back {
+            background-color: #95a5a6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #btn-theme {
+            background-color: transparent;
+            font-size: 1.5rem;
+            padding: 5px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Updated Home Page Grid (2 buttons per row) --- */
+        .topic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2 Columns */
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .topic-btn {
+            padding: 20px 10px;
+            font-size: 1.1rem;
+            text-align: center;
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s, filter 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            min-height: 80px;
+        }
+
+        .topic-btn:hover {
+            filter: brightness(1.1);
+        }
+        
+        .topic-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .options-list li {
+            padding: 8px 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin: 15px 0 5px 0;
+            font-size: 1rem;
+        }
+
+        .exam-trick {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        /* Practice Mock UI */
+        .mock-option {
+            width: 100%;
+            text-align: left;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--border);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        .mock-option.correct {
+            border-color: var(--secondary);
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        .mock-option.wrong {
+            border-color: var(--danger);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .action-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .score-board {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .score-board h2 {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--bg-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>SUPERMOCK - 1</div>
+        <div class="header-actions">
+            <button id="btn-back" style="display: none;">← BACK</button>
+            <button id="btn-theme">🌙</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Home View -->
+        <div id="view-home" class="view active">
+            <div class="topic-grid" id="home-menu">
+                <!-- Menu populated by JS -->
+            </div>
+        </div>
+
+        <!-- Detail View -->
+        <div id="view-detail" class="view">
+            <div id="detail-content"></div>
+        </div>
+
+        <!-- Practice Mock View -->
+        <div id="view-practice" class="view">
+            <div id="practice-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- Web Audio API for UI Sounds (Updated to Hard Beep) ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+            
+            if (type === 'click' || type === 'nav') {
+                // Hard Beep Sound
+                osc.type = 'square'; 
+                osc.frequency.setValueAtTime(1000, now); 
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.setValueAtTime(0, now + 0.1); // Sudden stop
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'correct') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.setValueAtTime(600, now + 0.1);
+                osc.frequency.setValueAtTime(800, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+        }
+
+        // --- Data Source ---
+        const studyData = [
+            {
+                topic: "ERROR DETECTION",
+                questions: [
+                    {
+                        qText: "During the family function, (A) / everyone was surprised by her singing (B) / so confidently in front of the guests (C) / despite being nervous earlier. (D) / No Error (E)",
+                        options: ["A", "B", "C", "D", "E"],
+                        answerIndex: 1,
+                        answerText: "B",
+                        explanation: "Transcript મુજબ, 'Surprised', 'Shocked', 'Amazed', 'Bewildered', 'Astonished' જેવા શબ્દો પછી જો કોઈ Person (વ્યક્તિ) નો ઉલ્લેખ હોય તો 'by' નો ઉપયોગ થાય છે. પરંતુ જો વ્યક્તિ સિવાયની કોઈ બાબત (Thing/Action) હોય તો 'at' નો ઉપયોગ થાય છે. અહી 'singing' (ગાવું) એ action છે, તેથી 'surprised at her singing' સાચો જવાબ છે.",
+                        examples: [
+                            "✅ I was surprised at the notice.",
+                            "✅ I was surprised by the officer."
+                        ],
+                        trick: "Surprised / Shocked / Amazed + by (Person)\nSurprised / Shocked / Amazed + at (Thing/Action)",
+                        quickRev: "જો વાક્યમાં surprised પછી નિર્જીવ વસ્તુ કે ક્રિયા હોય તો 'at' મૂકો."
+                    },
+                    {
+                        qText: "I met with my old friend at (A) / the station, but on (B) / his way home, he met (C) / with a serious accident. (D) / No Error (E)",
+                        options: ["A", "B", "C", "D", "E"],
+                        answerIndex: 0,
+                        answerText: "A",
+                        explanation: "Transcript મુજબ, જ્યારે 'Meet' (મળવું) નો ઉપયોગ સામાન્ય મુલાકાત માટે થાય, ત્યારે તેની સાથે કોઈ Preposition (with) લાગતો નથી. પરંતુ જ્યારે કોઈ અણધારી ઘટના (અકસ્માત) થાય ત્યારે 'met with' નો ઉપયોગ થાય છે. તેથી 'met my old friend' આવવું જોઈએ.",
+                        examples: [
+                            "✅ I met Ram. (સામાન્ય મુલાકાત)",
+                            "✅ I met with an accident. (અણધારી ઘટના)"
+                        ],
+                        trick: "Meet + Person = Direct (No 'with')\nMeet + Accident = 'with'",
+                        quickRev: "વ્યક્તિ સાથે મળવા માટે 'meet with' નહિ, માત્ર 'meet' વાપરો."
+                    },
+                    {
+                        qText: "The children discovered an old (A) / wooden chest beside the (B) / cupboard while cleaning (C) / their grandmother's room (D) / No Error (E)",
+                        options: ["A", "B", "C", "D", "E"],
+                        answerIndex: 1,
+                        answerText: "B",
+                        explanation: "Transcript મુજબ, 'beside' નો અર્થ 'બાજુમાં' (adjacent) થાય છે. જો wooden chest (લાકડાની પેટી) કબાટની બાજુમાં જ હોય, તો તેને 'discovered' (શોધી કાઢવું) ન કહેવાય કારણ કે તે દેખાતી જ હોય. 'Discover' ત્યારે વપરાય જ્યારે વસ્તુ સંતાયેલી હોય. તેથી અહીં 'behind' (પાછળ) આવવું જોઈએ.",
+                        examples: [],
+                        trick: "Context સમજો: 'Discovered' દર્શાવે છે કે વસ્તુ નજરે પડતી નહોતી, તેથી beside ખોટું છે, behind સાચું છે.",
+                        quickRev: "Beside = બાજુમાં, Behind = પાછળ."
+                    },
+                    {
+                        qText: "The professor advised his students (a) / to read articles written by experts and (b) / qualify for the exam in (c) / the flying colours (d) / No Error (e)",
+                        options: ["a", "b", "c", "d", "e"],
+                        answerIndex: 2,
+                        answerText: "C અને D બંનેમાં ભૂલ છે",
+                        explanation: "Transcript મુજબ, 'qualify', 'order', 'face' એ Transitive verbs છે, જેની સીધી અસર object પર થાય છે, તેથી વચ્ચે preposition વપરાતો નથી. 'qualify the exam' સાચું છે. અને phrase 'with flying colours' હોય છે, નહિ કે 'in the flying colours'.",
+                        examples: [
+                            "❌ I ordered for a pizza. -> ✅ I ordered a pizza.",
+                            "❌ He faced with a problem. -> ✅ He faced a problem."
+                        ],
+                        trick: "Transitive verbs (order, face, qualify) પછી 'what' (શું) પૂછવાથી સીધો જવાબ મળે, તેથી preposition (for/with) ન લગાવો.",
+                        quickRev: "Qualify the exam (without for). With flying colours (correct phrase)."
+                    },
+                    {
+                        qText: "Several vehicles stopped moving (A) / and traffic came to a complete (B) / halt when the heavy (C) / rain had flooded the streets (D) / No Error (E)",
+                        options: ["A", "B", "C", "D", "E"],
+                        answerIndex: 3,
+                        answerText: "D",
+                        explanation: "Transcript (Advanced Tense Concept) મુજબ: Past Perfect (had + V3) ત્યારે જ વપરાય જ્યારે બે past events વચ્ચે 'Time Gap' હોય. અહીં વરસાદના પાણી ભરાવવા અને ગાડીઓનું રોકાવું એકસાથે (તુરંત) થયું છે. જો time gap ન હોય તો બંને બાજુ Past Indefinite (V2) વપરાય. તેથી 'had flooded' ની જગ્યાએ માત્ર 'flooded' આવશે.",
+                        examples: [
+                            "✅ I had finished my editorial session before I took super mocks. (Time gap છે - Past Perfect સાચું)",
+                            "✅ The clerk stood up when the manager entered the office. (Time gap નથી - બંને Past Indefinite)"
+                        ],
+                        trick: "જો બે ઘટનાઓ એકસાથે થાય (No time gap), તો બંનેમાં Past Indefinite (V2) વાપરો.",
+                        quickRev: "No gap between actions = Use V2 in both clauses."
+                    }
+                ]
+            },
+            {
+                topic: "VOCABULARY",
+                questions: [
+                    {
+                        qText: "Find the antonym: The diplomat was known for his TACTLESS remarks, often offending foreign delegates with his bluntness.",
+                        options: ["A. Impolitic", "B. Undiplomatic", "C. Considerate", "D. Boorish", "E. None of these"],
+                        answerIndex: 2,
+                        answerText: "C. Considerate",
+                        explanation: "Tactless નો અર્થ છે અણઘડ, બેદરકાર (careless/unskilled) અથવા સામાવાળાનું ધ્યાન રાખ્યા વગર બોલવું. તેનો વિરોધી શબ્દ (antonym) 'Considerate' થશે જેનો અર્થ છે બીજાની લાગણીઓને સમજનાર અને તર્કબદ્ધ વર્તન કરનાર.",
+                        examples: [],
+                        trick: "Tactless એક negative શબ્દ છે, તેથી જવાબ positive હોવો જોઈએ. Impolitic, Undiplomatic, અને Boorish (rude) બધા negative છે.",
+                        quickRev: "Tactless (અણઘડ/careless) x Considerate (વિચારશીલ)."
+                    },
+                    {
+                        qText: "Find the antonym: The scientist's theory was dismissed as SPURIOUS until further research validated its accuracy.",
+                        options: ["A. Specious", "B. Fallacious", "C. Authentic", "D. Dubious", "E. None of these"],
+                        answerIndex: 2,
+                        answerText: "C. Authentic",
+                        explanation: "Spurious નો અર્થ છે બનાવટી (fake) અથવા શંકાસ્પદ (doubtful). તેનો વિરોધી શબ્દ 'Authentic' (અસલી/સાચું) થશે.",
+                        examples: [],
+                        trick: "Specious, Fallacious (false), અને Dubious આ બધા Spurious ના સમાનાર્થી (synonyms) છે.",
+                        quickRev: "Spurious (fake/doubtful) x Authentic (genuine)."
+                    },
+                    {
+                        qText: "Find the antonym: The commander remained OBDURATE, refusing to surrender despite overwhelming odds.",
+                        options: ["A. Stubborn", "B. Yielding", "C. Unyielding", "D. Resolute", "E. None of these"],
+                        answerIndex: 1,
+                        answerText: "B. Yielding",
+                        explanation: "Obdurate નો અર્થ છે જિદ્દી (stubborn/obstinate) જે કોઈની સામે ઝૂકે નહીં. તેનો વિરોધી શબ્દ 'Yielding' (સરન્ડર કરનાર/ઝૂકી જનાર) થશે.",
+                        examples: [],
+                        trick: "Stubborn, Unyielding, અને Resolute આ બધા Obdurate ના સમાનાર્થી છે. Yielding (Docile) એ જ વિરોધી છે.",
+                        quickRev: "Obdurate (જિદ્દી) x Yielding (ઝૂકનાર)."
+                    }
+                ]
+            },
+            {
+                topic: "PHRASE REPLACEMENT",
+                questions: [
+                    {
+                        qText: "The coward miser brothers refused to help their old friend in need, fearing it would cost him even a penny of his precious wealth.",
+                        options: [
+                            "A. The coward miser brothers",
+                            "B. A cowardly miser brothers",
+                            "C. A cowardly and miserly brother",
+                            "D. The cowardly and miserly brothers",
+                            "E. No improvement required"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C. A cowardly and miserly brother",
+                        explanation: "Transcript મુજબ, 'Coward' અને 'Miser' બંને Nouns છે. Noun ની આગળ Adjective જોઈએ. તેમને Adjective બનાવવા માટે પાછળ '-ly' લગાવવું પડે (Cowardly, Miserly). વળી, વાક્યના અંતે 'cost him' અને 'his precious wealth' છે જે દર્શાવે છે કે અહી એક જ ભાઈની (singular) વાત થઈ રહી છે. તેથી 'brother' (singular) આવશે.",
+                        examples: [
+                            "Friend (Noun) + ly = Friendly (Adjective)"
+                        ],
+                        trick: "Noun + ly = Adjective (Cowardly, Miserly). Pronoun 'him' દર્શાવે છે કે Subject singular છે.",
+                        quickRev: "Coward/Miser = Noun. Cowardly/Miserly = Adjective."
+                    },
+                    {
+                        qText: "This is the first time when we made a landmark progress in Chess.",
+                        options: [
+                            "A. when we have made a landmark progress",
+                            "B. that we have made a landmark progress",
+                            "C. we have made a landmark progress",
+                            "D. Both B and C",
+                            "E. No Improvement required"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D. Both B and C",
+                        explanation: "Transcript મુજબ, વાક્યમાં 'time' પોતે સમયનો ઉલ્લેખ કરે છે, તેથી 'when' લખવું એ Superfluous (વધારાનું) છે. તેને સુધારવા માટે તમે 'that' લગાવી શકો છો અથવા સંયોજક કાઢીને સીધું વાક્ય જોડી શકો છો. તેથી B અને C બંને સાચા છે.",
+                        examples: [
+                            "❌ It is 5 AM in the morning. (Superfluous - AM અને morning બંને સાથે ન આવે)"
+                        ],
+                        trick: "Time + when = Superfluous. 'that' વાપરો અથવા કાંઈ ન વાપરો.",
+                        quickRev: "Remove 'when' after 'time'."
+                    }
+                ]
+            },
+            {
+                topic: "WORD USAGE",
+                questions: [
+                    {
+                        qText: "Word: OBFUSCATE (Which sentences are correct?)\n1. The lawyer attempted to obfuscate the facts of the case by presenting irrelevant evidence.\n2. The dense fog rolling in from the sea did nothing to obfuscate the clarity of the lighthouse's beam.\n3. During the meeting, the CEO's ambiguous statements seemed designed to obfuscate the company's true intentions.",
+                        options: ["A. Only 1", "B. Only 1 and 3", "C. Only 2 and 3", "D. All 1, 2, and 3", "E. None of these"],
+                        answerIndex: 3,
+                        answerText: "D. All 1, 2, and 3",
+                        explanation: "Transcript મુજબ, 'Obfuscate' નો અર્થ છે 'to hide' (સંતાડવું/અસ્પષ્ટ કરવું). વાક્ય 1 માં હકીકત છુપાવવાની વાત છે (સાચું). વાક્ય 2 માં ધુમ્મસ લાઇટહાઉસની સ્પષ્ટતા છુપાવી શક્યું નહિ (સાચું). વાક્ય 3 માં CEO ના સ્ટેટમેન્ટ ઈરાદાઓ છુપાવવા માટે હતા (સાચું).",
+                        examples: [],
+                        trick: "ત્રણેય વાક્યોમાં 'hide' મૂકીને અર્થ સમજો, વાક્યનો અર્થ સ્પષ્ટ નીકળે છે.",
+                        quickRev: "Obfuscate = To hide / To make unclear."
+                    }
+                ]
+            },
+            {
+                topic: "PARA JUMBLE",
+                questions: [
+                    {
+                        qText: "Rearrange the following into a logical order:\nA. There are various components of Green Energy, including solar energy, wind energy, and hydropower.\nB. Conclusively, adopting green energy is essential for a cleaner and more sustainable future.\nC. These renewable energy sources collectively reduce reliance on fossil fuels and minimize greenhouse gas emissions.\nD. The solar panel requires consistent exposure to sunlight for optimal efficiency. Also, wind turbines play a vital role in generating clean electricity by harnessing wind power.\nE. A solar panel for instance, converts sunlight into electricity\nF. Green energy is a sustainable solution to combat climate change.",
+                        options: ["A. F-A-E-D-C-B", "B. F-A-C-E-D-B", "C. F-E-D-C-A-B", "D. A-F-E-D-C-B"],
+                        answerIndex: 0,
+                        answerText: "A. F-A-E-D-C-B",
+                        explanation: "Transcript મુજબ આ પ્રમાણે Flow બને છે:\n1. F: Green energy ને Main Topic તરીકે Introduce કરે છે.\n2. A: Green energy ના components (solar, wind) દર્શાવે છે (Sub-part 2).\n3. E: 'A solar panel' (Indefinite) થી ઉદાહરણ (for instance) આપે છે.\n4. D: 'The solar panel' (Definite) આગળની વાત વધારે સ્પષ્ટ કરે છે.\n5. C: 'These renewable energy sources' (solar, wind) નું summary આપે છે.\n6. B: 'Conclusively' દ્વારા ફકરાનો અંત (Last) કરે છે.",
+                        examples: [],
+                        trick: "પહેલા Indefinite article (A solar panel - E) આવે, પછી Definite article (The solar panel - D) આવે. Conclusively (B) છેલ્લે આવે.",
+                        quickRev: "Flow: Main idea -> Components -> Example (Indefinite) -> Detail (Definite) -> Summary -> Conclusion."
+                    }
+                ]
+            },
+            {
+                topic: "IDIOMS & CONNECTORS",
+                questions: [
+                    {
+                        qText: "Identify the correct meaning of the highlighted idiom: Maybe you will stop GRASPING AT STRAWS and admit you've lost",
+                        options: [
+                            "1. Stop finding the last possible chance to win",
+                            "2. Stop cheating in order to win",
+                            "3. Stop complaining of the unfair game",
+                            "4. Stop criticizing the opponent",
+                            "5. None of these"
+                        ],
+                        answerIndex: 0,
+                        answerText: "1. Stop finding the last possible chance to win",
+                        explanation: "💡 EXTRA EXPLANATION: 'Grasping at straws' એ એક idiom છે જેનો અર્થ થાય છે જ્યારે કોઈ વ્યક્તિ નિરાશાજનક સ્થિતિમાં હોય અને બચવા માટે સૌથી નાની અને અશક્ય લાગતી મદદની આશા રાખે (ડૂબતાને તરણખાનો સહારો).",
+                        examples: [],
+                        trick: "ડૂબતાને તરણખાનો સહારો = Grasping at straws.",
+                        quickRev: "Grasping at straws = Hoping for unlikely help in a bad situation."
+                    },
+                    {
+                        qText: "Join the sentences:\nI. It was for the first time in the history of politics in Maldives\nII. The President-elect said that he would stick to his campaign promise to remove Indian military personnel stationed in the archipelago state",
+                        options: ["A. That", "B. When", "C. As", "D. Both 1 and 2", "E. Both 2 and 3"],
+                        answerIndex: 0,
+                        answerText: "A. That",
+                        explanation: "💡 EXTRA EXPLANATION: આ વાક્યમાં આગળ શીખેલા Grammar rule (This is the first time) નો જ ઉપયોગ થયો છે. 'Time' સાથે સમય દર્શાવવા 'when' નહિ પરંતુ 'that' નો ઉપયોગ થાય છે.",
+                        examples: [],
+                        trick: "First time + That.",
+                        quickRev: "Use 'that' to connect after 'first time'."
+                    }
+                ]
+            }
+        ];
+
+        // --- Render UI ---
+        const homeMenu = document.getElementById('home-menu');
+        const detailContent = document.getElementById('detail-content');
+        const practiceContent = document.getElementById('practice-content');
+        const viewHome = document.getElementById('view-home');
+        const viewDetail = document.getElementById('view-detail');
+        const viewPractice = document.getElementById('view-practice');
+        const btnBack = document.getElementById('btn-back');
+        const btnTheme = document.getElementById('btn-theme');
+
+        // Colorful Button Colors
+        const tileColors = ['#FF4757', '#2ED573', '#1E90FF', '#FFA502', '#9C88FF', '#FF6348'];
+
+        // Dark/Light Mode
+        let isDarkMode = false;
+        btnTheme.addEventListener('click', () => {
+            playSound('nav');
+            isDarkMode = !isDarkMode;
+            document.body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            btnTheme.innerText = isDarkMode ? '☀️' : '🌙';
+        });
+
+        function showView(viewElement) {
+            viewHome.classList.remove('active');
+            viewDetail.classList.remove('active');
+            viewPractice.classList.remove('active');
+            viewElement.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize Home Menu
+        function initHome() {
+            homeMenu.innerHTML = '';
+            
+            studyData.forEach((section, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'topic-btn';
+                btn.innerText = section.topic;
+                btn.style.backgroundColor = tileColors[index % tileColors.length];
+                
+                btn.onclick = () => {
+                    playSound('click');
+                    renderDetailView(index);
+                };
+                homeMenu.appendChild(btn);
+            });
+
+            // Memory Sheet Button
+            const memoryBtn = document.createElement('button');
+            memoryBtn.className = 'topic-btn';
+            memoryBtn.innerText = "🔥 FINAL MEMORY SHEET";
+            memoryBtn.style.backgroundColor = "#5352ED";
+            memoryBtn.onclick = () => {
+                playSound('click');
+                renderMemorySheet();
+            };
+            homeMenu.appendChild(memoryBtn);
+
+            // Practice Mock Button
+            const mockBtn = document.createElement('button');
+            mockBtn.className = 'topic-btn';
+            mockBtn.innerText = "📝 PRACTICE MOCK";
+            mockBtn.style.backgroundColor = "#FF4757";
+            mockBtn.onclick = () => {
+                playSound('click');
+                renderPracticeMock();
+            };
+            homeMenu.appendChild(mockBtn);
+            
+            btnBack.style.display = 'none';
+            showView(viewHome);
+        }
+
+        btnBack.onclick = () => {
+            playSound('nav');
+            initHome();
+        };
+
+        // Render Topic Detail
+        function renderDetailView(sectionIndex) {
+            const section = studyData[sectionIndex];
+            let html = `<div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">${section.topic}</div>`;
+
+            section.questions.forEach((q, i) => {
+                html += `
+                <div class="card">
+                    <div class="section-title">Question ${i + 1}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    
+                    <ul class="options-list">
+                        ${q.options.map(opt => `<li>${opt}</li>`).join('')}
+                    </ul>
+
+                    <div class="section-title">✅ ANSWER</div>
+                    <p style="font-weight:bold; color:var(--secondary); margin-bottom: 15px;">${q.answerText}</p>
+
+                    <div class="section-title">🧠 COMPLETE EXPLANATION</div>
+                    <p>${q.explanation}</p>
+                    
+                    ${q.examples.length > 0 ? `
+                        <div class="section-title">✍️ EXAMPLES</div>
+                        ${q.examples.map(ex => `<p>${ex}</p>`).join('')}
+                    ` : ''}
+
+                    ${q.trick ? `
+                        <div class="exam-trick">
+                            <strong>🎯 EXAM TRICK:</strong><br>
+                            ${q.trick.replace(/\n/g, '<br>')}
+                        </div>
+                    ` : ''}
+
+                    <div class="section-title">⚡ QUICK REVISION</div>
+                    <p style="background-color: var(--bg-color); padding: 10px; border-radius: 4px;">${q.quickRev}</p>
+                </div>
+                `;
+            });
+
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        // Render Memory Sheet
+        function renderMemorySheet() {
+            let html = `
+                <div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">🔥 FINAL MEMORY SHEET</div>
+                <div class="card">
+                    <div class="section-title">1. Grammar Rules</div>
+                    <ul>
+                        <li><strong>Surprised at vs by:</strong> Person હોય તો 'by', Thing હોય તો 'at'.</li>
+                        <li><strong>Meet vs Meet with:</strong> સામાન્ય મુલાકાત = meet, અકસ્માત = meet with.</li>
+                        <li><strong>Beside vs Behind:</strong> Beside=બાજુમાં, Behind=પાછળ. સંતાયેલી વસ્તુ માટે behind.</li>
+                        <li><strong>Transitive Verbs:</strong> Order, Face, Qualify પછી preposition (for/with) ન લગાવો.</li>
+                        <li><strong>Advanced Tense:</strong> બે ઘટનાઓ વચ્ચે સમયનો ગાળો ન હોય તો બંનેમાં Past Indefinite (V2) વાપરો.</li>
+                        <li><strong>Mood Rule:</strong> Recommended/Suggested + that + Subject + Base form (V1).</li>
+                        <li><strong>Time + When:</strong> Time સાથે 'when' લગાવવું superfluous છે. 'That' વાપરો.</li>
+                    </ul>
+
+                    <div class="section-title" style="margin-top:20px;">2. Vocabulary Recap</div>
+                    <table>
+                        <tr><th>Word</th><th>Meaning</th><th>Antonym</th></tr>
+                        <tr><td>Tactless</td><td>અણઘડ / Careless</td><td>Considerate</td></tr>
+                        <tr><td>Spurious</td><td>બનાવટી / Fake</td><td>Authentic</td></tr>
+                        <tr><td>Obdurate</td><td>જિદ્દી / Stubborn</td><td>Yielding</td></tr>
+                        <tr><td>Lugubrious</td><td>શોકાતુર / Sad</td><td>Jovial</td></tr>
+                        <tr><td>Lachrymose</td><td>રડમસ / Tearful</td><td>Ebullient</td></tr>
+                        <tr><td>Obfuscate</td><td>સંતાડવું / Hide</td><td>-</td></tr>
+                        <tr><td>Perfunctory</td><td>રસ વિના / Careless</td><td>-</td></tr>
+                    </table>
+
+                    <div class="section-title" style="margin-top:20px;">3. Exam Tricks</div>
+                    <ul>
+                        <li>Noun + ly = Adjective (દા.ત. Cowardly, Miserly).</li>
+                        <li>વાક્યના અંતે જો Pronoun Singular હોય તો Subject પણ Singular જ આવે.</li>
+                        <li>Para Jumble માં પહેલા Indefinite (A/An), પછી Definite (The) આવે.</li>
+                    </ul>
+                </div>
+            `;
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        // --- Practice Mock Logic ---
+        let mockQuestions = [];
+        let currentMockIndex = 0;
+        let mockScore = { correct: 0, wrong: 0, skipped: 0 };
+        let answered = false;
+
+        function renderPracticeMock() {
+            mockQuestions = [];
+            studyData.forEach(section => {
+                section.questions.forEach(q => {
+                    mockQuestions.push({
+                        ...q,
+                        topicStr: section.topic
+                    });
+                });
+            });
+
+            currentMockIndex = 0;
+            mockScore = { correct: 0, wrong: 0, skipped: 0 };
+            btnBack.style.display = 'block';
+            
+            showMockQuestion();
+            showView(viewPractice);
+        }
+
+        function showMockQuestion() {
+            if (currentMockIndex >= mockQuestions.length) {
+                showMockResult();
+                return;
+            }
+
+            answered = false;
+            const q = mockQuestions[currentMockIndex];
+            let html = `
+                <div class="card-header" style="font-size:1.2rem; display:flex; justify-content:space-between;">
+                    <span>📝 PRACTICE MOCK</span>
+                    <span>Q ${currentMockIndex + 1} / ${mockQuestions.length}</span>
+                </div>
+                <div class="card">
+                    <div style="font-size: 0.9rem; color: #7f8c8d; margin-bottom: 10px;">${q.topicStr}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    <div id="mock-options-container">
+                        ${q.options.map((opt, i) => `
+                            <button class="mock-option" onclick="selectMockOption(${i}, this)">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <button class="action-btn" style="background-color: #95a5a6;" onclick="skipMockQuestion()" id="btn-skip">Skip Question</button>
+                    <button class="action-btn" style="display:none;" onclick="nextMockQuestion()" id="btn-next">Next Question →</button>
+                    
+                    <div class="result-box" id="mock-result-box"></div>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        function selectMockOption(selectedIndex, btnElement) {
+            if (answered) return;
+            answered = true;
+            
+            const q = mockQuestions[currentMockIndex];
+            const isCorrect = selectedIndex === q.answerIndex;
+            
+            if (isCorrect) {
+                playSound('correct');
+                btnElement.classList.add('correct');
+                mockScore.correct++;
+            } else {
+                playSound('wrong');
+                btnElement.classList.add('wrong');
+                mockScore.wrong++;
+                document.querySelectorAll('.mock-option')[q.answerIndex].classList.add('correct');
+            }
+
+            document.getElementById('btn-skip').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'inline-block';
+
+            const resultBox = document.getElementById('mock-result-box');
+            resultBox.style.display = 'block';
+            resultBox.style.backgroundColor = isCorrect ? 'rgba(46, 204, 113, 0.1)' : 'rgba(231, 76, 60, 0.1)';
+            resultBox.innerHTML = `
+                <strong style="color: ${isCorrect ? 'var(--secondary)' : 'var(--danger)'};">
+                    ${isCorrect ? '✅ CORRECT' : '❌ INCORRECT'}
+                </strong><br><br>
+                <strong>Correct Answer:</strong> ${q.answerText}<br>
+                <p style="margin-top:10px; font-size:0.95rem;">${q.explanation}</p>
+            `;
+        }
+
+        function skipMockQuestion() {
+            playSound('nav');
+            mockScore.skipped++;
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function nextMockQuestion() {
+            playSound('nav');
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function showMockResult() {
+            const total = mockQuestions.length;
+            const percentage = Math.round((mockScore.correct / total) * 100);
+            
+            let html = `
+                <div class="card-header" style="font-size:1.5rem;">🏆 FINAL SCORE</div>
+                <div class="card score-board">
+                    <h2>${percentage}%</h2>
+                    <p style="font-size:1.2rem; margin-bottom:10px;">Total Questions: <strong>${total}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--secondary)">Correct: <strong>${mockScore.correct}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--danger)">Wrong: <strong>${mockScore.wrong}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:20px; color:#95a5a6">Skipped: <strong>${mockScore.skipped}</strong></p>
+                    <button class="action-btn" onclick="initHome()">Return to Home</button>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        // Initialize App
+        window.onload = initHome;
+
+    </script>
+</body>
+</html>
