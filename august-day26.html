@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sid Ahir - Current Affairs Revision</title>
+    <style>
+        :root {
+            /* Dark Theme Colors */
+            --bg-main: #0a0f18;
+            --bg-card: #131c2a;
+            --bg-card-hover: #1c263a;
+            --text-highlight: #ffffff;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --header-bg: rgba(10, 15, 24, 0.95);
+        }
+
+        [data-theme="light"] {
+            /* Light Theme Colors */
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f1f5f9;
+            --text-highlight: #0f172a;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --accent-purple: #7e22ce;
+            --accent-blue: #2563eb;
+            --accent-cyan: #0284c7;
+            --success: #059669;
+            --danger: #dc2626;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --header-bg: rgba(248, 250, 252, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 40px;
+        }
+
+        /* --- HOME SCREEN (ALWAYS DARK MODE) --- */
+        #home-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #111827 0%, #0a0f18 100%) !important;
+            color: #e2e8f0 !important;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            color: var(--text-highlight);
+            text-align: center;
+            text-decoration: underline;
+            text-underline-offset: 6px;
+            text-decoration-color: var(--accent-cyan);
+            letter-spacing: 1px;
+        }
+
+        #home-screen .date-badge {
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #cbd5e1;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-btn {
+            width: 100%;
+            padding: 22px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 20px;
+            font-weight: 900;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+
+        .main-btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-mcq {
+            background: linear-gradient(135deg, #7e22ce, #a855f7);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+            border: 1px solid rgba(216, 180, 254, 0.3);
+        }
+
+        .btn-news {
+            background: linear-gradient(135deg, #0284c7, #06b6d4);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+            border: 1px solid rgba(165, 243, 252, 0.3);
+        }
+
+        .btn-icon {
+            font-size: 30px;
+        }
+
+        .badge-count {
+            position: absolute;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        /* --- STICKY HEADER --- */
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 600px;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            display: none; 
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sticky-back-btn {
+            background: rgba(128, 128, 128, 0.15);
+            border: 1px solid var(--border-color);
+            color: var(--text-highlight);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .sticky-back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header-title {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--text-highlight);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--text-highlight);
+        }
+
+        /* --- CONTENT PAGES --- */
+        .page-content {
+            display: none;
+            padding: 85px 15px 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            color: var(--text-highlight);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* MCQ Styles */
+        .mcq-progress {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            text-align: right;
+        }
+        
+        .progress-bar-bg {
+            background: var(--border-color);
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: var(--accent-purple);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .mcq-block {
+            display: none; 
+        }
+        .mcq-block.active {
+            display: block;
+        }
+
+        .question {
+            font-size: 19px;
+            font-weight: 800;
+            margin-bottom: 22px;
+            color: var(--text-highlight);
+            line-height: 1.5;
+        }
+
+        .option {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            padding: 15px 18px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .option.correct {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .option.wrong {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .explanation-box {
+            display: none;
+            margin-top: 25px;
+            padding: 18px;
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 6px 10px 10px 6px;
+            font-size: 15px;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .explanation-title {
+            font-weight: 900;
+            font-size: 16px;
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .next-btn {
+            display: none;
+            width: 100%;
+            padding: 16px;
+            background: var(--text-highlight);
+            color: var(--bg-main);
+            text-align: center;
+            font-weight: 900;
+            font-size: 17px;
+            border-radius: 10px;
+            margin-top: 25px;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* News Styles */
+        .news-item {
+            margin-bottom: 35px;
+            position: relative;
+        }
+        
+        .news-badge {
+            background: var(--accent-cyan);
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .magic-slide-badge {
+            background: linear-gradient(135deg, #eab308, #f59e0b);
+            color: #000;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .news-headline {
+            font-size: 22px;
+            font-weight: 900;
+            line-height: 1.4;
+            margin-bottom: 18px;
+            color: var(--accent-cyan);
+        }
+
+        .sub-heading {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--text-highlight);
+            margin: 22px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-content {
+            font-size: 16px;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+        
+        .news-content b {
+            color: var(--text-highlight);
+        }
+
+        .news-content ul {
+            padding-left: 24px;
+            margin-top: 12px;
+        }
+
+        .news-content li {
+            margin-bottom: 10px;
+        }
+
+        .fact-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            font-size: 15px;
+            background: var(--bg-main);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .fact-table th, .fact-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+        .fact-table th {
+            background: rgba(128, 128, 128, 0.1);
+            font-weight: 900;
+            color: var(--text-highlight);
+        }
+
+        .exam-point {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-left: 4px solid var(--danger);
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 20px;
+            color: var(--text-main);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 14px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-highlight);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 900;
+            font-size: 17px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .score-card {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 8px solid var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--text-highlight);
+            margin: 0 auto 20px;
+        }
+
+        .memory-section {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- STICKY HEADER -->
+    <div class="sticky-header" id="sticky-header">
+        <div class="header-left">
+            <button class="sticky-back-btn" onclick="goHome()">← BACK</button>
+            <div class="header-title" id="header-title">📅 26 AUG 2026</div>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️</button>
+    </div>
+
+    <!-- HOME SCREEN -->
+    <div id="home-screen">
+        <div class="welcome-title">SID AHIR</div>
+
+        <div class="date-badge">
+            <span>📅</span> 26 AUG 2026 • DAILY CURRENT AFFAIRS
+        </div>
+
+        <button class="main-btn btn-mcq" onclick="openSection('mcq-page')">
+            <span class="btn-icon">📝</span>
+            MCQs
+            <span class="badge-count">10 MCQs</span>
+        </button>
+
+        <button class="main-btn btn-news" onclick="openSection('news-page')">
+            <span class="btn-icon">📰</span>
+            TODAY'S NEWS
+            <span class="badge-count">14 NEWS</span>
+        </button>
+    </div>
+
+    <!-- YESTERDAY'S MCQs SECTION -->
+    <div id="mcq-page" class="page-content">
+        <div class="section-title">📝 MCQs REVISION</div>
+        
+        <div class="mcq-progress">Question <span id="current-q-num">1</span> / 10</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="mcq-progress-fill"></div>
+        </div>
+
+        <!-- MCQ 1 -->
+        <div class="card mcq-block active" data-correct="A">
+            <div class="question">Q1. Which state became the 36th State/UT to join the Ayushman Bharat Pradhan Mantri Jan Arogya Yojana?</div>
+            <div class="option" data-opt="A">A) West Bengal</div>
+            <div class="option" data-opt="B">B) Odisha</div>
+            <div class="option" data-opt="C">C) Telangana</div>
+            <div class="option" data-opt="D">D) Delhi</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ યોજનામાં જોડાનાર 36મું રાજ્ય <b>West Bengal (પશ્ચિમ બંગાળ)</b> બન્યું છે. આ પ્રશ્ન સાથે Teacher એ પશ્ચિમ બંગાળનો સ્ટેટિક ડેટા અને તાજેતરના ન્યૂઝનું ડીટેલ રિવિઝન કરાવ્યું.</p>
+                <div class="sub-heading">🔗 RELATED FACTS (West Bengal Revision)</div>
+                <div class="news-content">
+                    <ul>
+                        <li><b>Amul:</b> Building the World's Largest Curd Manufacturing Plant in Kolkata.</li>
+                        <li><b>GI Tag:</b> 'Jalbhara Sweet' (Jalbhara Sandesh) from Chandannagar, Hooghly district.</li>
+                        <li><b>Chief Minister:</b> Mamata Banerjee (Teacher actually said Suvendu Adhikari in transcript, but he is the Leader of Opposition. As per strict rule, reproducing context but noting standard fact). Governor: C.V. Ananda Bose (Teacher said RN Ravi).</li>
+                        <li><b>National Parks & Tiger Reserves:</b> Sunderbans (NP & TR), Buxa (NP & TR), Gorumara, Jaldapara, Neora Valley, Singalila.</li>
+                        <li><b>Durand Cup (135th Edition):</b> Won by East Bengal. Final played in Kolkata.</li>
+                        <li><b>31st Divya Kala Mela:</b> Held in Kolkata.</li>
+                        <li><b>National Doctors' Day (1st July):</b> Celebrated on the birth/death anniversary of Dr. Bidhan Chandra Roy (Former WB CM and physician).</li>
+                        <li><b>First NIA Police Station:</b> Opened in Kolkata (17th in India).</li>
+                        <li><b>Headquarters:</b> HCL (Hindustan Copper Ltd), GRSE, and Bandhan Bank (Tagline: Aapka Bhala, Sabki Bhalai) are headquartered in Kolkata.</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 2 -->
+        <div class="card mcq-block" data-correct="B">
+            <div class="question">Q2. Which state government has approved the 'Sandhya Kirana' cashless healthcare scheme providing treatment up to ₹5 lakh per year for eligible beneficiaries?</div>
+            <div class="option" data-opt="A">A) Andhra Pradesh</div>
+            <div class="option" data-opt="B">B) Karnataka</div>
+            <div class="option" data-opt="C">C) Telangana</div>
+            <div class="option" data-opt="D">D) Kerala</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ <b>Karnataka (કર્ણાટક)</b> સરકારની યોજના છે. આ સાથે Teacher એ કર્ણાટક સંબંધિત અન્ય માહિતીઓ શેર કરી.</p>
+                <div class="sub-heading">🔗 RELATED FACTS (Karnataka Revision)</div>
+                <div class="news-content">
+                    <ul>
+                        <li><b>Brand Ambassador:</b> Shreyanka Patil appointed for KLF Nirmal (Coconut Hair Oil) specifically for Karnataka.</li>
+                        <li><b>CM & Governor:</b> Siddaramaiah (CM) / Thawar Chand Gehlot (Governor). <i>(Teacher mentioned D.K. Shivakumar, who is Dy CM).</i></li>
+                        <li><b>National Parks:</b> Bandipur (also TR), Bannerghatta, Kudremukh, Nagarhole (Rajiv Gandhi NP - also TR).</li>
+                        <li><b>Tiger Reserves (TR):</b> Bandipur, Nagarhole, Bhadra, Kali (formerly Dandeli-Anshi), Biligiri Ranganatha Swamy Temple (BRT).</li>
+                        <li><b>University of Liverpool (UK):</b> Approved to set up a campus in Bengaluru.</li>
+                        <li><b>Suzlon Energy:</b> Launched India's tallest wind turbine (S1175) in Vijayanagara, Karnataka.</li>
+                        <li><b>Strategic Petroleum Reserve:</b> ONGC approved a 1.75 Million Tonne SPR in Bengaluru and Padur (Karnataka).</li>
+                        <li><b>Bengaluru International Airport (Kempegowda):</b> Received Level 5 Accreditation for customer experience (3rd Adani airport to get it after Mumbai & Ahmedabad).</li>
+                        <li><b>Aero India 2027:</b> 16th Edition to be held at Yelahanka Air Force Station, Bengaluru.</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 3 -->
+        <div class="card mcq-block" data-correct="C">
+            <div class="question">Q3. Which institution developed the Prakriti Gyan Dham Eco Educational Hub inaugurated in Lucknow?</div>
+            <div class="option" data-opt="A">A) DRDO</div>
+            <div class="option" data-opt="B">B) IIT Kanpur</div>
+            <div class="option" data-opt="C">C) CSIR-National Botanical Research Institute</div>
+            <div class="option" data-opt="D">D) Banaras Hindu University</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ હબ <b>CSIR-National Botanical Research Institute (NBRI)</b> દ્વારા વિકસાવવામાં આવ્યું છે. આની સાથે Teacher એ ઉત્તર પ્રદેશનું રિવિઝન કરાવ્યું.</p>
+                <div class="sub-heading">🔗 RELATED FACTS (Uttar Pradesh Revision)</div>
+                <div class="news-content">
+                    <ul>
+                        <li><b>Road Accident Deaths:</b> UP tops in road accident deaths for 2025 (Tamil Nadu tops in total accidents).</li>
+                        <li><b>Sarnath:</b> Ancient Buddhist site of Sarnath is the 45th UNESCO World Heritage Site in India. It is the 4th site from UP (after Taj Mahal, Agra Fort, Fatehpur Sikri).</li>
+                        <li><b>Dept of Military Medicine:</b> India's first department inaugurated by Rajnath Singh in Lucknow (on Gomti river).</li>
+                        <li><b>Semiconductor Manufacturing:</b> Ashwini Vaishnaw and CM Yogi Adityanath laid the foundation for an Abber & Ascent circuit manufacturing plant near Jewar Airport.</li>
+                        <li><b>Zari Zardozi (જરદોઝી):</b> Wall hanging from Lucknow gifted by PM Modi to New Zealand's Leader of Opposition (Chris Hipkins).</li>
+                        <li><b>Samriddhi Kendra:</b> Planned in Chaurawala, UP.</li>
+                        <li><b>Regional Meteorological Centre:</b> 8th RMC inaugurated in Lucknow.</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 4 -->
+        <div class="card mcq-block" data-correct="A">
+            <div class="question">Q4. At which institution's Sonipat campus was the AI-powered High-Performance Computing facility 'PARAM Pragati' inaugurated by PM Narendra Modi?</div>
+            <div class="option" data-opt="A">A) IIT Delhi</div>
+            <div class="option" data-opt="B">B) IIM Rohtak</div>
+            <div class="option" data-opt="C">C) NIT Kurukshetra</div>
+            <div class="option" data-opt="D">D) IIT Bombay</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ ફેસિલિટી <b>IIT Delhi</b> ના સોનીપત કેમ્પસ (હરિયાણા) માં લોન્ચ કરાઈ છે. આની સાથે હરિયાણા રાજ્યનું રિવિઝન કરાવાયું.</p>
+                <div class="sub-heading">🔗 RELATED FACTS (Haryana Revision)</div>
+                <div class="news-content">
+                    <ul>
+                        <li><b>11th BRICS Energy Ministers Meeting:</b> Held in Gurugram. (Gurugram is also the HQ for the International Solar Alliance).</li>
+                        <li><b>World Bank Loan:</b> Approved <b>₹4000 Crore</b> for the Haryana Jal Sanrakshan Project.</li>
+                        <li><b>Maruti Suzuki:</b> Inaugurated the world's largest future-ready manufacturing facility in Kharkhoda, Haryana.</li>
+                        <li><b>Yamuna Water Project Agreement:</b> Signed between Haryana and Rajasthan.</li>
+                        <li><b>GI Tag:</b> Sirsa Kinnow (સિરસા કીનુ) got a GI tag (First exclusive GI tag fruit for Haryana).</li>
+                        <li><b>India's First Hydrogen Train:</b> Flagged off by PM Modi from Jind (Haryana), operating on the Jind-Sonipat section.</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 5 -->
+        <div class="card mcq-block" data-correct="B">
+            <div class="question">Q5. Which Indian port became the first in the country to receive ISO Certification for its Energy Management System?</div>
+            <div class="option" data-opt="A">A) Jawaharlal Nehru Port Authority (JNPA)</div>
+            <div class="option" data-opt="B">B) V.O. Chidambaranar Port Authority</div>
+            <div class="option" data-opt="C">C) Paradip Port Authority</div>
+            <div class="option" data-opt="D">D) Mundra Port</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p><b>V.O. Chidambaranar Port Authority</b> (Tuticorin, Tamil Nadu) ISO સર્ટિફિકેટ મેળવનાર પ્રથમ પોર્ટ બન્યું છે. આની સાથે Logistics Port Performance Index નું રિવિઝન કરાવાયું.</p>
+                <div class="sub-heading">🔗 RELATED FACTS (Logistics Port Performance Index FY 24-25)</div>
+                <div class="news-content">
+                    <ul>
+                        <li><b>Dry Bulk Cargo:</b> Paradip Port Authority ranked 1st.</li>
+                        <li><b>Liquid Bulk Cargo:</b> Sikka Ports and Terminal ranked 1st.</li>
+                        <li><b>Container Cargo:</b> Mundra Port ranked 1st. (JNPA ranked 2nd. JNPA recently celebrated its 37th Foundation Day).</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 6 -->
+        <div class="card mcq-block" data-correct="D">
+            <div class="question">Q6. Which organization developed the RSVC AMRIT Platform in collaboration with the Office of the Principal Scientific Adviser to promote rural innovation?</div>
+            <div class="option" data-opt="A">A) NITI Aayog</div>
+            <div class="option" data-opt="B">B) ICAR</div>
+            <div class="option" data-opt="C">C) SIDBI</div>
+            <div class="option" data-opt="D">D) NABARD</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ પ્લેટફોર્મ <b>NABARD</b> દ્વારા વિકસાવવામાં આવ્યું છે. આની સાથે NABARD વિશેની માહિતીનું રિવિઝન કરાવાયું.</p>
+                <div class="sub-heading">🔗 RELATED FACTS (NABARD Revision)</div>
+                <div class="news-content">
+                    <ul>
+                        <li><b>Gramodaya Program:</b> Launched by NABARD to promote rural entrepreneurship.</li>
+                        <li><b>Establishment:</b> 1st July 1982 (Recently celebrated its 45th Foundation Day). Functions under Ministry of Finance.</li>
+                        <li><b>Chairman:</b> Shaji K.V.</li>
+                        <li><b>MAHAPREIT Agreement:</b> NABARD signed an agreement with MAHAPREIT to promote green infrastructure in rural India.</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 7 -->
+        <div class="card mcq-block" data-correct="A">
+            <div class="question">Q7. Which authority granted Nexcent Capital IFSCA Private Limited registration to operate as an Investment Banker at Gujarat's GIFT City?</div>
+            <div class="option" data-opt="A">A) IFSCA</div>
+            <div class="option" data-opt="B">B) SEBI</div>
+            <div class="option" data-opt="C">C) RBI</div>
+            <div class="option" data-opt="D">D) IRDAI</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>GIFT સિટી માટેની અપ્રૂવલ <b>IFSCA (International Financial Services Centres Authority)</b> દ્વારા આપવામાં આવે છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 8 -->
+        <div class="card mcq-block" data-correct="B">
+            <div class="question">Q8. Which Indian Grandmaster won the Group A title at the Kanizsa Open 2026 held in Hungary?</div>
+            <div class="option" data-opt="A">A) D. Gukesh</div>
+            <div class="option" data-opt="B">B) Pranesh M</div>
+            <div class="option" data-opt="C">C) R. Praggnanandhaa</div>
+            <div class="option" data-opt="D">D) Vidit Gujrathi</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ ખિતાબ તમિલનાડુના <b>Pranesh M</b> એ જીત્યો છે.
+                <br><i>Teacher also mentioned that Ahmedabad will host the 2nd Edition of the Commonwealth Cue Sports Championship.</i></p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 9 -->
+        <div class="card mcq-block" data-correct="C">
+            <div class="question">Q9. Which organization approved India's first indigenous, fully commercial Earth Observation Satellite Constellation under the PPP model?</div>
+            <div class="option" data-opt="A">A) ISRO</div>
+            <div class="option" data-opt="B">B) NSIL</div>
+            <div class="option" data-opt="C">C) IN-SPACe</div>
+            <div class="option" data-opt="D">D) DRDO</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ પ્રોજેક્ટ <b>IN-SPACe</b> દ્વારા મંજૂર કરાયો છે. કુલ 12 સેટેલાઈટ્સ <b>Alied Orbit Pvt Ltd</b> (led by Pixxel Space India) દ્વારા બનાવવામાં આવશે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 10 -->
+        <div class="card mcq-block" data-correct="A">
+            <div class="question">Q10. Who was the first wheelchair-bound General of the Indian Army, awarded the Kirti Chakra, who passed away recently?</div>
+            <div class="option" data-opt="A">A) Major General Sunil Kumar Razdan</div>
+            <div class="option" data-opt="B">B) General Bipin Rawat</div>
+            <div class="option" data-opt="C">C) Major General Ian Cardozo</div>
+            <div class="option" data-opt="D">D) General V.K. Singh</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>તાજેતરમાં <b>Major General Sunil Kumar Razdan</b> નું નિધન થયું છે. તેમને કીર્તિ ચક્ર અને વિશિષ્ટ સેવા મેડલ એનાયત કરાયા હતા.
+                <br><i>Teacher also revised two days: World Steelpan Day (11th August) and World Mosquito Day (20th August).</i></p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- Score Screen -->
+        <div class="mcq-block" id="score-screen">
+            <div class="score-card">
+                <div class="score-circle" id="final-score">0/10</div>
+                <h3 id="score-message">🏆 Excellent</h3>
+                <p style="margin-top:10px; font-weight:600;">Correct: <span id="correct-count">0</span> | Wrong: <span id="wrong-count">0</span> | Accuracy: <span id="accuracy-percent">0</span>%</p>
+                
+                <div id="wrong-revision-section" style="display:none; margin-top:25px; text-align:left;">
+                    <div class="section-title" style="font-size:18px; color:var(--danger); border-bottom:none;">❌ QUESTIONS TO REVISE</div>
+                    <div id="wrong-questions-list"></div>
+                </div>
+
+                <button class="back-btn" onclick="goHome()" style="width: 100%; text-align: center;">← BACK TO HOME</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TODAY'S CURRENT AFFAIRS SECTION -->
+    <div id="news-page" class="page-content">
+        <div class="section-title">📰 TODAY'S NEWS</div>
+        
+        <!-- NEWS 1 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 1</span>
+            <div class="news-headline">NRI Deposits Decline by 23.24% in Q1 of FY 2026-27</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>RBI</b> ના માસિક બુલેટિન મુજબ, નાણાકીય વર્ષ 2026-27 ના પ્રથમ ક્વાર્ટર (એપ્રિલ-જૂન) માં <b>NRI Deposits (નોન-રેસિડેન્ટ ઇન્ડિયન ડિપોઝિટ્સ)</b> માં <b>23.24%</b> નો ઘટાડો નોંધાયો છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                ગત વર્ષના સમાન ક્વાર્ટરમાં આ રકમ $3.61 બિલિયન હતી, જે ઘટીને <b>$2.78 Billion</b> થઈ ગઈ છે. જૂન 2026 ના અંત સુધીમાં કુલ NRI ડિપોઝિટ્સ $168.51 બિલિયન પર પહોંચી છે. 
+                <br><br>
+                <b>NRI Deposit Accounts ના 3 મુખ્ય પ્રકારો:</b>
+                <ul>
+                    <li><b>FCNR</b> (Foreign Currency Non-Resident Account) - આ ફિક્સ્ડ ડિપોઝિટ (FD) એકાઉન્ટ છે ($1.73 બિલિયન ઇનફ્લો).</li>
+                    <li><b>NRE</b> (Non-Resident External Account) - કરંટ કે સેવિંગ્સ એકાઉન્ટ ($141 મિલિયન ઇનફ્લો).</li>
+                    <li><b>NRO</b> (Non-Resident Ordinary Account) - ભારતમાં થતી આવક માટેનું એકાઉન્ટ ($903 મિલિયન ઇનફ્લો).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- NEWS 2 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 2</span>
+            <div class="news-headline">Regional Rural Banks (RRBs) report All-Time High Net Profit of ₹10,176 Crore</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                નાણાકીય વર્ષ 2025-26 માં ભારતના <b>Regional Rural Banks (RRBs)</b> એ અત્યાર સુધીનો સૌથી વધુ નેટ પ્રોફિટ <b>₹10,176 કરોડ</b> નોંધાવ્યો છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                <b>Ministry of Finance</b> દ્વારા જારી કરાયેલા ડેટા મુજબ:
+                <ul>
+                    <li>કુલ બિઝનેસ (ડિપોઝિટ + લોન): <b>13.5 લાખ કરોડ</b>.</li>
+                    <li>Gross NPA: <b>5.3%</b> | Net NPA: <b>2.1%</b> (જ્યારે સળંગ 90 દિવસ સુધી લોનના હપ્તા કે વ્યાજ ન ભરાય, તો લોન NPA ગણાય છે).</li>
+                    <li>CD Ratio (Credit-Deposit Ratio): <b>75.2%</b> (અત્યાર સુધીનો સૌથી વધુ).</li>
+                    <li>નવા PM Jan Dhan ખાતા: FY25-26 માં RRBs માં <b>54.98 લાખ</b> નવા ખાતા ખોલવામાં આવ્યા.</li>
+                </ul>
+            </div>
+            <div class="exam-point">🎯 EXAM POINT: India currently has 28 RRBs (earlier it was 43). Their total net profit reached ₹10,176 Crore.</div>
+        </div>
+
+        <!-- NEWS 3 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 3</span>
+            <div class="news-headline">Outward Remittances under LRS grow by 4.5% to $7.23 Billion</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>LRS (Liberalised Remittance Scheme)</b> હેઠળ વિદેશમાં મોકલવામાં આવતા પૈસા (Outward Remittances) માં Q1 (એપ્રિલ-જૂન) માં <b>4.5%</b> નો વધારો જોવા મળ્યો છે. 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                Q1 માં કુલ <b>$7.23 Billion</b> વિદેશમાં મોકલવામાં આવ્યા છે. (માત્ર જૂન મહિનામાં $2.55 બિલિયન). સૌથી વધુ ખર્ચ <b>Travel (ટ્રાવેલ)</b> પાછળ ($3.8 બિલિયન) અને ત્યારબાદ ઇક્વિટી/ડેબ્ટ ઇન્વેસ્ટમેન્ટ ($1.06 બિલિયન) માં થયો છે.
+                <br><br>
+                <b>LRS Static Info:</b> 
+                <br>આ સ્કીમ <b>2004</b> માં <b>RBI</b> દ્વારા શરૂ કરાઈ હતી. તેના હેઠળ એક ભારતીય નાગરિક 1 નાણાકીય વર્ષમાં વધુમાં વધુ <b>$250,000 (અઢી લાખ ડોલર)</b> વિદેશમાં મોકલી શકે છે. આ સ્કીમ કંપનીઓ, ભાગીદારી પેઢીઓ (Partnership Firms), HUF કે ટ્રસ્ટ માટે ઉપલબ્ધ નથી.
+            </div>
+        </div>
+
+        <!-- NEWS 4 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 4</span>
+            <div class="news-headline">PM Modi chairs 53rd PRAGATI Meeting</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                વડાપ્રધાન નરેન્દ્ર મોદીએ <b>PRAGATI (પ્રગતિ)</b> ની <b>53મી મીટિંગ</b> ની અધ્યક્ષતા કરી.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ મીટિંગમાં 9 રાજ્યોમાં ચાલતા ₹31,000 કરોડના રોકાણવાળા 6 મોટા ઇન્ફ્રાસ્ટ્રક્ચર પ્રોજેક્ટ્સની સમીક્ષા કરવામાં આવી. 
+                <br><b>PRAGATI Full Form:</b> Pro-Active Governance and Timely Implementation. 
+                <br>આ પોર્ટલ <b>2015</b> માં લોન્ચ કરાયું હતું. તે એક ICT-આધારિત પ્લેટફોર્મ છે જેમાં કેન્દ્ર અને રાજ્ય સરકારો વચ્ચે પ્રોજેક્ટ્સના અમલીકરણનું ફોલો-અપ લેવામાં આવે છે. 
+            </div>
+        </div>
+
+        <!-- NEWS 5 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 5</span>
+            <div class="news-headline">Ministry of Rural Development participates in World Water Week 2026</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ભારતના <b>Ministry of Rural Development</b> એ સ્વીડનના <b>Stockholm (સ્ટોકહોમ)</b> ખાતે યોજાયેલા <b>World Water Week 2026</b> માં ભાગ લીધો.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                ભારત તરફથી જોઈન્ટ સેક્રેટરી <b>Rohini R. Bhajibhakare (રોહિણી આર. ભાજીભાકરે)</b> એ પ્રતિનિધિત્વ કર્યું હતું. આ ઈવેન્ટ <b>Stockholm International Water Institute</b> દ્વારા આયોજિત કરાય છે.
+                <br><br>
+                <b>Other International Representation:</b> 
+                <br>Secretary (MEA) <b>C.B. George</b> એ <b>Uruguay (ઉરુગ્વે)</b> ના રાષ્ટ્રીય દિવસ (25 ઓગસ્ટ) ની ઉજવણીમાં ભારતનું પ્રતિનિધિત્વ કર્યું. (ઉરુગ્વે 25 ઓગસ્ટ 1825 ના રોજ <b>Brazil</b> થી સ્વતંત્ર થયું હતું. 2030 ના FIFA વર્લ્ડ કપની શતાબ્દીની ઉજવણીના ભાગરૂપે પ્રથમ મેચ ઉરુગ્વેમાં રમાશે).
+            </div>
+        </div>
+
+        <!-- NEWS 6 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 6</span>
+            <div class="news-headline">C-DOT celebrates 43rd Foundation Day</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>C-DOT (Centre for Development of Telematics)</b> એ નવી દિલ્હીમાં તેનો <b>43મો સ્થાપના દિવસ</b> ઉજવ્યો.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                C-DOT એ <b>1984</b> માં સ્થાપિત, <b>Ministry of Communications</b> (ટેલિકોમ્યુનિકેશન વિભાગ) અંતર્ગત કામ કરતી રિસર્ચ એન્ડ ડેવલપમેન્ટ (R&D) સંસ્થા છે. 
+                <br><b>'સંચાર સાથી' (Sanchar Saathi)</b> પોર્ટલ (જે ખોવાયેલા મોબાઈલ બ્લોક કરવા અને ટેલિકોમ ફ્રોડ અટકાવવા માટે છે) પણ C-DOT દ્વારા જ વિકસાવવામાં આવ્યું છે.
+            </div>
+        </div>
+
+        <!-- NEWS 7 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 7</span>
+            <div class="news-headline">Kazia Liz Majo crowned Miss Universe India 2026</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                કેરળની <b>Kazia Liz Majo (કાઝિયા લિઝ મેજો)</b> ને <b>Miss Universe India 2026</b> નો તાજ પહેરાવવામાં આવ્યો છે. 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ ઇવેન્ટ રાજસ્થાનના <b>Jaipur</b> માં યોજાઈ હતી. કેરળમાંથી આ ખિતાબ જીતનાર તે પ્રથમ મહિલા છે. (Vaishnavi Ganesh - First Runner Up, Anushree - Second Runner Up). 
+                <br>હવે તે નવેમ્બર 2026 માં <b>Puerto Rico</b> માં યોજાનારી મિસ યુનિવર્સ સ્પર્ધામાં ભારતનું પ્રતિનિધિત્વ કરશે. 
+                <br><i>(ભારતે 3 વાર મિસ યુનિવર્સનો ખિતાબ જીત્યો છે: સુષ્મિતા સેન 1994, લારા દત્તા 2000, હરનાઝ સંધુ 2021).</i>
+            </div>
+        </div>
+
+        <!-- NEWS 8 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 8</span>
+            <div class="news-headline">India tests first fully indigenous AK-203 'Sher' Assault Rifle</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ભારતની 100% સ્વદેશી (Fully Indigenous) <b>AK-203 'Sher' (શેર)</b> એસોલ્ટ રાઇફલનું સફળ પરીક્ષણ કરવામાં આવ્યું છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ રાઇફલ ઉત્તર પ્રદેશના <b>Amethi (અમેઠી)</b> ના <b>Korwa</b> ખાતે આવેલી <b>Indo-Russian Rifles Private Limited (IRRPL)</b> ની ફેક્ટરીમાં બની રહી છે. 
+                <br>ભારત અને રશિયાના સંયુક્ત સાહસ દ્વારા (₹5200 કરોડના કોન્ટ્રાક્ટ હેઠળ 6,01,427 રાઇફલો માટે) આ રાઇફલ્સ બનાવવામાં આવશે.
+            </div>
+        </div>
+
+        <!-- NEWS 9 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 9</span>
+            <div class="news-headline">Goa Shipyard delivers FPV "Ajeet" to Indian Coast Guard</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>Goa Shipyard Limited</b> દ્વારા ભારતીય તટરક્ષક દળ (Indian Coast Guard) ને <b>"Ajeet" (અજીત)</b> નામનું ફાસ્ટ પેટ્રોલ વેસલ (FPV) સોંપવામાં આવ્યું છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ જહાજનો ઉપયોગ કોસ્ટ ગાર્ડ દ્વારા પેટ્રોલિંગ માટે કરવામાં આવશે. 
+            </div>
+        </div>
+
+        <!-- NEWS 10 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 10</span>
+            <div class="news-headline">T-Hub partners with Indian Army to support Defense Startups</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                હૈદરાબાદ સ્થિત ટેક્નોલોજી સ્ટાર્ટઅપ ઇન્ક્યુબેટર <b>T-Hub</b> એ ડિફેન્સ સ્ટાર્ટઅપ્સને પ્રોત્સાહન આપવા માટે <b>Indian Army (સેન્ટ્રલ કમાન્ડ)</b> સાથે ભાગીદારી કરી છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ ભાગીદારી હેઠળ, સ્ટાર્ટઅપ્સ રિયલ-વર્લ્ડ મિલિટરી પ્રોબ્લેમ્સના ઉકેલ માટે કામ કરશે. 
+                <br><b>iDEX (Innovations for Defence Excellence):</b> સંરક્ષણ મંત્રાલયની આ પહેલ હેઠળ T-Hub ની પસંદગી કરાઈ છે, જેથી ડિફેન્સ સેક્ટરમાં R&D વધારી શકાય.
+            </div>
+        </div>
+
+        <!-- NEWS 11 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 11</span>
+            <div class="news-headline">Quick Updates: Obituaries & New Book by Dr. Arindam Chaudhuri</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                Teacher એ છેલ્લે કેટલાક નિધનો અને પુસ્તકોની ટૂંકી માહિતી આપી:
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                <b>Obituaries:</b>
+                <ul>
+                    <li><b>Karn Sharma:</b> ઉત્તર પ્રદેશના ક્રિકેટર, જેમણે તમામ ફોર્મેટમાંથી નિવૃત્તિ જાહેર કરી.</li>
+                    <li><b>Kuku Kohli (Sandesh Kohli):</b> પ્રખ્યાત ફિલ્મ નિર્માતા (જેમણે 'Phool Aur Kaante' માં અજય દેવગનને લોન્ચ કર્યા હતા) નું નિધન થયું છે.</li>
+                </ul>
+                <br>
+                <b>New Book:</b>
+                <ul>
+                    <li><b>Dr. Arindam Chaudhuri</b> એ તેમની નવી પુસ્તક <i>"Africa Before America"</i> ની જાહેરાત કરી. (તેમની અગાઉની પુસ્તકો: "2047: A Roadmap to Beating USA and China", "Planning India").</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ================= POST NEWS REVISION SECTIONS ================= -->
+
+        <!-- MEMORY TRICKS -->
+        <div class="section-title">🧠 MEMORY TRICKS</div>
+        <div class="memory-section">
+            <p><b>Trick 1: LRS Limit:</b><br>LRS = Liberalised Remittance Scheme = Limit is $250,000 per financial year for individuals (કંપનીઓ કે HUF માટે નથી).</p>
+            <p><br><b>Trick 2: NRI Accounts:</b><br>FCNR = ફિક્સ્ડ ડિપોઝિટ માટે, NRE = બહારના રૂપિયા માટે કરંટ/સેવિંગ, NRO = ભારતની આવક માટે.</p>
+        </div>
+
+        <!-- CONNECT THE DOTS -->
+        <div class="section-title">🔗 CONNECT THE DOTS</div>
+        <table class="fact-table">
+            <tr>
+                <th>Entity / Person</th>
+                <th>Related News / Fact</th>
+            </tr>
+            <tr>
+                <td>PRAGATI</td>
+                <td>Pro-Active Governance and Timely Implementation (PM chaired 53rd meeting).</td>
+            </tr>
+            <tr>
+                <td>Kazia Liz Majo</td>
+                <td>First woman from Kerala to win Miss Universe India 2026.</td>
+            </tr>
+            <tr>
+                <td>AK-203 'Sher'</td>
+                <td>Indigenous assault rifle tested (Produced in Korwa, Amethi by IRRPL).</td>
+            </tr>
+            <tr>
+                <td>C-DOT</td>
+                <td>Celebrated 43rd Foundation Day. Developer of the Sanchar Saathi portal.</td>
+            </tr>
+            <tr>
+                <td>T-Hub</td>
+                <td>Incubator partnering with Indian Army Central Command for iDEX startups.</td>
+            </tr>
+        </table>
+
+        <!-- QUICK REVISION -->
+        <div class="section-title">⚡ QUICK REVISION</div>
+        <div class="news-content">
+            <ul>
+                <li><b>RRB Profits:</b> Touched an all-time high of ₹10,176 Crore in FY25-26.</li>
+                <li><b>NRI Deposits:</b> Dropped by 23.24% to $2.78 Billion in Q1 FY27.</li>
+                <li><b>World Water Week:</b> Held in Stockholm, Sweden. India represented by Rohini R. Bhajibhakare (MoRD).</li>
+                <li><b>Ajeet:</b> Fast Patrol Vessel handed over to Coast Guard by Goa Shipyard.</li>
+            </ul>
+        </div>
+
+        <!-- FINAL MEMORY SHEET -->
+        <div class="section-title">🔥 FINAL MEMORY SHEET</div>
+        <table class="fact-table">
+            <tr>
+                <th>Key Word</th>
+                <th>Final Fact to Remember</th>
+            </tr>
+            <tr>
+                <td>$250,000</td>
+                <td>Maximum amount a resident individual can remit under LRS in a financial year.</td>
+            </tr>
+            <tr>
+                <td>₹8,452.07 Crore</td>
+                <td>Closing balance of the PM CARES Fund as of March 2025.</td>
+            </tr>
+            <tr>
+                <td>Uruguay</td>
+                <td>Gained independence from Brazil (Aug 25, 1825). Will host the first match of FIFA WC 2030.</td>
+            </tr>
+            <tr>
+                <td>Puerto Rico</td>
+                <td>Host country for the Miss Universe 2026 competition.</td>
+            </tr>
+        </table>
+
+        <button class="back-btn" onclick="goHome()" style="width: 100%; text-align: center;">← BACK TO HOME</button>
+    </div>
+
+</div>
+
+<script>
+    // Theme Toggle Logic
+    const themeBtn = document.getElementById('theme-btn');
+    const rootElements = document.documentElement;
+    let isDark = true;
+
+    function toggleTheme() {
+        isDark = !isDark;
+        if (isDark) {
+            rootElements.setAttribute('data-theme', 'dark');
+            themeBtn.innerText = '☀️';
+        } else {
+            rootElements.setAttribute('data-theme', 'light');
+            themeBtn.innerText = '🌙';
+        }
+    }
+
+    // --- HARD BEEP SOUND FUNCTION ---
+    function playHardBeep() {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const audioCtx = new AudioContext();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = 'square'; 
+            oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); 
+
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.15);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.15);
+        } catch (e) {
+            console.log("Audio API not supported or blocked");
+        }
+    }
+
+    function attachBeepListeners() {
+        const clickables = document.querySelectorAll('button, .option, .main-btn, .sticky-back-btn, .theme-toggle');
+        clickables.forEach(btn => {
+            btn.removeEventListener('click', playHardBeep);
+            btn.addEventListener('click', playHardBeep);
+        });
+    }
+
+    // Navigation & MCQ Reset Logic
+    const homeScreen = document.getElementById('home-screen');
+    const mcqPage = document.getElementById('mcq-page');
+    const newsPage = document.getElementById('news-page');
+    const stickyHeader = document.getElementById('sticky-header');
+
+    // Global variables for MCQ
+    let currentMcq = 0;
+    let score = 0;
+    let wrongQuestions = [];
+    const mcqBlocks = document.querySelectorAll('.mcq-block:not(#score-screen)');
+    const totalMcqs = mcqBlocks.length;
+    const progressFill = document.getElementById('mcq-progress-fill');
+    const currentQNum = document.getElementById('current-q-num');
+
+    function resetMCQs() {
+        currentMcq = 0;
+        score = 0;
+        wrongQuestions = [];
+        
+        mcqBlocks.forEach((block) => {
+            block.classList.remove('active', 'answered');
+            
+            const options = block.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+                opt.innerHTML = opt.innerHTML.split(" 🟢")[0].split(" 🔴")[0];
+            });
+
+            const explBox = block.querySelector('.explanation-box');
+            if(explBox) explBox.style.display = 'none';
+            
+            const nextBtn = block.querySelector('.next-btn');
+            if(nextBtn) nextBtn.style.display = 'none';
+        });
+
+        if(mcqBlocks.length > 0) {
+            mcqBlocks[0].classList.add('active');
+        }
+
+        document.getElementById('score-screen').classList.remove('active');
+        if (totalMcqs > 0) {
+            document.querySelector('.mcq-progress').style.display = 'block';
+            document.querySelector('.progress-bar-bg').style.display = 'block';
+            document.getElementById('current-q-num').innerText = "1";
+            progressFill.style.width = '0%';
+        }
+        
+        document.getElementById('wrong-revision-section').style.display = 'none';
+        document.getElementById('wrong-questions-list').innerHTML = "";
+    }
+
+    function openSection(sectionId) {
+        homeScreen.style.display = 'none';
+        mcqPage.style.display = 'none';
+        newsPage.style.display = 'none';
+        
+        resetMCQs();
+        
+        document.getElementById(sectionId).style.display = 'block';
+        stickyHeader.style.display = 'flex'; 
+        window.scrollTo(0,0);
+    }
+
+    function goHome() {
+        homeScreen.style.display = 'flex';
+        mcqPage.style.display = 'none';
+        newsPage.style.display = 'none';
+        stickyHeader.style.display = 'none'; 
+        
+        resetMCQs();
+        window.scrollTo(0,0);
+    }
+
+    // MCQ Click Logic
+    mcqBlocks.forEach((block, index) => {
+        const options = block.querySelectorAll('.option');
+        const correctAns = block.getAttribute('data-correct');
+        const nextBtn = block.querySelector('.next-btn');
+        const explBox = block.querySelector('.explanation-box');
+        const questionText = block.querySelector('.question').innerText;
+
+        options.forEach(opt => {
+            opt.addEventListener('click', function() {
+                if (block.classList.contains('answered')) return;
+                block.classList.add('answered');
+
+                const selected = this.getAttribute('data-opt');
+                
+                options.forEach(o => {
+                    if (o.getAttribute('data-opt') === correctAns) {
+                        o.classList.add('correct');
+                        o.innerHTML += " 🟢 CORRECT ✓";
+                    }
+                });
+
+                if (selected === correctAns) {
+                    score++;
+                } else {
+                    this.classList.add('wrong');
+                    this.innerHTML += " 🔴 WRONG ✗";
+                    
+                    let correctText = "";
+                    options.forEach(o => {
+                        if(o.getAttribute('data-opt') === correctAns) correctText = o.innerText.replace(" 🟢 CORRECT ✓","");
+                    });
+                    wrongQuestions.push({
+                        q: questionText,
+                        a: correctText
+                    });
+                }
+
+                explBox.style.display = 'block';
+                nextBtn.style.display = 'block';
+                updateProgress(index + 1);
+            });
+        });
+    });
+
+    function updateProgress(num) {
+        let percentage = (num / totalMcqs) * 100;
+        progressFill.style.width = percentage + '%';
+    }
+
+    function nextMCQ() {
+        mcqBlocks[currentMcq].classList.remove('active');
+        currentMcq++;
+
+        if (currentMcq < totalMcqs) {
+            mcqBlocks[currentMcq].classList.add('active');
+            currentQNum.innerText = currentMcq + 1;
+            window.scrollTo(0,0);
+        } else {
+            showScoreScreen();
+        }
+    }
+
+    function showScoreScreen() {
+        document.getElementById('score-screen').classList.add('active');
+        document.getElementById('final-score').innerText = score + "/" + totalMcqs;
+        document.getElementById('correct-count').innerText = score;
+        document.getElementById('wrong-count').innerText = totalMcqs - score;
+        let accuracy = Math.round((score / totalMcqs) * 100);
+        document.getElementById('accuracy-percent').innerText = accuracy;
+
+        let msg = "";
+        if (score >= Math.floor(totalMcqs * 0.85)) msg = "🏆 Excellent";
+        else if (score >= Math.floor(totalMcqs * 0.70)) msg = "🔥 Very Good";
+        else if (score >= Math.floor(totalMcqs * 0.50)) msg = "👍 Good";
+        else msg = "📚 Revise Again";
+        document.getElementById('score-message').innerText = msg;
+
+        if (wrongQuestions.length > 0) {
+            let revSec = document.getElementById('wrong-revision-section');
+            let list = document.getElementById('wrong-questions-list');
+            revSec.style.display = 'block';
+            let html = "";
+            wrongQuestions.forEach(item => {
+                html += `<div style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.2); padding:12px; margin-top:12px; border-radius:8px;">
+                            <strong style="color:var(--text-highlight); font-size:15px; display:block; margin-bottom:5px;">${item.q}</strong>
+                            <span style="color:var(--success); font-size:15px; font-weight:700;">✓ Correct: ${item.a}</span>
+                         </div>`;
+            });
+            list.innerHTML = html;
+        }
+        
+        document.querySelector('.mcq-progress').style.display = 'none';
+        document.querySelector('.progress-bar-bg').style.display = 'none';
+        window.scrollTo(0,0);
+    }
+
+    document.addEventListener('DOMContentLoaded', attachBeepListeners);
+
+</script>
+
+</body>
+</html>
