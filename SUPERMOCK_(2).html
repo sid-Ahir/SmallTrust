@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPERMOCK - 2</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #e0e6ed;
+            --header-bg: #1a252f;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #333333;
+            --header-bg: #000000;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            padding-top: 60px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        #btn-back {
+            background-color: #95a5a6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #btn-theme {
+            background-color: transparent;
+            font-size: 1.5rem;
+            padding: 5px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .topic-btn {
+            padding: 20px 10px;
+            font-size: 1.1rem;
+            text-align: center;
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s, filter 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            min-height: 100px;
+            word-wrap: break-word;
+        }
+
+        .topic-btn:hover {
+            filter: brightness(1.1);
+        }
+        
+        .topic-btn:active {
+            transform: scale(0.95);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .options-list li {
+            padding: 10px 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin: 20px 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .exam-trick {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .quick-revision {
+            background-color: var(--bg-color);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .mock-option {
+            width: 100%;
+            text-align: left;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--border);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        .mock-option.correct {
+            border-color: var(--secondary);
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        .mock-option.wrong {
+            border-color: var(--danger);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .action-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .score-board {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .score-board h2 {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--bg-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>SUPERMOCK - 2</div>
+        <div class="header-actions">
+            <button id="btn-back" style="display: none;">← BACK</button>
+            <button id="btn-theme">🌙</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Home View -->
+        <div id="view-home" class="view active">
+            <div class="topic-grid" id="home-menu">
+                <!-- Menu populated by JS -->
+            </div>
+        </div>
+
+        <!-- Detail View -->
+        <div id="view-detail" class="view">
+            <div id="detail-content"></div>
+        </div>
+
+        <!-- Practice Mock View -->
+        <div id="view-practice" class="view">
+            <div id="practice-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- Web Audio API for UI Sounds (Hard Beep) ---
+        let audioCtx;
+        
+        function playSound() {
+            try {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (!AudioContext) return; 
+                    audioCtx = new AudioContext();
+                }
+                
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.type = 'square'; 
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime); 
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0, audioCtx.currentTime + 0.1); 
+                
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.1);
+            } catch(e) {
+                console.log("Audio not supported or blocked", e);
+            }
+        }
+
+        // --- Data Source (CLEANED FROM SPAN MARKERS) ---
+        const studyData = [
+            {
+                topic: "PHRASE REPLACEMENT (1-5)",
+                questions: [
+                    {
+                        qText: "A number of witnesses was reportedly hesitating to testify against the corporation, fearing retaliation from its powerful legal team.",
+                        options: [
+                            "A) was reportedly hesitant to testify against the corporations",
+                            "B) were reportedly hesitating testifying against the corporation",
+                            "C) were reportedly hesitant to testify against the corporation",
+                            "D) had reportedly been hesitating to testify against the corporation",
+                            "E) No correction required"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) were reportedly hesitant to testify against the corporation",
+                        explanation: "Transcript મુજબ, 'A number of' નો અર્થ 'Many' (ઘણા બધા) થાય છે, તેથી તેની સાથે હમેશા Plural verb (were) આવશે. બીજું, અમુક 'State verbs' (જેમ કે forget, think, understand, like, dislike, hesitate) ને Continuous Tense (V-ing) માં લખી શકાતા નથી. તેથી 'hesitating' ને બદલે 'hesitant' આવશે.",
+                        examples: [
+                            "❌ A number of witnesses was...",
+                            "✅ A number of witnesses were...",
+                            "❌ They were hesitating...",
+                            "✅ They were hesitant..."
+                        ],
+                        trick: "A number of = Many = Plural Verb (were). State verbs = No V-ing.",
+                        quickRev: "A number of + Plural Verb. State verb (hesitate) નું continuous form ના બને."
+                    },
+                    {
+                        qText: "The board dismissed the executive whom they suspected were leaking confidential merger details to a rival firm.",
+                        options: [
+                            "A) whom they suspected was leaking",
+                            "B) who they suspected were leaking",
+                            "C) who they suspected was leaking",
+                            "D) whose they suspected was leaking",
+                            "E) No correction required"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) who they suspected was leaking",
+                        explanation: "Transcript મુજબ, વાક્યમાં Subject અને Verb ની જોડી સમાન હોવી જોઈએ. 'The board' (Subject) ની જોડી 'dismissed' (Verb) સાથે છે, 'they' (Subject) ની જોડી 'suspected' (Verb) સાથે છે. હવે 'were leaking' એ verb છે, જેના માટે નવો Subject જોઈએ, તેથી 'whom' (Object) ના બદલે 'who' (Subject) આવશે. લીક કરનાર Executive એકવચન (Singular) હોવાથી 'was leaking' સાચો જવાબ છે.",
+                        examples: [],
+                        trick: "Verb ગણો અને Subject ગણો. જો Verb વધારે હોય તો Object (whom) ના બદલે Subject (who) લગાવો. લીક કોણ કરતું હતું? (Executive = Singular = was).",
+                        quickRev: "Subject (who) vs Object (whom). Subject અને Verb ની સંખ્યા સમાન હોવી જોઈએ."
+                    },
+                    {
+                        qText: "Of the two candidates shortlisted for the ambassadorial post, the senior diplomat's negotiation strategy are arguably the most pragmatic.",
+                        options: [
+                            "A) strategy is arguably more pragmatic",
+                            "B) strategies is arguably the more pragmatic",
+                            "C) strategy is arguably the more pragmatic",
+                            "D) strategy is arguably the most pragmatic",
+                            "E) No correction required"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) strategy is arguably the more pragmatic",
+                        explanation: "Transcript મુજબ, જ્યારે બે વ્યક્તિ કે વસ્તુની સરખામણી થતી હોય ત્યારે Comparative Degree આવે. સામાન્ય રીતે Comparative પહેલા 'the' નથી આવતો, પરંતુ જ્યારે 'Of the two' લખેલું હોય અથવા પસંદગી (Choice) ની વાત હોય, ત્યારે Comparative ની આગળ 'the' લગાડવો ફરજિયાત છે. અહી strategy એકવચન છે તેથી 'is' આવશે.",
+                        examples: [
+                            "✅ He is more intelligent than Ram. (સામાન્ય સરખામણી - No article)",
+                            "✅ Of the two books, which one is the more interesting? ('Of the two' માં 'the' આવે)"
+                        ],
+                        trick: "Of the two + The + Comparative Degree (the more pragmatic). Strategy = Singular = is.",
+                        quickRev: "જ્યારે 2 ની વાત હોય (Of the two), ત્યારે Comparative degree (more) ની આગળ 'the' ચોક્કસ આવે."
+                    },
+                    {
+                        qText: "The committee recommended reducing the budget for travel and to increase the funds allocated for research and development next year.",
+                        options: [
+                            "A. to reduce the budget for travel and increasing",
+                            "B. reducing the budget for travel and increasing",
+                            "C. to reduce the budget for travel and to increase",
+                            "D. Both B and C",
+                            "E. No correction required"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B. reducing the budget for travel and increasing",
+                        explanation: "Transcript મુજબ, Parallelism નો નિયમ કહે છે કે 'and' ની બંને બાજુ માળખું સમાન હોવું જોઈએ. જો આગળ 'reducing' (V-ing) છે તો પાછળ પણ 'increasing' (V-ing) હોવું જોઈએ. Option C માં 'to reduce... and to increase' લખ્યું છે, જેમાં બીજો 'to' superfluous (વધારાનો) છે, તેથી Option B સાચો છે.",
+                        examples: [],
+                        trick: "And ની બંને બાજુ સમાન Form (V-ing and V-ing). જો Infinitive વાપરો તો બીજી વાર 'to' ના વાપરો.",
+                        quickRev: "Parallelism: reducing ... and increasing."
+                    },
+                    {
+                        qText: "Despite repeated warnings, the residents remained completely indifferent on the flood alerts issued by the local authorities.\nI. remained completely indifferent to the flood alerts\nII. stayed entirely unconcerned about the flood alerts\nIII. remained totally indifferent with the flood alerts",
+                        options: [
+                            "A) Only I",
+                            "B) Both I and II",
+                            "C) Both II and III",
+                            "D) Only II",
+                            "E) All I, II and III"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) Both I and II",
+                        explanation: "Transcript મુજબ, 'indifferent' અને 'apathetic' શબ્દોનો અર્થ થાય છે 'કોઈ ફેર ન પડવો', અને તેમની સાથે હંમેશા 'to' preposition લાગે છે (indifferent to, apathetic to). જ્યારે 'concerned' કે 'unconcerned' સાથે 'about' અથવા અમુક કિસ્સામાં 'with' લાગે છે. તેથી I અને II બંને વ્યાકરણ અને અર્થની દ્રષ્ટિએ સાચા છે.",
+                        examples: [],
+                        trick: "Indifferent/Apathetic + to. Concerned/Unconcerned + about.",
+                        quickRev: "Indifferent to / Unconcerned about."
+                    }
+                ]
+            },
+            {
+                topic: "PHRASE REPLACEMENT (6-10)",
+                questions: [
+                    {
+                        qText: "While drafting the policy, the analyst had to thoroughly account of the regional variations in consumer behaviour.\nI. had to thoroughly account for the regional variations\nII. had to carefully take into account the regional variations\nIII. had to thoroughly account on the regional variations",
+                        options: [
+                            "A) Only I",
+                            "B) Both I and II",
+                            "C) Both II and III",
+                            "D) Only II",
+                            "E) All I, II and III"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) Both I and II",
+                        explanation: "Transcript મુજબ, જ્યારે આપણે કોઈ બાબતને ધ્યાનમાં લેવાની (Consider) વાત કરતા હોઈએ, ત્યારે 'account for' અથવા 'take into account' ફ્રેઝ વપરાય છે. 'account of' કે 'account on' વ્યાકરણની દ્રષ્ટિએ ખોટા છે.",
+                        examples: [
+                            "✅ Account for = Consider (ધ્યાનમાં લેવું)",
+                            "✅ Take into account = Consider"
+                        ],
+                        trick: "વાક્યમાં 'account for' અથવા 'take into account' ની જગ્યાએ 'consider' મૂકીને વાંચો, અર્થ સ્પષ્ટ જળવાઈ રહેશે.",
+                        quickRev: "Account for = Take into account = Consider."
+                    },
+                    {
+                        qText: "The committee members were reluctant to take a firm stand on the controversial policy, fearing backlash from both sides of the debate.\n(i) to commit decisively to\n(ii) to express clear support for\n(iii) to adopt a rigid position on",
+                        options: [
+                            "A. Only i",
+                            "B. Only ii",
+                            "C. Only iii",
+                            "D. All i, ii and iii",
+                            "E. No Improvement"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E. No Improvement",
+                        explanation: "Transcript મુજબ, 'Take a firm stand' નો અર્થ થાય છે કોઈ બાબતને મજબૂતીથી ટેકો આપવો (Strongly support). આપેલા ત્રણેય વિકલ્પો (i, ii, iii) એ મૂળ ફ્રેઝ ના Synonyms (સમાનાર્થી) જ છે. મૂળ વાક્યમાં કોઈ જ Grammatical કે Contextual ભૂલ નથી, તેથી તેને બદલવાની જરૂર નથી (No Improvement).",
+                        examples: [],
+                        trick: "જ્યારે મૂળ વાક્ય સાચું હોય અને વિકલ્પો માત્ર સમાનાર્થી હોય, ત્યારે સાચો જવાબ 'No Improvement' આવે.",
+                        quickRev: "Take a firm stand = strongly support = commit decisively = no error here."
+                    },
+                    {
+                        qText: "The startup is scaling quickly, but a shortage in skilled workers could hold it back; investors say we must invest money on training.\nI. lack of skilled workers, invest money on training\nII. shortage of skilled workers, invest money in training\nIII. short of skilled workers, invest money towards training",
+                        options: [
+                            "A) Only I",
+                            "B) Both I and III",
+                            "C) Only II",
+                            "D) Both II and III",
+                            "E) None of the above"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) Only II",
+                        explanation: "Transcript મુજબ, અછત દર્શાવતા શબ્દો (shortage, lack, paucity, lacuna, scarcity, sparsity) ની સાથે હંમેશા 'of' preposition આવે છે (shortage of). બીજું, આપણે ટ્રેનિંગ 'માં' પૈસા રોકીએ છીએ, ટ્રેનિંગ 'પર' નહિ. તેથી 'invest in training' સાચું છે, નહિ કે 'invest on training'.",
+                        examples: [
+                            "✅ Shortage of / Lack of / Scarcity of / Paucity of",
+                            "✅ Invest in training"
+                        ],
+                        trick: "અછતવાળા બધા શબ્દો પાછળ 'of' લગાવો. Invest પાછળ 'in' લગાવો.",
+                        quickRev: "Shortage of + Invest in."
+                    },
+                    {
+                        qText: "After the product launch, the staff were exhausted by the back-to-back demos, but the company management refused to clear up their bonus payments.",
+                        options: [
+                            "A) the crew was drained, to hand over their bonus",
+                            "B) the employees was tired, to turn down their extra",
+                            "C) the workers were breaking to take off their financial",
+                            "D) the team was breaking to pass out their incentive",
+                            "E) No replacement required"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) the crew was drained, to hand over their bonus",
+                        explanation: "Transcript મુજબ, Staff, Army, Crew જેવા કલેક્ટિવ નાઉન્સને સામાન્ય રીતે Singular ગણવામાં આવે છે, તેથી 'was' આવશે (અહી વાક્યમાં મૂળ 'were' ખોટું છે). થાકી જવા માટે exhausted, drained શબ્દો યોગ્ય છે. બોનસ આપવાની ના પાડવા માટે 'refused to hand over' (આપવું) સાચું બેસે છે. 'take off' (સફળ થવું) અને 'pass out' (બેભાન થવું) નો અર્થ અહી બેસતો નથી.",
+                        examples: [],
+                        trick: "Staff / Crew = Singular (was). Hand over = આપવું. Drained = Exhausted (થાકી જવું).",
+                        quickRev: "Collective noun (crew) takes singular verb. Hand over = provide."
+                    },
+                    {
+                        qText: "The management is looking forward to meet the employees to sort out the grievances.",
+                        options: [
+                            "A) looks forward to meeting, to sort out the details",
+                            "B) is looking forward to meeting, to iron out the grievances",
+                            "C) is looking forward to meeting, to back out the grievances",
+                            "D) look forward to meeting, to look up the grievances",
+                            "E) No replacement required"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) is looking forward to meeting, to iron out the grievances",
+                        explanation: "Transcript મુજબ, look, seem, appear એ 'State verbs' છે, જેનું Continuous form (V-ing) બનતું નથી. પરંતુ, 'look forward to', 'look after', 'look into' એ Phrasal verbs છે, તેથી તેમાં 'looking' વાપરી શકાય. 'look forward to' પછી હંમેશા V+ing આવે છે (meeting). આ મીટીંગ વારંવાર થવાની નથી, એકવાર થવાની છે, તેથી Present Indefinite (looks) ના બદલે Present Continuous (is looking) નો ઉપયોગ થશે. 'iron out' નો અર્થ સમસ્યા ઉકેલવી થાય છે.",
+                        examples: [
+                            "❌ He is looking happy. -> ✅ He looks happy. (State verb)",
+                            "✅ We are looking forward to meeting you. (Phrasal verb + Ving)"
+                        ],
+                        trick: "Look forward to + V(ing). Iron out = Sort out = સમસ્યાનો ઉકેલ લાવવો.",
+                        quickRev: "Looking forward to + meeting. Iron out = resolve."
+                    }
+                ]
+            },
+            {
+                topic: "IDIOMS (11-14)",
+                questions: [
+                    {
+                        qText: "CANNOT REPLACE: We were ready to sign the contract, but at the last minute, the client threw a spanner in the works by demanding a complete revision of the terms.",
+                        options: [
+                            "A) Disrupted the process",
+                            "B) Facilitated the agreement",
+                            "C) Halted the progress",
+                            "D) Threw a wrench in the plans",
+                            "E) Obstructed the proceedings"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) Facilitated the agreement",
+                        explanation: "Transcript મુજબ, 'threw a spanner in the works' (મશીનમાં પાનું નાખવું) નો અર્થ થાય છે કોઈ ચાલતા કામને રોકી દેવું કે બગાડવું (Disrupt, Halt, Obstruct). જયારે 'Facilitate' નો અર્થ થાય છે કામને સરળ બનાવવું કે પ્રોત્સાહન આપવું, જે આ ઈડિયમનું વિરોધી છે. પ્રશ્નમાં CANNOT replace પૂછ્યું હોવાથી B સાચો જવાબ છે.",
+                        examples: [],
+                        trick: "Spanner in the works = ચાલતું કામ અટકાવવું. Facilitate = કામ આગળ વધારવું.",
+                        quickRev: "Threw a spanner in the works = Stop the process. Cannot be replaced by 'Facilitated'."
+                    },
+                    {
+                        qText: "CANNOT REPLACE: Despite the board's attempt to present a unified front, it became increasingly apparent that the internal factions were at loggerheads...",
+                        options: [
+                            "A) In a state of irreconcilable conflict",
+                            "B) Engaging in a protracted deadlock",
+                            "C) Locked in a bitter dispute",
+                            "D) Reaching a harmonious consensus",
+                            "E) Clashing over fundamental disagreements"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D) Reaching a harmonious consensus",
+                        explanation: "Transcript મુજબ, 'at loggerheads' નો અર્થ થાય છે ઝઘડો થવો, મતભેદ હોવા અથવા તણાવ હોવો (conflict, dispute, clashing). 'Reaching a harmonious consensus' નો અર્થ થાય છે શાંતિપૂર્ણ રીતે સહમત થવું, જે આ ઈડિયમનું વિરોધી છે.",
+                        examples: [],
+                        trick: "At loggerheads = ઝઘડો / મતભેદ (Negative). Consensus = સહમતી (Positive).",
+                        quickRev: "At loggerheads = In conflict. Cannot be replaced by 'harmonious consensus'."
+                    },
+                    {
+                        qText: "CAN REPLACE: Despite putting in extra hours and rearranging my entire schedule, I jump through hoop every single day just to get a simple approval...",
+                        options: [
+                            "A. jumped through hoops",
+                            "B. jumping for hooping",
+                            "C. jumped on hoop",
+                            "D. jumping from hoop",
+                            "E. No correction required"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A. jumped through hoops",
+                        explanation: "Transcript મુજબ, સાચો ઈડિયમ 'jump through hoops' (બહુવચન) છે, જેનો અર્થ થાય છે કોઈ કામ કરવા માટે બહુ જ મુશ્કેલીઓનો સામનો કરવો. વાક્યમાં પાછળ 'seemed' (Past tense) આપેલું હોવાથી અહી પણ ભૂતકાળ 'jumped' આવશે.",
+                        examples: [],
+                        trick: "Jump through hoops (Hoop નહિ, hoops આવે). વાક્યનો Tense (ભૂતકાળ) ધ્યાનમાં રાખો.",
+                        quickRev: "Jump through hoops = To face difficulty while performing a task."
+                    },
+                    {
+                        qText: "CAN REPLACE: Despite receiving several loans and subsidies meant for small-scale farmers, many households in the drought-hit region lives hand to mouthful...",
+                        options: [
+                            "A. live handful to mouthful",
+                            "B. live hand to mouth",
+                            "C. living hands to mouth",
+                            "D. live handful to mouth",
+                            "E. No correction required"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B. live hand to mouth",
+                        explanation: "Transcript મુજબ, 'Handful' કે 'Mouthful' નો અર્થ થાય છે કોઈ વસ્તુ વિપુલ માત્રામાં (Abundance) હોવી. જ્યારે સાચો ઈડિયમ 'live hand to mouth' છે, જેનો અર્થ થાય છે માંડ માંડ ગુજરાન ચલાવવું (Barely having resources). Households બહુવચન હોવાથી 'live' આવશે.",
+                        examples: [],
+                        trick: "માંડ માંડ જીવવું = Live hand to mouth. (Handful/Mouthful = પુષ્કળ).",
+                        quickRev: "Live hand to mouth = Barely having any resources."
+                    }
+                ]
+            },
+            {
+                topic: "GRAMMAR & USAGE (15-21)",
+                questions: [
+                    {
+                        qText: "Since medicines are quite costlier than the average family's monthly budget, most patients in rural areas are forced to skip essential treatments.",
+                        options: [
+                            "A. more costlier than",
+                            "B. so costly than",
+                            "C. very costly for",
+                            "D. too costly for",
+                            "E. No correction required"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D. too costly for",
+                        explanation: "Transcript મુજબ, 'quite' અને 'costlier' (comparative degree) બંને શબ્દો તીવ્રતા (intensity) દર્શાવે છે, તેથી તેમને એકસાથે વાપરી શકાય નહિ (તે Superfluous છે). અહી યોગ્ય માળખું 'too... for' નું બેસે છે, કારણ કે પાછળ 'the average family' (noun) આપેલું છે. તેથી 'too costly for' સાચો જવાબ છે.",
+                        examples: [
+                            "❌ He is quite more intelligent. (Superfluous)",
+                            "✅ The box is too heavy for me."
+                        ],
+                        trick: "Quite + Comparative = ખોટું (Superfluous).",
+                        quickRev: "Do not use 'quite' with comparative degree. Use 'too... for'."
+                    },
+                    {
+                        qText: "Had the regulatory authorities been more vigilant, the massive embezzlement of public funds could been averted through timely intervention.",
+                        options: [
+                            "A) could be averted by timely intervention",
+                            "B) would have been averted by timely intervention",
+                            "C) could have been averted by timely intervention",
+                            "D) would be averted by timely intervention",
+                            "E) No correction required"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) could have been averted by timely intervention",
+                        explanation: "Transcript મુજબ, આ 3rd Conditional નું વાક્ય છે. 'Had + Subject + V3' (Had the authorities been...) થી વાક્ય શરુ થાય ત્યારે પાછળના ભાગમાં 'would / could / might + have + V3' આવવું જોઈએ. મૂળ વાક્યમાં 'could' નો ભાવ (Possibility) હોવાથી ઓપ્શનમાં 'could have been averted' જ પસંદ કરવું.",
+                        examples: [
+                            "✅ Had he played, we would have won."
+                        ],
+                        trick: "Had + V3 હોય તો સામે છેડે 'would/could/might + have + V3' આવે.",
+                        quickRev: "3rd Conditional: Had + V3 -> could/would have + V3."
+                    },
+                    {
+                        qText: "The manager communicated effectively the new strategy to the staff during the quarterly meeting, ensuring total alignment.\nI. effectively communicated the new strategy to the staff.\nII. communicated the new strategy effectively to the staff.\nIII. communicated the new strategy to the staff effectively.",
+                        options: [
+                            "A. Only (I)",
+                            "B. Only (II)",
+                            "C. Both (I) and (II)",
+                            "D. Only (III)",
+                            "E. All of the above"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C. Both (I) and (II)",
+                        explanation: "Transcript મુજબ, Transitive verb (communicated) અને તેના Object (the new strategy) ની વચ્ચે ક્યારેય Adverb (effectively) મૂકી શકાય નહિ. Adverb કાં તો Verb ની પહેલા મૂકો (effectively communicated) અથવા Object ની પછી મૂકો (communicated the new strategy effectively). તેથી I અને II બંને સાચા છે.",
+                        examples: [
+                            "❌ He answered quickly the question.",
+                            "✅ He quickly answered the question. (Verb પહેલા)",
+                            "✅ He answered the question quickly. (Object પછી)"
+                        ],
+                        trick: "Verb અને Object છૂટા ના પાડો. Adverb ને આગળ કે પાછળ મૂકો.",
+                        quickRev: "Never place an adverb between a transitive verb and its direct object."
+                    },
+                    {
+                        qText: "The candidate felt indignant into the unjust treatment he received during the final round of the high-stakes corporate interview.\nI. felt indignant to the unjust treatment\nII. felt indignant at the unjust treatment\nIII. felt indignant for the unjust treatment",
+                        options: [
+                            "A. Only (I)",
+                            "B. Only (II)",
+                            "C. Only (III)",
+                            "D. Both (I) and (II)",
+                            "E. No Improvement Required"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B. Only (II)",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'Indignant' (ગુસ્સે અથવા નારાજ હોવું) સાથે યોગ્ય preposition વાપરવો પડે છે. જો કોઈ 'વ્યક્તિ' (Person) પર નારાજ હોવ તો 'with' આવે (indignant with someone), અને જો કોઈ 'બાબત/વસ્તુ' (Thing/Action) પર નારાજ હોવ તો 'at' આવે. અહી 'unjust treatment' એ એક બાબત છે, તેથી 'indignant at' આવશે.",
+                        examples: [
+                            "✅ I was indignant with him. (Person)",
+                            "✅ I was indignant at his behavior. (Thing/Action)"
+                        ],
+                        trick: "Indignant with (Person) / Indignant at (Thing).",
+                        quickRev: "Indignant at a thing / Indignant with a person."
+                    },
+                    {
+                        qText: "The company decided to renege on the initial agreement after the market conditions plummeted unexpectedly.\n1. Back out of the initial agreement\n2. Default on the initial agreement\n3. Abide by the initial agreement",
+                        options: [
+                            "A. Only 1",
+                            "B. Only 2",
+                            "C. Only 3",
+                            "D. Both 1 and 2",
+                            "E. No correction required"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D. Both 1 and 2",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'Renege on' નો અર્થ થાય છે કોઈ વચન કે કરારમાંથી ફરી જવું (પાછા હટી જવું). 'Back out of' અને 'Default on' એ બંને તેના સમાનાર્થી (Synonyms) છે. 'Abide by' નો અર્થ થાય છે કરારનું પાલન કરવું, જે વિરોધી અર્થ આપે છે. તેથી વિકલ્પ 1 અને 2 સાચા છે.",
+                        examples: [],
+                        trick: "Renege on = વચનભંગ કરવો (Back out of / Default on).",
+                        quickRev: "Renege on = Back out of = Default on (To break a promise)."
+                    },
+                    {
+                        qText: "The professor emphasized on the importance of archival research during the lecture.\nI. emphasized the importance\nII. laid stress on the importance\nIII. highlighted about the importance",
+                        options: [
+                            "A) Only I",
+                            "B) Only II",
+                            "C) Only I and II",
+                            "D) Only III",
+                            "E) No correction required"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) Only I and II",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'Emphasize' એ Transitive Verb છે, તેથી તેની પછી સીધો Object આવે છે, કોઈ પ્રેપોઝીશન (on) નથી આવતું (emphasized the importance). જો 'on' વાપરવો જ હોય, તો Noun સ્વરૂપ 'stress' નો ઉપયોગ કરવો પડે (laid stress on). તેથી I અને II બંને સાચા છે.",
+                        examples: [
+                            "❌ Emphasized on the topic.",
+                            "✅ Emphasized the topic.",
+                            "✅ Laid stress on the topic."
+                        ],
+                        trick: "Emphasize + NO preposition. Laid stress + ON.",
+                        quickRev: "Do not use 'on' after emphasize."
+                    },
+                    {
+                        qText: "The committee of experts, one of who are responsible for drafting the new policy, will meet next week...\n",
+                        options: [
+                            "A. one of who is responsible",
+                            "B. one of whom are responsible",
+                            "C. one of whom is responsible",
+                            "D. one of which are responsible",
+                            "E. No improvement required"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C. one of whom is responsible",
+                        explanation: "PDF સ્ત્રોત મુજબ, Preposition (of) પછી હંમેશા Pronoun નું Objective Case (whom) આવે છે, 'who' નહિ. વળી, 'One of' નો ઉપયોગ થયો હોવાથી કર્તા એકવચન (Singular) ગણાશે, તેથી Verb પણ 'is' આવશે. જેથી સાચું વાક્ય 'one of whom is responsible' બનશે.",
+                        examples: [
+                            "❌ One of who are...",
+                            "✅ One of whom is..."
+                        ],
+                        trick: "Preposition (of) + Object (whom). 'One of' = Singular Verb (is).",
+                        quickRev: "After preposition 'of', use 'whom'. 'One of' takes a singular verb."
+                    }
+                ]
+            },
+            {
+                topic: "ADDITIONAL QUESTIONS (22-26)",
+                questions: [
+                    {
+                        qText: "The surge in mandatory security measures at the border is predicted to increase processing times and weighing some people up flying.\nI. discourage some people from\nII. put some people off\nIII. deterring some people from",
+                        options: [
+                            "A. Only I and II",
+                            "B. Only II and III",
+                            "C. Only I and III",
+                            "D. All I, II, and III",
+                            "E. No improvement"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A. Only I and II",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'weighing some people up' નો અર્થ બંધ બેસતો નથી. અહી અર્થ છે કે સુરક્ષાના પગલાં વધવાથી લોકો ઉડાન ભરતા (ફ્લાઇંગ કરતા) અટકી જશે કે નિરાશ થશે. આ માટે 'discourage some people from' અથવા 'put some people off' યોગ્ય ફ્રેઝ છે. (Parallelism મુજબ 'to increase' સાથે 'discourage' આવે, 'deterring' નહિ).",
+                        examples: [],
+                        trick: "Put off = નિરાશ કરવું / હિંમત હારવી. Discourage from = કોઈ કામ કરતા અટકાવવું.",
+                        quickRev: "Discourage from / Put off = To deter someone."
+                    },
+                    {
+                        qText: "After years of operating as a secret collective, the group feared that stepping out with the shadows might lead to targeted harassment by their online rivals.\nI. going anonymous\nII. revealing their identities\nIII. giving themselves away",
+                        options: [
+                            "A. Only I and II",
+                            "B. Only II",
+                            "C. Only I and III",
+                            "D. Only II and III",
+                            "E. No improvement"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D. Only II and III",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'stepping out with the shadows' એ ખોટો ઈડિયમ છે. અહી અર્થ છે છુપા રહેવાને બદલે ઓળખ છતી કરવી. 'revealing their identities' (ઓળખ છતી કરવી) અને 'giving themselves away' (પોતાની માહિતી આપી દેવી) બંને યોગ્ય છે. 'going anonymous' નો અર્થ વિરોધી થાય છે.",
+                        examples: [],
+                        trick: "છુપાયેલા માંથી બહાર આવવું = Reveal identity / Give away.",
+                        quickRev: "Reveal identity = Give oneself away."
+                    },
+                    {
+                        qText: "The environmental agency is concerned that hazardous chemicals are continuing being dumped into the river by nearby factories.\nI. continuing to be dumped into\nII. increasingly being dumped into\nIII. being continued to be dumped into",
+                        options: [
+                            "A. Only I and II",
+                            "B. Only I",
+                            "C. Only I and III",
+                            "D. All I, II, and III",
+                            "E. No improvement"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A. Only I and II",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'are continuing being dumped' એ વ્યાકરણની દ્રષ્ટિએ ખોટું છે. 'are continuing to be dumped' (ડમ્પ થવાનું ચાલુ છે) અથવા 'increasingly being dumped' (વધુ ને વધુ ડમ્પ થઇ રહ્યું છે) બંને સાચા છે.",
+                        examples: [],
+                        trick: "Continuing + to be + V3 અથવા Increasingly + being + V3.",
+                        quickRev: "Continuing to be dumped / Increasingly being dumped."
+                    },
+                    {
+                        qText: "The athlete finished the marathon whether exhaustion or pain, achieving a new world record.",
+                        options: [
+                            "A whether exhaustion and agony",
+                            "B with exhaustion and tension",
+                            "C with exhaustion or pain",
+                            "D without exhaustion or pain",
+                            "E No correction required"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D without exhaustion or pain",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'whether' અહી ખોટું છે. જો એથ્લેટે નવો વર્લ્ડ રેકોર્ડ બનાવ્યો હોય, તો તેણે થાક કે પીડા 'વિના' મેરેથોન પૂરી કરી હોવી જોઈએ. તેથી 'without exhaustion or pain' સાચો વિકલ્પ છે.",
+                        examples: [],
+                        trick: "Context સમજો: નવો રેકોર્ડ બન્યો એટલે થાક કે પીડા નહિ હોય (without).",
+                        quickRev: "Without exhaustion or pain fits the positive context of achieving a record."
+                    },
+                    {
+                        qText: "The scientist's and the policymaker's consensus regarding the 2026 global carbon reduction targets has faced unprecedented scrutiny...",
+                        options: [
+                            "A The scientist's and the policymaker's consensuses",
+                            "B The scientist and the policymaker's consensus",
+                            "C The scientist's and the policymaker consensuses",
+                            "D The scientist and the policymaker consensus",
+                            "E No correction required"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B The scientist and the policymaker's consensus",
+                        explanation: "PDF સ્ત્રોત મુજબ, જ્યારે બે વ્યક્તિઓ વચ્ચે સંયુક્ત માલિકી (Joint possession) હોય (અહી સંયુક્ત સહમતિ 'consensus' છે), ત્યારે માત્ર છેલ્લા શબ્દ પર જ Apostrophe 's' લગાડવામાં આવે છે. તેથી 'The scientist and the policymaker's consensus' સાચું છે.",
+                        examples: [
+                            "✅ Ram and Shyam's house. (સંયુક્ત ઘર)"
+                        ],
+                        trick: "Joint Possession માં છેલ્લા Noun પર જ 's લાગે.",
+                        quickRev: "Joint possession: add 's only to the last noun."
+                    }
+                ]
+            },
+            {
+                topic: "ADDITIONAL QUESTIONS (27-30)",
+                questions: [
+                    {
+                        qText: "As global temperatures continued to break records throughout the summer of 2026, the international climate task force took it upon themselves to mitigate of the environmental damage caused by the sudden surge in industrial emissions.",
+                        options: [
+                            "A themselves to mitigate",
+                            "B themselves to mitigate the",
+                            "C himself to mitigate of",
+                            "D themselves mitigate",
+                            "E No correction required"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B themselves to mitigate the",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'Mitigate' (ઘટાડવું) એ Transitive Verb છે, તેથી તેની પછી સીધો જ Object આવે છે, વચ્ચે પ્રેપોઝીશન 'of' ની જરૂર નથી. 'to mitigate the environmental damage' એ સાચું વાક્ય બનશે.",
+                        examples: [],
+                        trick: "Mitigate + Object (No 'of').",
+                        quickRev: "Do not use 'of' after mitigate."
+                    },
+                    {
+                        qText: "Climate researchers analyse the satellite data that may exist, and relate it to finding an evidence of methane leaks...",
+                        options: [
+                            "A that may have existed, and relating them to find evidence",
+                            "B that may have existed, and relate them to finding evidence",
+                            "C that may have existed, and related them to find an evidence",
+                            "D that may have existed, and related it to finding an evidence",
+                            "E No correction required"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A that may have existed, and relating them to find evidence",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'Data' શબ્દ બહુવચન (Plural) તરીકે વપરાય છે, તેથી તેની સાથે સર્વનામ 'them' આવશે, 'it' નહિ. વળી, 'Evidence' એ અનકાઉન્ટેબલ નાઉન હોવાથી તેની આગળ આર્ટીકલ 'an' નહિ આવે. તેથી 'relating them to find evidence' સાચું છે.",
+                        examples: [],
+                        trick: "Data = Plural (them). Evidence = Uncountable (No article).",
+                        quickRev: "Data is plural (use them). Evidence is uncountable (no 'an')."
+                    },
+                    {
+                        qText: "The lax oversight for AI-driven logistics in the 2026 cross-border trade networks has introduced systemic risks to global supply chains...\nI. weak governance of\nII. insufficient supervision by\nIII. inadequate regulation of",
+                        options: [
+                            "A Only III",
+                            "B Only II",
+                            "C Only I and II",
+                            "D Only I and III",
+                            "E No improvement"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D Only I and III",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'lax oversight for' (ઢીલી દેખરેખ) ની જગ્યાએ 'weak governance of' (નબળું શાસન) અથવા 'inadequate regulation of' (અપૂરતું નિયમન) બંને યોગ્ય સમાનાર્થી ફ્રેઝ છે. 'insufficient supervision by' અહી બેસતું નથી કારણ કે અહી AI-driven logistics 'પર' દેખરેખની વાત છે, 'દ્વારા' નહિ.",
+                        examples: [],
+                        trick: "Lax oversight = Weak governance = Inadequate regulation.",
+                        quickRev: "Lax oversight = weak governance / inadequate regulation."
+                    },
+                    {
+                        qText: "International cooperation in green technology is the catalyst with economic stability, and when nations commit to shared R&D protocols, they can effectively secure the global energy grid...\nI. essentially needed\nII. driving force behind economic stability\nIII. cornerstone of economic stability",
+                        options: [
+                            "A. Only I and III",
+                            "B. Only I and II",
+                            "C. Only II",
+                            "D. Only II and III",
+                            "E. No improvement"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D. Only II and III",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'catalyst' સાથે સામાન્ય રીતે 'for' વપરાય છે (catalyst for), 'with' નહિ. અહી 'catalyst' ના સ્થાને 'driving force behind' (મુખ્ય કારણ/પ્રેરક બળ) અને 'cornerstone of' (મુખ્ય આધાર) બંને યોગ્ય રીતે વાપરી શકાય છે.",
+                        examples: [],
+                        trick: "Catalyst = Driving force = Cornerstone.",
+                        quickRev: "Catalyst for = Driving force behind = Cornerstone of."
+                    },
+                    {
+                        qText: "The integration of AI-driven smart grids across the 2026 national energy infrastructure is gaining ground slowly because of the complex regulatory hurdles involved...\nI. is progressing sluggishly\nII. is advancing incrementally\nIII. is expanding exponentially",
+                        options: [
+                            "A. Only I",
+                            "B. Only II",
+                            "C. Only I and II",
+                            "D. Only II and III",
+                            "E. No improvement"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C. Only I and II",
+                        explanation: "PDF સ્ત્રોત મુજબ, 'gaining ground slowly' (ધીમે ધીમે આગળ વધવું) માટે 'progressing sluggishly' અને 'advancing incrementally' બંને યોગ્ય સમાનાર્થી છે. 'expanding exponentially' નો અર્થ બહુ ઝડપથી વધવું થાય છે, જે મૂળ વાક્યથી વિપરીત છે.",
+                        examples: [],
+                        trick: "Slowly = Sluggishly = Incrementally.",
+                        quickRev: "Gaining ground slowly = Progressing sluggishly = Advancing incrementally."
+                    }
+                ]
+            }
+        ];
+
+        // --- Render UI ---
+        const homeMenu = document.getElementById('home-menu');
+        const detailContent = document.getElementById('detail-content');
+        const practiceContent = document.getElementById('practice-content');
+        const viewHome = document.getElementById('view-home');
+        const viewDetail = document.getElementById('view-detail');
+        const viewPractice = document.getElementById('view-practice');
+        const btnBack = document.getElementById('btn-back');
+        const btnTheme = document.getElementById('btn-theme');
+
+        const tileColors = ['#FF4757', '#2ED573', '#1E90FF', '#FFA502', '#9C88FF', '#FF6348'];
+
+        let isDarkMode = false;
+        btnTheme.addEventListener('click', () => {
+            playSound();
+            isDarkMode = !isDarkMode;
+            document.body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            btnTheme.innerText = isDarkMode ? '☀️' : '🌙';
+        });
+
+        function showView(viewElement) {
+            viewHome.classList.remove('active');
+            viewDetail.classList.remove('active');
+            viewPractice.classList.remove('active');
+            viewElement.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function initHome() {
+            homeMenu.innerHTML = '';
+            
+            studyData.forEach((section, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'topic-btn';
+                btn.innerText = section.topic;
+                btn.style.backgroundColor = tileColors[index % tileColors.length];
+                
+                btn.onclick = () => {
+                    playSound();
+                    renderDetailView(index);
+                };
+                homeMenu.appendChild(btn);
+            });
+
+            const memoryBtn = document.createElement('button');
+            memoryBtn.className = 'topic-btn';
+            memoryBtn.innerText = "🔥 FINAL MEMORY SHEET";
+            memoryBtn.style.backgroundColor = "#5352ED";
+            memoryBtn.onclick = () => {
+                playSound();
+                renderMemorySheet();
+            };
+            homeMenu.appendChild(memoryBtn);
+
+            const mockBtn = document.createElement('button');
+            mockBtn.className = 'topic-btn';
+            mockBtn.innerText = "📝 PRACTICE MOCK";
+            mockBtn.style.backgroundColor = "#34495e";
+            mockBtn.onclick = () => {
+                playSound();
+                renderPracticeMock();
+            };
+            homeMenu.appendChild(mockBtn);
+            
+            btnBack.style.display = 'none';
+            showView(viewHome);
+        }
+
+        btnBack.onclick = () => {
+            playSound();
+            initHome();
+        };
+
+        function renderDetailView(sectionIndex) {
+            const section = studyData[sectionIndex];
+            let html = `<div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">${section.topic}</div>`;
+
+            section.questions.forEach((q, i) => {
+                html += `
+                <div class="card">
+                    <div class="section-title">Question ${i + 1}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    
+                    <ul class="options-list">
+                        ${q.options.map(opt => `<li>${opt}</li>`).join('')}
+                    </ul>
+
+                    <div class="section-title">✅ ANSWER</div>
+                    <p style="font-weight:bold; color:var(--secondary); margin-bottom: 15px; font-size:1.1rem;">${q.answerText}</p>
+
+                    <div class="section-title">🧠 COMPLETE EXPLANATION</div>
+                    <p>${q.explanation}</p>
+                    
+                    ${q.examples.length > 0 ? `
+                        <div class="section-title">✍️ EXAMPLES</div>
+                        ${q.examples.map(ex => `<p>${ex}</p>`).join('')}
+                    ` : ''}
+
+                    ${q.trick ? `
+                        <div class="exam-trick">
+                            <strong>🎯 EXAM TRICK:</strong><br>
+                            ${q.trick.replace(/\n/g, '<br>')}
+                        </div>
+                    ` : ''}
+
+                    <div class="section-title">⚡ QUICK REVISION</div>
+                    <div class="quick-revision">${q.quickRev}</div>
+                </div>
+                `;
+            });
+
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        function renderMemorySheet() {
+            let html = `
+                <div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">🔥 FINAL MEMORY SHEET</div>
+                <div class="card">
+                    <div class="section-title">1. Grammar Rules</div>
+                    <ul>
+                        <li><strong>A number of:</strong> હમેશા Plural verb (were) લેશે.</li>
+                        <li><strong>State Verbs:</strong> Forget, think, understand, hesitate નું V-ing (continuous) સ્વરૂપ ના બને.</li>
+                        <li><strong>Of the two:</strong> જ્યારે બે ની સરખામણી હોય ત્યારે Comparative degree ની આગળ 'the' ચોક્કસ લાગે.</li>
+                        <li><strong>Parallelism:</strong> 'And' ની બંને બાજુ માળખું સમાન હોવું જોઈએ (V-ing and V-ing).</li>
+                        <li><strong>Prepositions:</strong> Indifferent/Apathetic + to. Concerned/Unconcerned + about.</li>
+                        <li><strong>Shortage:</strong> Shortage, lack, paucity, scarcity + of. Invest + in.</li>
+                        <li><strong>Adverb Placement:</strong> Transitive verb અને Object ની વચ્ચે Adverb ના મુકાય. (તેને આગળ કે પાછળ મૂકો).</li>
+                        <li><strong>Indignant:</strong> Indignant + with (Person), Indignant + at (Thing/Action).</li>
+                        <li><strong>Emphasize:</strong> Emphasize પછી કોઈ પ્રેપોઝીશન (on) ના આવે.</li>
+                        <li><strong>Data & Evidence:</strong> Data બહુવચન (them) છે, Evidence અનકાઉન્ટેબલ (No 'an') છે.</li>
+                    </ul>
+
+                    <div class="section-title" style="margin-top:20px;">2. Important Phrasal Verbs & Idioms</div>
+                    <table>
+                        <tr><th>Phrase/Idiom</th><th>Meaning</th></tr>
+                        <tr><td>Account for / Take into account</td><td>ધ્યાનમાં લેવું (Consider)</td></tr>
+                        <tr><td>Take a firm stand</td><td>મજબૂતીથી ટેકો આપવો (Strongly support)</td></tr>
+                        <tr><td>Look forward to</td><td>(Phrasal verb) હમેશા V-ing લેશે (e.g., meeting)</td></tr>
+                        <tr><td>Iron out</td><td>સમસ્યાનો ઉકેલ લાવવો (Resolve)</td></tr>
+                        <tr><td>Spanner in the works</td><td>ચાલતું કામ અટકાવવું (Disrupt/Halt)</td></tr>
+                        <tr><td>At loggerheads</td><td>ઝઘડો કે મતભેદ હોવા (In conflict)</td></tr>
+                        <tr><td>Jump through hoops</td><td>કોઈ કામ માટે બહુ મુશ્કેલીઓ વેઠવી</td></tr>
+                        <tr><td>Live hand to mouth</td><td>માંડ માંડ ગુજરાન ચલાવવું</td></tr>
+                        <tr><td>Renege on</td><td>વચનભંગ કરવો (Back out of / Default on)</td></tr>
+                        <tr><td>Put off / Discourage from</td><td>નિરાશ કરવું / અટકાવવું</td></tr>
+                    </table>
+
+                    <div class="section-title" style="margin-top:20px;">3. Exam Tricks</div>
+                    <ul>
+                        <li>વાક્યમાં Verb ગણો અને Subject ગણો. જો Verb વધે તો Object (whom) ની જગ્યાએ Subject (who) મૂકો.</li>
+                        <li>Quite અને Comparative degree ક્યારેય ભેગા ના વાપરો (Superfluous).</li>
+                        <li>3rd Conditional: <code>Had + V3</code> આવે તો સામે <code>would/could/might + have + V3</code> મૂકવું.</li>
+                        <li>Joint Possession (સંયુક્ત માલિકી) માં માત્ર છેલ્લા શબ્દ પર જ 's (Apostrophe) લગાડો.</li>
+                        <li>Mitigate એક Transitive verb છે, તેની પાછળ 'of' ના આવે.</li>
+                    </ul>
+                </div>
+            `;
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        let mockQuestions = [];
+        let currentMockIndex = 0;
+        let mockScore = { correct: 0, wrong: 0, skipped: 0 };
+        let answered = false;
+
+        function renderPracticeMock() {
+            mockQuestions = [];
+            studyData.forEach(section => {
+                section.questions.forEach(q => {
+                    mockQuestions.push({
+                        ...q,
+                        topicStr: section.topic
+                    });
+                });
+            });
+
+            currentMockIndex = 0;
+            mockScore = { correct: 0, wrong: 0, skipped: 0 };
+            btnBack.style.display = 'block';
+            
+            showMockQuestion();
+            showView(viewPractice);
+        }
+
+        function showMockQuestion() {
+            if (currentMockIndex >= mockQuestions.length) {
+                showMockResult();
+                return;
+            }
+
+            answered = false;
+            const q = mockQuestions[currentMockIndex];
+            let html = `
+                <div class="card-header" style="font-size:1.2rem; display:flex; justify-content:space-between;">
+                    <span>📝 PRACTICE MOCK</span>
+                    <span>Q ${currentMockIndex + 1} / ${mockQuestions.length}</span>
+                </div>
+                <div class="card">
+                    <div style="font-size: 0.9rem; color: #7f8c8d; margin-bottom: 10px;">${q.topicStr}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    <div id="mock-options-container">
+                        ${q.options.map((opt, i) => `
+                            <button class="mock-option" onclick="selectMockOption(${i}, this)">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <button class="action-btn" style="background-color: #95a5a6;" onclick="skipMockQuestion()" id="btn-skip">Skip Question</button>
+                    <button class="action-btn" style="display:none;" onclick="nextMockQuestion()" id="btn-next">Next Question →</button>
+                    
+                    <div class="result-box" id="mock-result-box"></div>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        function selectMockOption(selectedIndex, btnElement) {
+            if (answered) return;
+            answered = true;
+            playSound();
+            
+            const q = mockQuestions[currentMockIndex];
+            const isCorrect = selectedIndex === q.answerIndex;
+            
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                mockScore.correct++;
+            } else {
+                btnElement.classList.add('wrong');
+                mockScore.wrong++;
+                document.querySelectorAll('.mock-option')[q.answerIndex].classList.add('correct');
+            }
+
+            document.getElementById('btn-skip').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'inline-block';
+
+            const resultBox = document.getElementById('mock-result-box');
+            resultBox.style.display = 'block';
+            resultBox.style.backgroundColor = isCorrect ? 'rgba(46, 204, 113, 0.1)' : 'rgba(231, 76, 60, 0.1)';
+            resultBox.innerHTML = `
+                <strong style="color: ${isCorrect ? 'var(--secondary)' : 'var(--danger)'};">
+                    ${isCorrect ? '✅ CORRECT' : '❌ INCORRECT'}
+                </strong><br><br>
+                <strong>Correct Answer:</strong> ${q.answerText}<br>
+                <p style="margin-top:10px; font-size:0.95rem;">${q.explanation}</p>
+            `;
+        }
+
+        function skipMockQuestion() {
+            playSound();
+            mockScore.skipped++;
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function nextMockQuestion() {
+            playSound();
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function showMockResult() {
+            const total = mockQuestions.length;
+            const percentage = Math.round((mockScore.correct / total) * 100);
+            
+            let html = `
+                <div class="card-header" style="font-size:1.5rem;">🏆 FINAL SCORE</div>
+                <div class="card score-board">
+                    <h2>${percentage}%</h2>
+                    <p style="font-size:1.2rem; margin-bottom:10px;">Total Questions: <strong>${total}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--secondary)">Correct: <strong>${mockScore.correct}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--danger)">Wrong: <strong>${mockScore.wrong}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:20px; color:#95a5a6">Skipped: <strong>${mockScore.skipped}</strong></p>
+                    <button class="action-btn" onclick="initHome()">Return to Home</button>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', initHome);
+
+    </script>
+</body>
+</html>
