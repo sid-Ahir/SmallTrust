@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPERMOCK - 3</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #e0e6ed;
+            --header-bg: #1a252f;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #333333;
+            --header-bg: #000000;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            padding-top: 60px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        #btn-back {
+            background-color: #95a5a6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #btn-theme {
+            background-color: transparent;
+            font-size: 1.5rem;
+            padding: 5px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .topic-btn {
+            padding: 20px 10px;
+            font-size: 1.1rem;
+            text-align: center;
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s, filter 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            min-height: 100px;
+            word-wrap: break-word;
+        }
+
+        .topic-btn:hover {
+            filter: brightness(1.1);
+        }
+        
+        .topic-btn:active {
+            transform: scale(0.95);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .options-list li {
+            padding: 10px 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin: 20px 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .exam-trick {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .quick-revision {
+            background-color: var(--bg-color);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .mock-option {
+            width: 100%;
+            text-align: left;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--border);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        .mock-option.correct {
+            border-color: var(--secondary);
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        .mock-option.wrong {
+            border-color: var(--danger);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .action-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .score-board {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .score-board h2 {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--bg-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>SUPERMOCK - 3</div>
+        <div class="header-actions">
+            <button id="btn-back" style="display: none;">← BACK</button>
+            <button id="btn-theme">🌙</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Home View -->
+        <div id="view-home" class="view active">
+            <div class="topic-grid" id="home-menu">
+                <!-- Menu populated by JS -->
+            </div>
+        </div>
+
+        <!-- Detail View -->
+        <div id="view-detail" class="view">
+            <div id="detail-content"></div>
+        </div>
+
+        <!-- Practice Mock View -->
+        <div id="view-practice" class="view">
+            <div id="practice-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- Web Audio API for UI Sounds (Hard Beep) ---
+        let audioCtx;
+        
+        function playSound() {
+            try {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (!AudioContext) return; 
+                    audioCtx = new AudioContext();
+                }
+                
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.type = 'square'; 
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime); 
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0, audioCtx.currentTime + 0.1); 
+                
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.1);
+            } catch(e) {
+                console.log("Audio not supported or blocked", e);
+            }
+        }
+
+        // --- Data Source (Combined PDF & Transcript - 100% Complete) ---
+        const studyData = [
+            {
+                topic: "PHRASE REPLACEMENT (1-5)",
+                questions: [
+                    {
+                        qText: "The minister's evasive response merely compounded the speculation surrounding his abrupt resignation.",
+                        options: [
+                            "(a) allayed the speculation",
+                            "(b) intensified the speculation",
+                            "(c) corroborated with the speculation",
+                            "(d) dispensed the speculation",
+                            "(e) No replacement required"
+                        ],
+                        answerIndex: 1,
+                        answerText: "(b) intensified the speculation",
+                        explanation: "Transcript મુજબ[cite: 3], 'compounded' નો અર્થ વધારો કરવો થાય છે. મંત્રીના ગોળગોળ જવાબથી અટકળો (speculation) માં વધુ તીવ્રતા આવી ગઈ, તેથી 'intensified the speculation' સાચો જવાબ છે. 'Allayed' એટલે ઘટાડવું થાય.",
+                        examples: [],
+                        trick: "Compound = Intensify (વધારવું / ઉગ્ર બનાવવું).",
+                        quickRev: "Compounded = Intensified."
+                    },
+                    {
+                        qText: "Although the evidence was largely circumstantial, the prosecutor attempted to impute the discrepancy to deliberate financial manipulation.",
+                        options: [
+                            "(a) attribute the discrepancy to",
+                            "(b) infer the discrepancy with",
+                            "(c) implicate the discrepancy for",
+                            "(d) deduce the discrepancy from",
+                            "(e) No replacement required"
+                        ],
+                        answerIndex: 0,
+                        answerText: "(a) attribute the discrepancy to",
+                        explanation: "Transcript મુજબ[cite: 3], જ્યારે કોઈ બાબત પાછળનું કારણ દર્શાવવું હોય ત્યારે 'attribute... to' નો ઉપયોગ થાય છે. પ્રોસિક્યુટરે એવું કારણ દર્શાવવાનો પ્રયાસ કર્યો કે આ વિસંગતતા (discrepancy) પાછળ નાણાકીય હેરાફેરી છે.",
+                        examples: [
+                            "✅ His success is attributed to hard work[cite: 3]."
+                        ],
+                        trick: "Cause દર્શાવવા માટે 'attribute to' વપરાય છે.",
+                        quickRev: "Attribute... to = કારણ બતાવવું."
+                    },
+                    {
+                        qText: "Far from resolving the constitutional impasse, the judgment lent credence for claims that the executive had exceeded its authority.",
+                        options: [
+                            "(a) accorded credibility with",
+                            "(b) lent credence to",
+                            "(c) bestowed credence upon",
+                            "(d) conceded credibility for",
+                            "(e) No replacement required"
+                        ],
+                        answerIndex: 1,
+                        answerText: "(b) lent credence to",
+                        explanation: "Transcript મુજબ[cite: 3], 'credence' (માન્યતા/વિશ્વાસ) શબ્દ સાથે હંમેશા 'to' preposition લાગે છે ('lent credence to'). 'for' વાપરવું ખોટું છે.",
+                        examples: [],
+                        trick: "Credence + to (Fixed preposition).",
+                        quickRev: "Lent credence TO claims."
+                    },
+                    {
+                        qText: "The researcher focused on to the significance of critical thinking in scientific inquiry.\nI. focused on the significance of\nII. laid emphasis on the significance of\nIII. highlighted about the significance of",
+                        options: [
+                            "A) Only I",
+                            "B) Only II",
+                            "C) Only I and II",
+                            "D) Only III",
+                            "E) No correction required"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) Only I and II",
+                        explanation: "Transcript મુજબ[cite: 3], 'focused on' પછી સીધું object આવે, 'on to' ખોટું છે. 'laid emphasis on' સાચું છે. 'highlighted' એ transitive verb છે, તેથી તેની પાછળ 'about' ના આવે.",
+                        examples: [
+                            "✅ He focused on the class[cite: 3].",
+                            "✅ He laid emphasis on the importance[cite: 3]."
+                        ],
+                        trick: "Focus + on (No 'onto'). Highlight + No preposition.",
+                        quickRev: "Focused on / Laid emphasis on / Highlighted (no 'about')."
+                    },
+                    {
+                        qText: "National Security Adviser Meera Nair's talks with Japan had impact of significant strategic importance...",
+                        options: [
+                            "A. talks with Japan had an impact of significant, her closed-door discussion",
+                            "B. talks with Japan had impacts of significant, her closed-door discussion",
+                            "C. talks with Japan had impact of significant, her closed-door discussions",
+                            "D. talks with Japan had impacts of significance, her closed-door discussions",
+                            "E. No correction required"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E. No correction required",
+                        explanation: "💡 EXTRA EXPLANATION: PDF સ્ત્રોત મુજબ[cite: 3], વાક્યમાં વ્યાકરણની દ્રષ્ટિએ 'had impact of significant' અને 'closed-door discussion' યોગ્ય માળખામાં છે, તેથી No correction required આવશે.",
+                        examples: [],
+                        trick: "વાક્ય રચના તપાસો, કોઈ ભૂલ નથી.",
+                        quickRev: "No correction required."
+                    }
+                ]
+            },
+            {
+                topic: "ERROR DETECTION (6-10)",
+                questions: [
+                    {
+                        qText: "The museum remained silent and near empty (A)/ throughout the afternoon, except a small (B)/ group of students lively discussions (C)/ echoed faintly on the gallery halls. (D)",
+                        options: [
+                            "A) B",
+                            "B) ABD",
+                            "C) ABC",
+                            "D) CD",
+                            "E) ACD"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) ABC",
+                        explanation: "Transcript મુજબ[cite: 3]:\n(A) 'near empty' ના બદલે 'nearly empty' (adverb) આવે.\n(B) 'except' ના બદલે 'except for' આવે.\n(C) students નું પઝેશન બતાવવા 'students' lively' ના બદલે 'students's' કે 'whose' આવે.\n(D) 'on the gallery halls' ના બદલે 'in the gallery halls' આવે.",
+                        examples: [],
+                        trick: "Near = નજીક, Nearly = લગભગ. Except for આવે. Possession માટે whose/students'.",
+                        quickRev: "Error parts: A (near -> nearly), B (except -> except for), C (students -> whose)."
+                    },
+                    {
+                        qText: "During the review meeting, the external auditor advised (A)/ that the finance department implements a more transparent (B)/ reporting system so that discrepancies could detect early and (C)/ corrective measures could be taken without delaying quarterly submission. (D)",
+                        options: [
+                            "A) BC",
+                            "B) ABD",
+                            "C) ABC",
+                            "D) CD",
+                            "E) BCD"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) BCD",
+                        explanation: "Transcript (Mood & Voice) મુજબ[cite: 3]:\n(B) 'advised that... implements' માં mood નિયમ મુજબ Base form 'implement' આવે (s/es ના લાગે).\n(C) 'discrepancies could detect' એ active માં છે પણ વિસંગતતા જાતે detect ના થાય, તેથી 'could be detected' (passive) આવે.",
+                        examples: [],
+                        trick: "Advised that + Base form (implement). Discrepancies could BE detected.",
+                        quickRev: "Mood rule (base verb) & Passive voice (could be detected)."
+                    },
+                    {
+                        qText: "Researchers observed that the new teaching methodology (A)/ significantly much enhanced students' critical-thinking skills, particularly (B)/ when combined collaborative learning (C)/ activities and regular formation assessments. (D)",
+                        options: [
+                            "A) BC",
+                            "B) ABD",
+                            "C) ABC",
+                            "D) CD",
+                            "E) BCD"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) BCD",
+                        explanation: "Transcript મુજબ[cite: 3]:\n(B) 'significantly much' બે intensify એકસાથે સુપરફ્લુઅસ છે.\n(C) 'combined' સાથે preposition 'with' આવે ('combined with collaborative learning').\n(D) 'formation assessments' ના બદલે યોગ્ય adjective 'formative assessments' આવે.",
+                        examples: [],
+                        trick: "Combined + WITH. Formation (noun) -> Formative (adjective).",
+                        quickRev: "Errors in B, C, D (significantly/much, combined with, formative)."
+                    },
+                    {
+                        qText: "In addition to manage the entire project, the team leader (A)/ also took responsibilities for training new interns, (B)/ ensuring documentation accurate, and maintaining (C)/ regular communication with stakeholders. (D)",
+                        options: [
+                            "A) BC",
+                            "B) ABC",
+                            "C) ABD",
+                            "D) CD",
+                            "E) BCD"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) ABD",
+                        explanation: "Transcript મુજબ[cite: 3]:\n(A) 'In addition to' એ prepositional phrase હોવાથી gerund 'managing' આવે.\n(B) ટીમ લીડરે એક જ જવાબદારી લીધી હોવાથી 'responsibilities' ના બદલે 'responsibility' આવે.\n(C) 'ensuring documentation accurate' માં adverb/adjective ની ભૂલ છે ('accurately').",
+                        examples: [],
+                        trick: "To + V(ing) (managing). Responsibility (singular).",
+                        quickRev: "In addition to managing / responsibility / accurately."
+                    },
+                    {
+                        qText: "Although the manager promise to consider every (A) / suggestion fairly, he quietly reject the most practical proposal, (B) / causing disappointment among employees who had (C) / expected a more thoughtful and transparent decision process. (D)",
+                        options: [
+                            "A) BC",
+                            "B) ABC",
+                            "C) ABD",
+                            "D) AB",
+                            "E) BCD"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D) AB",
+                        explanation: "Transcript મુજબ[cite: 3], વાક્ય ભૂતકાળ (Past) ની ઘટના દર્શાવે છે, તેથી Present tense ના રૂપો 'promise' અને 'reject' ખોટા છે. ત્યાં क्रमशः 'promised' અને 'rejected' (V2) આવવું જોઈએ. તેથી A અને B માં ભૂલ છે.",
+                        examples: [],
+                        trick: "વાક્યનો સંદર્ભ પાતનો છે, તેથી V2 (promised, rejected) વાપરો.",
+                        quickRev: "Past tense consistency: promised & rejected."
+                    }
+                ]
+            },
+            {
+                topic: "WORD USAGE (11-13)",
+                questions: [
+                    {
+                        qText: "Word: COUNTENANCE\n1. Her cheerful countenance concealed the profound anxiety she had endured throughout the ordeal.\n2. The administration refused to countenance any deliberate violation of the institution's ethical standards.\n3. Several eminent scholars countenanced the proposed educational reforms by publicly defending their necessity.",
+                        options: [
+                            "A. Both I and III",
+                            "B. Both I and II",
+                            "C. Both II and III",
+                            "D. All I, II, and III",
+                            "E. None of the above"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D. All I, II, and III",
+                        explanation: "Transcript મુજબ[cite: 3], 'Countenance' ના ત્રણ અર્થ થાય છે: (1) ચહેરાના હાવભાવ/Expression, (2) સહન કરવું કે પરવાનગી ન આપવી (Tolerate), (3) ટેકો આપવો (Support). ત્રણેય વાક્યોમાં શબ્દનો યોગ્ય અને સાચો પ્રયોગ થયો છે.",
+                        examples: [],
+                        trick: "Countenance = Expression / Tolerate / Support.",
+                        quickRev: "All sentences (1, 2, 3) are correct."
+                    },
+                    {
+                        qText: "Word: RESERVE\n1. The authorities reserved a substantial portion of the emergency fund for future contingencies.\n2. Despite the provocative allegations, she responded with remarkable reserve.\n3. The endangered animals were relocated to a protected wildlife reserve.",
+                        options: [
+                            "A. Both I and II",
+                            "B. Both I and III",
+                            "C. Both II and III",
+                            "D. All I, II, and III",
+                            "E. None of the above"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D. All I, II, and III",
+                        explanation: "Transcript મુજબ[cite: 3], 'Reserve' એટલે (1) ભવિષ્ય માટે બચાવવું/સુરक्षित રાખવું, (2) સંયમ કે શાંતિ (Noun - composure), (3) અભયારણ્ય કે સુરક્ષિત વિસ્તાર (Wildlife reserve). ત્રણેય સેન્ટેન્સ એકદમ સાચા છે.",
+                        examples: [],
+                        trick: "Reserve = Save (verb) / Composure (noun) / Protected space (noun).",
+                        quickRev: "All sentences (1, 2, 3) are correct."
+                    },
+                    {
+                        qText: "Word: DISCHARGE\n1. The officer was discharged from duty after completing his final assignment.\n2. The factory was penalised for discharging toxic waste into the nearby river.\n3. The trustee perfunctorily discharged all the obligations entrusted to him.",
+                        options: [
+                            "A. Both I and II",
+                            "B. Both I and III",
+                            "C. Both II and III",
+                            "D. All I, II, and III",
+                            "E. None of the above"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B. Both I and III",
+                        explanation: "Transcript મુજબ[cite: 3], (1) ફરજ મુક્ત કરવા માટે discharged વપરાય. (2) કેમિકલ છોડવા માટે discharging વપરાય. (3) વાક્ય 3 માં 'perfunctorily discharged' (બેદરકારીથી ફરજ બજાવી) માં શબ્દનો અર્થ બેસતો નથી કારણ કે આગળ પોઝિટિવ સેન્સ છે. તેથી માત્ર I અને III સાચા છે.",
+                        examples: [],
+                        trick: "Sentence 3 માં perfunctory (નેગેટિવ) સાથે discharged (ફરજ પૂરી કરવી) નો મેચ થતો નથી.",
+                        quickRev: "Sentences 1 and 2 are correct. (Sentence 3 has a contextual mismatch)."
+                    }
+                ]
+            },
+            {
+                topic: "INFERENCE BASED VOCAB (14-15)",
+                questions: [
+                    {
+                        qText: "Following the sudden collapse of the central government, administrative institutions ceased to function. Police forces abandoned their posts, courts suspended proceedings... With no recognised authority... violence, disorder and insecurity spread rapidly. Which word can be inferred?",
+                        options: [
+                            "A. Autocracy",
+                            "B. Oligarchy",
+                            "C. Anarchy",
+                            "D. Theocracy",
+                            "E. Bureaucracy"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C. Anarchy",
+                        explanation: "Transcript મુજબ[cite: 3], સરકારના પતન અને કોઈ પણ કાયદો કે વ્યવસ્થા ન હોવાની સ્થિતિને 'Anarchy' (અરાજકતા - Absence of government) કહેવાય છે.",
+                        examples: [],
+                        trick: "Government વગરની સ્થિતિ = Anarchy.",
+                        quickRev: "Anarchy = Absence of government / Disorder."
+                    },
+                    {
+                        qText: "Despite having eaten a substantial meal, Raghav continued sampling every delicacy... appeared more interested in eating abundantly than in appreciating the quality... Which word can be inferred?",
+                        options: [
+                            "A. Epicure",
+                            "B. Ascetic",
+                            "C. Gourmet",
+                            "D. Gourmand",
+                            "E. Glutton"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D. Gourmand",
+                        explanation: "Transcript મુજબ[cite: 3], જે વ્યક્તિ વધુ પડતું ખાવાનો શોખીન હોય અને ગુણવત્તા કરતાં જથ્થા પાછળ ભાગતો હોય તેને 'Gourmand' કહે છે. (Glutton આદતવશ વધુ ખાય છે, પણ અહીં વિપુલ માત્રામાં ખાવાના શોખીન માટે Gourmand યોગ્ય છે).",
+                        examples: [],
+                        trick: "Excessive eating નો શોખીન = Gourmand.",
+                        quickRev: "Gourmand = Fond of excessive eating."
+                    }
+                ]
+            },
+            {
+                topic: "REARRANGEMENT / PARA JUMBLE (16-20)",
+                questions: [
+                    {
+                        qText: "Rearrange the following into a coherent paragraph:\nA. The combined evidence prompted historians to examine surviving regional manuscripts.\nB. At first researchers dismissed the inscription as merely a decorative pattern.\nC. Those texts confirmed the treatment described by the recovered symbols.\nD. However, closer examination revealed symbols resembling an ancient medical prescription.\nE. Soon afterward, laboratory tests on the accompanying vessel detected medicinal herbs.",
+                        options: [
+                            "A. BDEAC",
+                            "B. BDAEC",
+                            "C. BACED",
+                            "D. BDACE",
+                            "E. DECAB"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D. BDACE",
+                        explanation: "Transcript મુજબ[cite: 3] સાચો ક્રમ **B-D-A-C-E** બને છે:\n1. B: શરૂઆતમાં સંશોધકોએ તેને માત્ર ડિઝાઇન માની નકારી કાઢી.\n2. D: પરંતુ નજીકથી તપાસ કરતા તે પ્રાચીન મેડિકલ પ્રિસ્ક્રિપ્શન જેવા પ્રતીકો જણાયા.\n3. A: આ સંયુક્ત પુરાવાએ ઇતિહાસકારોને પ્રાદેશિક હસ્તપ્રતો (manuscripts) તપાસવા પ્રેર્યા.\n4. C: તે ટેક્સ્ટ્સ/હસ્તપ્રતોએ પ્રતીકોમાં વર્ણવેલી સારવારને સમર્થન આપ્યું.\n5. E: ત્યારબાદ લેબોરેટરી ટેસ્ટ દ્વારા વાસણોમાંથી ઔષધીય વનસ્પતિઓ મળી આવી.",
+                        examples: [],
+                        trick: "At first (B) -> However (D) -> Evidence (A) -> Texts (C) -> Laboratory tests (E).",
+                        quickRev: "Logical Flow: B -> D -> A -> C -> E."
+                    }
+                ]
+            },
+            {
+                topic: "CLOZE TEST (21-26)",
+                questions: [
+                    {
+                        qText: "Medical researchers in Country Y are examining how ancient remains can illuminate the evolution of human diseases... chamber had remained intact because it was protected (A) environmental disturbances for centuries.",
+                        options: [
+                            "A. Against",
+                            "B. With",
+                            "C. From",
+                            "D. By",
+                            "E. Of"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C. From",
+                        explanation: "Transcript મુજબ[cite: 3], રક્ષણ આપવા માટે 'protect from' નો ઉપયોગ થાય છે (protected from environmental disturbances).",
+                        examples: [
+                            "✅ Protect someone from danger[cite: 3]."
+                        ],
+                        trick: "Protected + from.",
+                        quickRev: "Protected FROM disturbances."
+                    },
+                    {
+                        qText: "...Inside, the team found preserved remains... (B) the objects initially appeared ceremonial, microscopic examination revealed signs of practical use.",
+                        options: [
+                            "A. Because",
+                            "B. Although",
+                            "C. Unless",
+                            "D. Inasmuch as",
+                            "E. Provided that"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B. Although",
+                        explanation: "Transcript મુજબ[cite: 3], વાક્યમાં વિરોધાભાસ છે (શરૂઆતમાં ધાર્મિક/સેરેમોનિયલ લાગતા હતા, પણ અસલમાં વ્યવહારુ ઉપયોગ હતો). તેથી 'Although' (જોકે) આવશે.",
+                        examples: [],
+                        trick: "વિરોધાભાસ દર્શાવવા માટે Although વપરાય.",
+                        quickRev: "Although the objects initially appeared..."
+                    },
+                    {
+                        qText: "High-resolution scans enabled scientists to (C) injuries sustained during life from fractures caused after burial.",
+                        options: [
+                            "A. Segregate",
+                            "B. Dissociate",
+                            "C. Distinguish",
+                            "D. Alienate",
+                            "E. Displace"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C. Distinguish",
+                        explanation: "Transcript મુજબ[cite: 3], જીવન દરમિયાન થયેલી ઇજાઓ અને દફનાવ્યા પછીના અસ્થિભંગ વચ્ચે 'ભેદ પારખવા' કે 'અલગ તારવવા' માટે 'Distinguish... from' ફ્રેઝ વપરાય છે.",
+                        examples: [],
+                        trick: "Distinguish X from Y (બે બાબતો વચ્ચે તફાવત પારખવો).",
+                        quickRev: "Distinguish injuries... from fractures."
+                    },
+                    {
+                        qText: "Particular attention was paid (D) one skull displaying a precisely shaped opening...",
+                        options: [
+                            "A. For",
+                            "B. Upon",
+                            "C. At",
+                            "D. To",
+                            "E. With"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D. To",
+                        explanation: "Transcript મુજબ[cite: 3], 'attention' શબ્દ સાથે હંમેશા 'to' preposition લાગે છે (paid attention to).",
+                        examples: [
+                            "✅ Pay attention to me[cite: 3]."
+                        ],
+                        trick: "Attention + to (Fixed preposition).",
+                        quickRev: "Attention was paid TO one skull."
+                    },
+                    {
+                        qText: "The healing indicated that the individual had survived the procedure, lending (E) to the theory that deliberate cranial surgery had been performed.",
+                        options: [
+                            "A. Credence",
+                            "B. Compliance",
+                            "C. Adherence",
+                            "D. Deference",
+                            "E. Allegiance"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A. Credence",
+                        explanation: "Transcript મુજબ[cite: 3], અગાઉ ભણેલા નિયમ મુજબ 'lend credence to the theory' (સિદ્ધાંતને બળ પૂરું પાડવું/વિશ્વાસ આપવો) યોગ્ય ફ્રેઝ છે.",
+                        examples: [],
+                        trick: "Lend credence to a theory.",
+                        quickRev: "Lending CREDENCE to the theory."
+                    },
+                    {
+                        qText: "The evidence remains insufficient for sweeping conclusions; (F), it challenges the belief that systematic surgical knowledge was confined...",
+                        options: [
+                            "A. Likewise",
+                            "B. Nevertheless",
+                            "C. But",
+                            "D. Consequently",
+                            "E. Moreover"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B. Nevertheless",
+                        explanation: "Transcript મુજબ[cite: 3], પૂરાવા અપૂરતા હોવા છતાં (તેનાથી વિપરીત) તે માન્યતાને પડકારે છે. વિરોધાભાસ અને પરિણામ દર્શાવવા માટે 'Nevertheless' (તેમ છતાં) યોગ્ય કનેક્ટર છે.",
+                        examples: [],
+                        trick: "અપૂરતા પુરાવા હોવા છતાં પણ... = Nevertheless.",
+                        quickRev: "Nevertheless, it challenges the belief."
+                    }
+                ]
+            }
+        ];
+
+        // --- Render UI ---
+        const homeMenu = document.getElementById('home-menu');
+        const detailContent = document.getElementById('detail-content');
+        const practiceContent = document.getElementById('practice-content');
+        const viewHome = document.getElementById('view-home');
+        const viewDetail = document.getElementById('view-detail');
+        const viewPractice = document.getElementById('view-practice');
+        const btnBack = document.getElementById('btn-back');
+        const btnTheme = document.getElementById('btn-theme');
+
+        const tileColors = ['#FF4757', '#2ED573', '#1E90FF', '#FFA502', '#9C88FF', '#FF6348'];
+
+        let isDarkMode = false;
+        btnTheme.addEventListener('click', () => {
+            playSound();
+            isDarkMode = !isDarkMode;
+            document.body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            btnTheme.innerText = isDarkMode ? '☀️' : '🌙';
+        });
+
+        function showView(viewElement) {
+            viewHome.classList.remove('active');
+            viewDetail.classList.remove('active');
+            viewPractice.classList.remove('active');
+            viewElement.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function initHome() {
+            homeMenu.innerHTML = '';
+            
+            studyData.forEach((section, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'topic-btn';
+                btn.innerText = section.topic;
+                btn.style.backgroundColor = tileColors[index % tileColors.length];
+                
+                btn.onclick = () => {
+                    playSound();
+                    renderDetailView(index);
+                };
+                homeMenu.appendChild(btn);
+            });
+
+            const memoryBtn = document.createElement('button');
+            memoryBtn.className = 'topic-btn';
+            memoryBtn.innerText = "🔥 FINAL MEMORY SHEET";
+            memoryBtn.style.backgroundColor = "#5352ED";
+            memoryBtn.onclick = () => {
+                playSound();
+                renderMemorySheet();
+            };
+            homeMenu.appendChild(memoryBtn);
+
+            const mockBtn = document.createElement('button');
+            mockBtn.className = 'topic-btn';
+            mockBtn.innerText = "📝 PRACTICE MOCK";
+            mockBtn.style.backgroundColor = "#34495e";
+            mockBtn.onclick = () => {
+                playSound();
+                renderPracticeMock();
+            };
+            homeMenu.appendChild(mockBtn);
+            
+            btnBack.style.display = 'none';
+            showView(viewHome);
+        }
+
+        btnBack.onclick = () => {
+            playSound();
+            initHome();
+        };
+
+        function renderDetailView(sectionIndex) {
+            const section = studyData[sectionIndex];
+            let html = `<div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">${section.topic}</div>`;
+
+            section.questions.forEach((q, i) => {
+                html += `
+                <div class="card">
+                    <div class="section-title">Question ${i + 1}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    
+                    <ul class="options-list">
+                        ${q.options.map(opt => `<li>${opt}</li>`).join('')}
+                    </ul>
+
+                    <div class="section-title">✅ ANSWER</div>
+                    <p style="font-weight:bold; color:var(--secondary); margin-bottom: 15px; font-size:1.1rem;">${q.answerText}</p>
+
+                    <div class="section-title">🧠 COMPLETE EXPLANATION</div>
+                    <p>${q.explanation}</p>
+                    
+                    ${q.examples.length > 0 ? `
+                        <div class="section-title">✍️ EXAMPLES</div>
+                        ${q.examples.map(ex => `<p>${ex}</p>`).join('')}
+                    ` : ''}
+
+                    ${q.trick ? `
+                        <div class="exam-trick">
+                            <strong>🎯 EXAM TRICK:</strong><br>
+                            ${q.trick.replace(/\n/g, '<br>')}
+                        </div>
+                    ` : ''}
+
+                    <div class="section-title">⚡ QUICK REVISION</div>
+                    <div class="quick-revision">${q.quickRev}</div>
+                </div>
+                `;
+            });
+
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        function renderMemorySheet() {
+            let html = `
+                <div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">🔥 FINAL MEMORY SHEET</div>
+                <div class="card">
+                    <div class="section-title">1. Grammar Rules[cite: 3]</div>
+                    <ul>
+                        <li><strong>Attribute to:</strong> કારણ દર્શાવવા માટે attribute... to વપરાય છે.</li>
+                        <li><strong>Credence:</strong> Credence શબ્દ સાથે હંમેશા 'to' preposition લાગે છે (lent credence to).</li>
+                        <li><strong>Focus & Highlight:</strong> Focus પછી 'on' આવે (onto નહિ). Highlight પછી કોઈ preposition ના આવે.</li>
+                        <li><strong>Except:</strong> Except ના બદલે 'except for' નો ઉપયોગ યોગ્ય બને છે.</li>
+                        <li><strong>Mood & Voice:</strong> Advised that... પછી base form આવે. Passive voice માં 'could be detected' થાય.</li>
+                        <li><strong>Combined:</strong> Combined સાથે preposition 'with' આવે છે.</li>
+                        <li><strong>In addition to:</strong> Preposition હોવાથી પછી V(ing) એટલે કે 'managing' આવશે.</li>
+                    </ul>
+
+                    <div class="section-title" style="margin-top:20px;">2. Vocabulary & Idioms[cite: 3]</div>
+                    <table>
+                        <tr><th>Word / Phrase</th><th>Meaning / Usage</th></tr>
+                        <tr><td>Compounded</td><td>તીવ્ર કરવું (Intensified)</td></tr>
+                        <tr><td>Anarchy</td><td>અરાજકતા (Absence of government)</td></tr>
+                        <tr><td>Gourmand</td><td>વિપુલ માત્રામાં ખાવાનો શોખીન</td></tr>
+                        <tr><td>Countenance</td><td>ચહેરાના ભાવ / સહન કરવું / ટેકો આપવો</td></tr>
+                        <tr><td>Reserve</td><td>બચાવવું / સંયમ / સુરક્ષિત વિસ્તાર</td></tr>
+                        <tr><td>Protect from</td><td>રક્ષણ આપવું</td></tr>
+                    </table>
+
+                    <div class="section-title" style="margin-top:20px;">3. Exam Tricks[cite: 3]</div>
+                    <ul>
+                        <li>વાક્યનો Tense (ભૂતકાળ/વર્તમાન) ચકાસીને જ ઓપ્શન પસંદ કરવો (Consistency).</li>
+                        <li>Joint / Single Responsibility માં noun નું વચન (Singular/Plural) ચકાસો.</li>
+                        <li>Cloze test માં Prepositions (from, to, with) ના ચોક્કસ નિયમો યાદ રાખો.</li>
+                    </ul>
+                </div>
+            `;
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        let mockQuestions = [];
+        let currentMockIndex = 0;
+        let mockScore = { correct: 0, wrong: 0, skipped: 0 };
+        let answered = false;
+
+        function renderPracticeMock() {
+            mockQuestions = [];
+            studyData.forEach(section => {
+                section.questions.forEach(q => {
+                    mockQuestions.push({
+                        ...q,
+                        topicStr: section.topic
+                    });
+                });
+            });
+
+            currentMockIndex = 0;
+            mockScore = { correct: 0, wrong: 0, skipped: 0 };
+            btnBack.style.display = 'block';
+            
+            showMockQuestion();
+            showView(viewPractice);
+        }
+
+        function showMockQuestion() {
+            if (currentMockIndex >= mockQuestions.length) {
+                showMockResult();
+                return;
+            }
+
+            answered = false;
+            const q = mockQuestions[currentMockIndex];
+            let html = `
+                <div class="card-header" style="font-size:1.2rem; display:flex; justify-content:space-between;">
+                    <span>📝 PRACTICE MOCK</span>
+                    <span>Q ${currentMockIndex + 1} / ${mockQuestions.length}</span>
+                </div>
+                <div class="card">
+                    <div style="font-size: 0.9rem; color: #7f8c8d; margin-bottom: 10px;">${q.topicStr}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    <div id="mock-options-container">
+                        ${q.options.map((opt, i) => `
+                            <button class="mock-option" onclick="selectMockOption(${i}, this)">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <button class="action-btn" style="background-color: #95a5a6;" onclick="skipMockQuestion()" id="btn-skip">Skip Question</button>
+                    <button class="action-btn" style="display:none;" onclick="nextMockQuestion()" id="btn-next">Next Question →</button>
+                    
+                    <div class="result-box" id="mock-result-box"></div>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        function selectMockOption(selectedIndex, btnElement) {
+            if (answered) return;
+            answered = true;
+            playSound();
+            
+            const q = mockQuestions[currentMockIndex];
+            const isCorrect = selectedIndex === q.answerIndex;
+            
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                mockScore.correct++;
+            } else {
+                btnElement.classList.add('wrong');
+                mockScore.wrong++;
+                document.querySelectorAll('.mock-option')[q.answerIndex].classList.add('correct');
+            }
+
+            document.getElementById('btn-skip').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'inline-block';
+
+            const resultBox = document.getElementById('mock-result-box');
+            resultBox.style.display = 'block';
+            resultBox.style.backgroundColor = isCorrect ? 'rgba(46, 204, 113, 0.1)' : 'rgba(231, 76, 60, 0.1)';
+            resultBox.innerHTML = `
+                <strong style="color: ${isCorrect ? 'var(--secondary)' : 'var(--danger)'};">
+                    ${isCorrect ? '✅ CORRECT' : '❌ INCORRECT'}
+                </strong><br><br>
+                <strong>Correct Answer:</strong> ${q.answerText}<br>
+                <p style="margin-top:10px; font-size:0.95rem;">${q.explanation}</p>
+            `;
+        }
+
+        function skipMockQuestion() {
+            playSound();
+            mockScore.skipped++;
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function nextMockQuestion() {
+            playSound();
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function showMockResult() {
+            const total = mockQuestions.length;
+            const percentage = Math.round((mockScore.correct / total) * 100);
+            
+            let html = `
+                <div class="card-header" style="font-size:1.5rem;">🏆 FINAL SCORE</div>
+                <div class="card score-board">
+                    <h2>${percentage}%</h2>
+                    <p style="font-size:1.2rem; margin-bottom:10px;">Total Questions: <strong>${total}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--secondary)">Correct: <strong>${mockScore.correct}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--danger)">Wrong: <strong>${mockScore.wrong}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:20px; color:#95a5a6">Skipped: <strong>${mockScore.skipped}</strong></p>
+                    <button class="action-btn" onclick="initHome()">Return to Home</button>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', initHome);
+
+    </script>
+</body>
+</html>
