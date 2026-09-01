@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sid Ahir - Current Affairs Revision</title>
+    <style>
+        :root {
+            /* Dark Theme Colors */
+            --bg-main: #0a0f18;
+            --bg-card: #131c2a;
+            --bg-card-hover: #1c263a;
+            --text-highlight: #ffffff;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --header-bg: rgba(10, 15, 24, 0.95);
+        }
+
+        [data-theme="light"] {
+            /* Light Theme Colors */
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f1f5f9;
+            --text-highlight: #0f172a;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --accent-purple: #7e22ce;
+            --accent-blue: #2563eb;
+            --accent-cyan: #0284c7;
+            --success: #059669;
+            --danger: #dc2626;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --header-bg: rgba(248, 250, 252, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 40px;
+        }
+
+        /* --- HOME SCREEN (ALWAYS DARK MODE) --- */
+        #home-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #111827 0%, #0a0f18 100%) !important;
+            color: #e2e8f0 !important;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            color: var(--text-highlight);
+            text-align: center;
+            text-decoration: underline;
+            text-underline-offset: 6px;
+            text-decoration-color: var(--accent-cyan);
+            letter-spacing: 1px;
+        }
+
+        #home-screen .date-badge {
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #cbd5e1;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .main-btn {
+            width: 100%;
+            padding: 22px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 20px;
+            font-weight: 900;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+
+        .main-btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-mcq {
+            background: linear-gradient(135deg, #7e22ce, #a855f7);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+            border: 1px solid rgba(216, 180, 254, 0.3);
+        }
+
+        .btn-news {
+            background: linear-gradient(135deg, #0284c7, #06b6d4);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+            border: 1px solid rgba(165, 243, 252, 0.3);
+        }
+
+        .btn-icon {
+            font-size: 30px;
+        }
+
+        .badge-count {
+            position: absolute;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        /* --- STICKY HEADER --- */
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 600px;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            display: none; 
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sticky-back-btn {
+            background: rgba(128, 128, 128, 0.15);
+            border: 1px solid var(--border-color);
+            color: var(--text-highlight);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .sticky-back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header-title {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--text-highlight);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--text-highlight);
+        }
+
+        /* --- CONTENT PAGES --- */
+        .page-content {
+            display: none;
+            padding: 85px 15px 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            color: var(--text-highlight);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* MCQ Styles */
+        .mcq-progress {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            text-align: right;
+        }
+        
+        .progress-bar-bg {
+            background: var(--border-color);
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: var(--accent-purple);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .mcq-block {
+            display: none; 
+        }
+        .mcq-block.active {
+            display: block;
+        }
+
+        .question {
+            font-size: 19px;
+            font-weight: 800;
+            margin-bottom: 22px;
+            color: var(--text-highlight);
+            line-height: 1.5;
+        }
+
+        .option {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            padding: 15px 18px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .option.correct {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .option.wrong {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .explanation-box {
+            display: none;
+            margin-top: 25px;
+            padding: 18px;
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 6px 10px 10px 6px;
+            font-size: 15px;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .explanation-title {
+            font-weight: 900;
+            font-size: 16px;
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .next-btn {
+            display: none;
+            width: 100%;
+            padding: 16px;
+            background: var(--text-highlight);
+            color: var(--bg-main);
+            text-align: center;
+            font-weight: 900;
+            font-size: 17px;
+            border-radius: 10px;
+            margin-top: 25px;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* News Styles */
+        .news-item {
+            margin-bottom: 35px;
+            position: relative;
+        }
+        
+        .news-badge {
+            background: var(--accent-cyan);
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .magic-slide-badge {
+            background: linear-gradient(135deg, #eab308, #f59e0b);
+            color: #000;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .news-headline {
+            font-size: 22px;
+            font-weight: 900;
+            line-height: 1.4;
+            margin-bottom: 18px;
+            color: var(--accent-cyan);
+        }
+
+        .sub-heading {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--text-highlight);
+            margin: 22px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-content {
+            font-size: 16px;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+        
+        .news-content b {
+            color: var(--text-highlight);
+        }
+
+        .news-content ul {
+            padding-left: 24px;
+            margin-top: 12px;
+        }
+
+        .news-content li {
+            margin-bottom: 10px;
+        }
+
+        .fact-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            font-size: 15px;
+            background: var(--bg-main);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .fact-table th, .fact-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+        .fact-table th {
+            background: rgba(128, 128, 128, 0.1);
+            font-weight: 900;
+            color: var(--text-highlight);
+        }
+
+        .exam-point {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-left: 4px solid var(--danger);
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 20px;
+            color: var(--text-main);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 14px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-highlight);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 900;
+            font-size: 17px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .score-card {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 8px solid var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--text-highlight);
+            margin: 0 auto 20px;
+        }
+
+        .memory-section {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- STICKY HEADER -->
+    <div class="sticky-header" id="sticky-header">
+        <div class="header-left">
+            <button class="sticky-back-btn" onclick="goHome()">← BACK</button>
+            <div class="header-title" id="header-title">📅 01 SEP 2026</div>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️</button>
+    </div>
+
+    <!-- HOME SCREEN -->
+    <div id="home-screen">
+        <div class="welcome-title">SID AHIR</div>
+
+        <div class="date-badge">
+            <span>📅</span> 01 SEP 2026 • DAILY CURRENT AFFAIRS
+        </div>
+
+        <button class="main-btn btn-mcq" onclick="openSection('mcq-page')">
+            <span class="btn-icon">📝</span>
+            MCQs
+            <span class="badge-count">16 MCQs</span>
+        </button>
+
+        <button class="main-btn btn-news" onclick="openSection('news-page')">
+            <span class="btn-icon">📰</span>
+            TODAY'S NEWS
+            <span class="badge-count">10 NEWS</span>
+        </button>
+    </div>
+
+    <!-- YESTERDAY'S MCQs SECTION -->
+    <div id="mcq-page" class="page-content">
+        <div class="section-title">📝 MCQs REVISION</div>
+        
+        <div class="mcq-progress">Question <span id="current-q-num">1</span> / 16</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="mcq-progress-fill"></div>
+        </div>
+
+        <!-- MCQ 1 -->
+        <div class="card mcq-block active" data-correct="D">
+            <div class="question">Q1. Who has been reappointed as the Chairman of the Association of Mutual Funds in India (AMFI)?</div>
+            <div class="option" data-opt="A">A) Vishal Kapoor</div>
+            <div class="option" data-opt="B">B) U.K. Sinha</div>
+            <div class="option" data-opt="C">C) Navneet Munot</div>
+            <div class="option" data-opt="D">D) Sundeep Sikka</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p><b>Sundeep Sikka</b> ને ફરીથી AMFI ના ચેરમેન તરીકે નિયુક્ત કરવામાં આવ્યા છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 2 -->
+        <div class="card mcq-block" data-correct="B">
+            <div class="question">Q2. Which financial inclusion scheme, launched in 2014, completed 12 years in August 2026 and allows bank accounts to be opened with zero balance?</div>
+            <div class="option" data-opt="A">A) PM Jeevan Jyoti Bima Yojana</div>
+            <div class="option" data-opt="B">B) Pradhan Mantri Jan Dhan Yojana</div>
+            <div class="option" data-opt="C">C) PM Suraksha Bima Yojana</div>
+            <div class="option" data-opt="D">D) Atal Pension Yojana</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ યોજના <b>Pradhan Mantri Jan Dhan Yojana (PMJDY)</b> છે. આની સાથે Teacher એ યોજનાનું ડીટેલ રિવિઝન કરાવ્યું.</p>
+                <div class="sub-heading">🔗 RELATED FACTS (PMJDY Revision)</div>
+                <div class="news-content">
+                    <ul>
+                        <li><b>Launch Date:</b> Announced on 15th Aug 2014, Launched on 28th Aug 2014.</li>
+                        <li><b>Accidental Insurance:</b> ₹2 Lakh (Earlier it was ₹1 Lakh).</li>
+                        <li><b>Overdraft Facility:</b> ₹2,000 without condition. Max ₹10,000 per household (preferably to women) with 6 months of satisfactory operation.</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 3 -->
+        <div class="card mcq-block" data-correct="A">
+            <div class="question">Q3. Which ministry released data showing that India's Index of Industrial Production (IIP) grew by 6.7% year-on-year in July 2026?</div>
+            <div class="option" data-opt="A">A) Ministry of Statistics and Programme Implementation</div>
+            <div class="option" data-opt="B">B) Ministry of Commerce and Industry</div>
+            <div class="option" data-opt="C">C) Ministry of Finance</div>
+            <div class="option" data-opt="D">D) Ministry of Corporate Affairs</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ ડેટા <b>Ministry of Statistics and Programme Implementation (MoSPI)</b> દ્વારા જારી કરાયો છે. આ પ્રશ્ન સાથે Teacher એ ડેટા રિલીઝ કરતી સંસ્થાઓનું રિવિઝન કરાવ્યું.</p>
+                <div class="sub-heading">🔗 RELATED FACTS (Data Release Organizations)</div>
+                <div class="news-content">
+                    <ul>
+                        <li><b>MoSPI (via NSO):</b> Releases IIP, CPI (Consumer Price Index), Periodic Labour Force Survey, GDP, and Index of Services Production (ISP).</li>
+                        <li><b>Ministry of Commerce & Industry (via DPIIT):</b> Releases WPI (Wholesale Price Index), PPI (Producer Price Index), and Index of Core Industries.</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 4 -->
+        <div class="card mcq-block" data-correct="C">
+            <div class="question">Q4. What percentage of stake in ICICI Prudential Asset Management Company is Prudential PLC planning to sell through an open market transaction for around ₹3190 crore?</div>
+            <div class="option" data-opt="A">A) 1%</div>
+            <div class="option" data-opt="B">B) 1.5%</div>
+            <div class="option" data-opt="C">C) 2%</div>
+            <div class="option" data-opt="D">D) 2.5%</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>Prudential PLC આશરે ₹3190 કરોડમાં <b>2%</b> હિસ્સો વેચી રહી છે. 
+                <br><i>Teacher also discussed the Disinvestment target for 2026-27, which is roughly around <b>₹80,000 Crore</b> (₹78K-80K Cr). Disinvestment means the government selling its stake in PSUs.</i></p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 5 -->
+        <div class="card mcq-block" data-correct="D">
+            <div class="question">Q5. Which edition of the BRICS Summit will India host on 12th and 13th September 2026 at Bharat Mandapam, New Delhi?</div>
+            <div class="option" data-opt="A">A) 15th</div>
+            <div class="option" data-opt="B">B) 16th</div>
+            <div class="option" data-opt="C">C) 17th</div>
+            <div class="option" data-opt="D">D) 18th</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>ભારત <b>18th (18માં)</b> BRICS Summit ની યજમાની કરશે. આ પ્રશ્ન સાથે Teacher એ અન્ય અગત્યના Summits ના હોસ્ટ દેશોનું રિવિઝન કરાવ્યું.</p>
+                <div class="sub-heading">🔗 RELATED FACTS (Summits Revision)</div>
+                <div class="news-content">
+                    <ul>
+                        <li><b>BRICS Summit 2026:</b> India</li>
+                        <li><b>G20 Summit 2026:</b> USA</li>
+                        <li><b>G7 Summit 2026:</b> France</li>
+                        <li><b>SCO Heads of State Summit 2026:</b> Kyrgyzstan</li>
+                        <li><b>NATO Summit 2026:</b> Turkey</li>
+                        <li><b>COP 31 (UN Climate Change Conference):</b> Turkey</li>
+                        <li><b>ASEAN Summit 2026:</b> Philippines</li>
+                        <li><b>Quad Summit 2026:</b> India</li>
+                        <li><b>APEC Summit:</b> (Teacher gave homework to find the host country).</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 6 -->
+        <div class="card mcq-block" data-correct="A">
+            <div class="question">Q6. Which organization is establishing India's first dedicated Quantum and Artificial Intelligence University campus in Amaravati, Andhra Pradesh?</div>
+            <div class="option" data-opt="A">A) NIELIT</div>
+            <div class="option" data-opt="B">B) C-DAC</div>
+            <div class="option" data-opt="C">C) IISc</div>
+            <div class="option" data-opt="D">D) IIT Madras</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ કેમ્પસ <b>NIELIT (National Institute of Electronics and Information Technology)</b> દ્વારા બનાવવામાં આવી રહ્યું છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 7 -->
+        <div class="card mcq-block" data-correct="B">
+            <div class="question">Q7. Which player did Indian Grandmaster R. Praggnanandhaa defeat to become the first Indian to win the Grand Chess Tour title?</div>
+            <div class="option" data-opt="A">A) Magnus Carlsen</div>
+            <div class="option" data-opt="B">B) Fabiano Caruana</div>
+            <div class="option" data-opt="C">C) Hikaru Nakamura</div>
+            <div class="option" data-opt="D">D) Ian Nepomniachtchi</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>R. Praggnanandhaa એ અમેરિકાના <b>Fabiano Caruana</b> ને હરાવીને આ ટાઇટલ જીત્યું.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 8 -->
+        <div class="card mcq-block" data-correct="C">
+            <div class="question">Q8. Which Swiss tennis legend, a 20-time Grand Slam champion who retired from professional tennis in 2022, will be inducted into the International Tennis Hall of Fame?</div>
+            <div class="option" data-opt="A">A) Rafael Nadal</div>
+            <div class="option" data-opt="B">B) Novak Djokovic</div>
+            <div class="option" data-opt="C">C) Roger Federer</div>
+            <div class="option" data-opt="D">D) Andy Murray</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ સન્માન <b>Roger Federer (રોજર ફેડરર)</b> ને આપવામાં આવશે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 9 -->
+        <div class="card mcq-block" data-correct="A">
+            <div class="question">Q9. Who won the Budapest Squash Open title after defeating Hungary's Balazs Farkas in the final?</div>
+            <div class="option" data-opt="A">A) Velavan Senthilkumar</div>
+            <div class="option" data-opt="B">B) Saurav Ghosal</div>
+            <div class="option" data-opt="C">C) Ramit Tandon</div>
+            <div class="option" data-opt="D">D) Mahesh Mangaonkar</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ ટાઇટલ <b>Velavan Senthilkumar</b> એ જીત્યું છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 10 -->
+        <div class="card mcq-block" data-correct="D">
+            <div class="question">Q10. What is the estimated value of the deal under which the Indian Army will procure the FGM-148 Javelin Anti-Tank Guided Missile System from the United States?</div>
+            <div class="option" data-opt="A">A) $50 Million</div>
+            <div class="option" data-opt="B">B) $75 Million</div>
+            <div class="option" data-opt="C">C) $85 Million</div>
+            <div class="option" data-opt="D">D) $93 Million</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ ડીલની અંદાજિત કિંમત <b>$93 Million</b> છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 11 -->
+        <div class="card mcq-block" data-correct="B">
+            <div class="question">Q11. Which company built and delivered the first indigenous multipurpose vessel, "Samarthak", to the Indian Navy?</div>
+            <div class="option" data-opt="A">A) Mazagon Dock Shipbuilders</div>
+            <div class="option" data-opt="B">B) Larsen & Toubro (L&T)</div>
+            <div class="option" data-opt="C">C) Garden Reach Shipbuilders</div>
+            <div class="option" data-opt="D">D) Cochin Shipyard</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ જહાજ <b>Larsen & Toubro (L&T)</b> દ્વારા બનાવવામાં આવ્યું છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 12 -->
+        <div class="card mcq-block" data-correct="C">
+            <div class="question">Q12. What is the cost of the T-Series tanks overhaul facility for which Defence Minister Rajnath Singh laid the foundation stone at the Vehicle Factory in Jabalpur?</div>
+            <div class="option" data-opt="A">A) ₹250 Crore</div>
+            <div class="option" data-opt="B">B) ₹350 Crore</div>
+            <div class="option" data-opt="C">C) ₹472 Crore</div>
+            <div class="option" data-opt="D">D) ₹500 Crore</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>આ સુવિધાની કિંમત <b>₹472 કરોડ</b> છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 13 -->
+        <div class="card mcq-block" data-correct="D">
+            <div class="question">Q13. Which monarch of Norway, who served as King from January 1991 until his death in August 2026, passed away at the age of 89?</div>
+            <div class="option" data-opt="A">A) King Olav V</div>
+            <div class="option" data-opt="B">B) King Haakon VII</div>
+            <div class="option" data-opt="C">C) King Carl XVI Gustaf</div>
+            <div class="option" data-opt="D">D) King Harald V</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>નોર્વેના <b>King Harald V</b> નું તાજેતરમાં નિધન થયું છે.</p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- MCQ 14 -->
+        <div class="card mcq-block" data-correct="A">
+            <div class="question">Q14. On which date was World Sanskrit Day observed (coinciding with Shravana Purnima)?</div>
+            <div class="option" data-opt="A">A) 28th August</div>
+            <div class="option" data-opt="B">B) 29th August</div>
+            <div class="option" data-opt="C">C) 30th August</div>
+            <div class="option" data-opt="D">D) 31st August</div>
+            <div class="explanation-box">
+                <div class="explanation-title">📚 COMPLETE TEACHER EXPLANATION</div>
+                <p>વિશ્વ સંસ્કૃત દિવસ <b>28th August</b> ના રોજ ઉજવવામાં આવ્યો. 
+                <br><i>Teacher also mentioned National Sports Day on 29th August (Theme: "Tribute, Play, and Move").</i></p>
+            </div>
+            <button class="next-btn" onclick="nextMCQ()">NEXT QUESTION</button>
+        </div>
+
+        <!-- Score Screen -->
+        <div class="mcq-block" id="score-screen">
+            <div class="score-card">
+                <div class="score-circle" id="final-score">0/14</div>
+                <h3 id="score-message">🏆 Excellent</h3>
+                <p style="margin-top:10px; font-weight:600;">Correct: <span id="correct-count">0</span> | Wrong: <span id="wrong-count">0</span> | Accuracy: <span id="accuracy-percent">0</span>%</p>
+                
+                <div id="wrong-revision-section" style="display:none; margin-top:25px; text-align:left;">
+                    <div class="section-title" style="font-size:18px; color:var(--danger); border-bottom:none;">❌ QUESTIONS TO REVISE</div>
+                    <div id="wrong-questions-list"></div>
+                </div>
+
+                <button class="back-btn" onclick="goHome()" style="width: 100%; text-align: center;">← BACK TO HOME</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TODAY'S CURRENT AFFAIRS SECTION -->
+    <div id="news-page" class="page-content">
+        <div class="section-title">📰 TODAY'S NEWS</div>
+        
+        <!-- NEWS 1 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 1</span>
+            <div class="news-headline">India and Uzbekistan elevate bilateral relations to "Comprehensive Strategic Partnership"</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                વડાપ્રધાન નરેન્દ્ર મોદીની <b>Uzbekistan (ઉઝબેકિસ્તાન)</b> મુલાકાત દરમિયાન ભારત અને ઉઝબેકિસ્તાન વચ્ચેના સંબંધોને "Strategic Partnership" થી વધારીને <b>"Comprehensive Strategic Partnership"</b> કરવામાં આવ્યા છે. 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ મુલાકાત દરમિયાન લેવાયેલા અગત્યના નિર્ણયો:
+                <ul>
+                    <li><b>Bilateral Trade Target:</b> બંને દેશો <b>2030</b> સુધીમાં દ્વિપક્ષીય વેપારને <b>$5 Billion</b> સુધી લઈ જશે.</li>
+                    <li><b>Scholarship:</b> ઉઝબેકિસ્તાનના વિદ્યાર્થીઓને હિન્દી ભાષા શીખવા માટે 'લાલ બહાદુર શાસ્ત્રી સ્કોલરશિપ' અપાશે.</li>
+                    <li><b>Grant:</b> ભારતે ઉઝબેકિસ્તાનના <b>Aral Sea (અરલ સમુદ્ર)</b> ના પર્યાવરણીય પુનર્વસન (Environmental Rehabilitation) માટે <b>$1 Million</b> ની ગ્રાન્ટ આપી છે.</li>
+                    <li><b>Buddhist Sites Restoration:</b> ઉઝબેકિસ્તાનમાં આવેલા બે બૌદ્ધ સ્થળો - <b>Fayaz Tepa</b> અને <b>Kara Tepa</b> ના જીર્ણોદ્ધાર માટે પણ સહમતિ બની છે.</li>
+                    <li><b>Sanskrit Chair:</b> તાશ્કંદ સ્ટેટ યુનિવર્સિટીમાં 'ઇન્ડિયન કાઉન્સિલ ઓફ કલ્ચરલ રિલેશન સંસ્કૃત ચેર' સ્થાપિત કરાશે.</li>
+                    <li><b>UPI Expansion:</b> NIPL (NPCI International Payments Ltd) અને ઉઝબેકિસ્તાનની NIPC (જે HUMO પેમેન્ટ સિસ્ટમ ચલાવે છે) વચ્ચે <b>UPI-based QR payment</b> માટે કરાર થયા છે. હવે ભારતીય પ્રવાસીઓ ઉઝબેકિસ્તાનમાં UZQR કોડ સ્કેન કરીને પેમેન્ટ કરી શકશે. <i>(આ કરારને RBI અને Central Bank of Uzbekistan ની મંજૂરી મળી ગઈ છે).</i></li>
+                </ul>
+            </div>
+            <div class="exam-point">🎯 EXAM POINT: Trade target is $5 Billion by 2030. NIPL partnered with HUMO for UPI in Uzbekistan.</div>
+        </div>
+
+        <!-- NEWS 2 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 2</span>
+            <div class="news-headline">Bihar and Jharkhand sign pact to end 25-year-old Sone River water dispute</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                કેન્દ્રીય જળશક્તિ મંત્રી <b>C.R. Patil (સી.આર. પાટીલ)</b> ની મધ્યસ્થીથી <b>Bihar અને Jharkhand</b> વચ્ચે <b>Sone River (સોન નદી)</b> ના પાણીની વહેંચણી અંગે 25 વર્ષ જૂનો વિવાદ ઉકેલાઈ ગયો છે. 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ કરાર પર બિહારના મુખ્યમંત્રી Samrat Choudhary અને ઝારખંડના મુખ્યમંત્રી Hemant Soren ની હાજરીમાં હસ્તાક્ષર થયા. આ પાણીનો ઉપયોગ બંને રાજ્યોમાં પીવાના પાણી અને સિંચાઈ માટે થશે. 
+                <br><i>(Teacher also mentioned Palamu Tiger Reserve which is in Jharkhand).</i>
+            </div>
+        </div>
+
+        <!-- NEWS 3 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 3</span>
+            <div class="news-headline">Index of Services Production (ISP) records strong growth in June 2026</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                જૂન 2026 માટે જારી કરાયેલા <b>Index of Services Production (ISP)</b> માં સર્વિસ સેક્ટરે મજબૂત ગ્રોથ નોંધાવ્યો છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ ડેટા <b>MoSPI (Ministry of Statistics and Programme Implementation)</b> ના NSO દ્વારા જારી કરાય છે. (ISP નો Base Year 2024-25 છે).
+                <br>કુલ 19 સબ-સેક્ટર્સમાંથી <b>18 સેક્ટર્સે પોઝિટિવ ગ્રોથ</b> નોંધાવ્યો છે (જેમાં 8 સેક્ટર્સે ડબલ ડિજિટ ગ્રોથ કર્યો છે). 
+                <br><b>એકમાત્ર નેગેટિવ સેક્ટર:</b> <i>Air Transport</i> સેક્ટરમાં 6% નો ઘટાડો (Contraction) જોવા મળ્યો છે.
+            </div>
+            <div class="exam-point">🎯 EXAM POINT: Air Transport was the only sub-sector showing a decline in the ISP for June 2026.</div>
+        </div>
+
+        <!-- NEWS 4 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 4</span>
+            <div class="news-headline">PM Modi attends 6th World Nomad Games in Kyrgyzstan</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                વડાપ્રધાન મોદીએ <b>Kyrgyzstan (કિર્ગિઝસ્તાન)</b> ના બિશ્કેક ખાતે <b>6th World Nomad Games</b> ની ઓપનિંગ સેરેમનીમાં હાજરી આપી.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ ગેમ્સ દર બે વર્ષે (Biennially) યોજાય છે, જેમાં પરંપરાગત (Traditional) રમતો રમાડવામાં આવે છે. 
+                <br>નોંધ: કિર્ગિઝસ્તાન આ વર્ષે SCO (Shanghai Cooperation Organisation) ના <i>Heads of State Summit</i> ની યજમાની પણ કરી રહ્યું છે.
+            </div>
+        </div>
+
+        <!-- NEWS 5 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 5</span>
+            <div class="news-headline">Ramon Magsaysay Awards 2026 announced</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                એશિયાના નોબેલ પ્રાઇઝ તરીકે ઓળખાતા <b>Ramon Magsaysay Award 2026</b> ના વિજેતાઓની જાહેરાત કરવામાં આવી છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ વર્ષે આ એવોર્ડ 3 વ્યક્તિઓને આપવામાં આવ્યો છે:
+                <ul>
+                    <li><b>Ruu Khan</b> (Bangladesh - Humanitarian)</li>
+                    <li><b>Tomiko</b> (Singapore - Diplomat)</li>
+                    <li><b>Boki</b> (Myanmar - Human Rights Advocate)</li>
+                </ul>
+                <i>(Teacher reminded students that last year the Indian NGO "Educate Girls" from Rajasthan had won this award).</i>
+            </div>
+        </div>
+
+        <!-- NEWS 6 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 6</span>
+            <div class="news-headline">Lionel Messi retires from International Football</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                આર્જેન્ટિનાના દિગ્ગજ ફૂટબોલર <b>Lionel Messi (લિયોનેલ મેસ્સી)</b> એ 39 વર્ષની વયે ઇન્ટરનેશનલ ફૂટબોલમાંથી નિવૃત્તિ (Retirement) ની જાહેરાત કરી છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                <b>મેસ્સીના રેકોર્ડ્સ:</b>
+                <ul>
+                    <li>આર્જેન્ટિના માટે સૌથી વધુ મેચ (Most Capped Player) રમ્યા છે: <b>207 Matches</b>.</li>
+                    <li>સૌથી વધુ ગોલ (All-time Leading Scorer): <b>125 Goals</b>.</li>
+                    <li>તેમણે આર્જેન્ટિનાને 2022 નો ફિફા વર્લ્ડ કપ જિતાડ્યો હતો (2026 વર્લ્ડ કપમાં તેઓ સ્પેન સામે ફાઇનલમાં હાર્યા હતા).</li>
+                    <li>તેઓ <b>8 વખત</b> Ballon d'Or વિજેતા છે.</li>
+                    <li>તેઓ એકમાત્ર એવા ખેલાડી છે જેમણે ત્રણ અલગ-અલગ વર્લ્ડ કપ (2014, 2022, 2026) માં પોતાની ટીમની કેપ્ટનશિપ કરી હોય.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- NEWS 7 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 7</span>
+            <div class="news-headline">Indian Navy commissions INS Nipun in Mumbai</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ભારતીય નૌસેનાએ મુંબઈના નેવલ ડોકયાર્ડ ખાતે <b>INS Nipun (આઈએનએસ નિપુણ)</b> ને કમિશન (સેવામાં સામેલ) કર્યું છે. 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ જહાજ <b>Hindustan Shipyard Limited</b> દ્વારા બનાવવામાં આવ્યું છે. 
+                <br>આ <b>'Nistar Class'</b> નું ડાઇવિંગ સપોર્ટ વેસલ (Diving Support Vessel) છે. (આ ક્લાસનું પહેલું જહાજ INS Nistar હતું). 
+                <br>કમિશનિંગ સેરેમની વાઇસ એડમિરલ કૃષ્ણ સ્વામીનાથનની હાજરીમાં યોજાઈ હતી.
+            </div>
+        </div>
+
+        <!-- NEWS 8 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 8</span>
+            <div class="news-headline">NASA launches Nancy Grace Roman Space Telescope</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>NASA</b> એ બ્રહ્માંડના રહસ્યોનો અભ્યાસ કરવા માટે નવું ટેલિસ્કોપ <b>Nancy Grace Roman Space Telescope</b> લોન્ચ કર્યું છે.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ ટેલિસ્કોપ <b>SpaceX</b> ના ફાલ્કન હેવી રોકેટ દ્વારા ફ્લોરિડાથી લોન્ચ કરાયું છે. 
+                <br>તે 'વાઇડ-એંગલ' (Wide-field panoramic) સર્વે કરશે. (James Webb Telescope ડીપ અને હાઇલી સેન્સિટિવ ઓબ્ઝર્વેશન કરે છે, જ્યારે આ ટેલિસ્કોપ મોટો એરિયા કવર કરશે). 
+                <br>આ મિશનનો ખર્ચ અંદાજે <b>$4 Billion</b> છે અને તેનું પ્રાથમિક મિશન 5 વર્ષ માટે નક્કી કરાયું છે.
+            </div>
+        </div>
+
+        <!-- NEWS 9 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 9</span>
+            <div class="news-headline">Quick Updates: Airbus-Mahindra deal & DRDO contract for Avantel</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                Teacher એ છેલ્લે બે અગત્યના ડિફેન્સ/એરોસ્પેસ કોન્ટ્રાક્ટ્સની માહિતી આપી.
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                <ul>
+                    <li><b>Airbus & Mahindra Aerostructures:</b> એરબસે <b>Mahindra Aerostructures</b> ને A320 અને A321XLR વિમાનોની પાછળની બોડી (Rear Fuselage) અને ટેલ સેક્શન બનાવવા માટે કોન્ટ્રાક્ટ આપ્યો છે. આ પાર્ટ્સ બેંગલુરુની ફેક્ટરીમાં બનશે અને 2028 સુધીમાં જર્મની મોકલવામાં આવશે.</li>
+                    <li><b>DRDO & Avantel:</b> DRDO ની લેબોરેટરી <b>DEAL</b> (Defence Electronics Application Laboratory) એ <b>Avantel</b> ને ગ્રાઉન્ડ સેગમેન્ટ હબ (Ground Segment Hub) બનાવવા માટે <b>₹117.88 કરોડ</b> નો કોન્ટ્રાક્ટ આપ્યો છે. આ હબ 2029 સુધીમાં તૈયાર થશે અને ઇન્ડિયન જીઓ-સ્ટેશનરી સેટેલાઇટનો ઉપયોગ કરીને ડેટા અને વોઇસ કોમ્યુનિકેશન સુધારશે.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ================= POST NEWS REVISION SECTIONS ================= -->
+
+        <!-- MEMORY TRICKS -->
+        <div class="section-title">🧠 MEMORY TRICKS</div>
+        <div class="memory-section">
+            <p><b>Trick 1: Data Releasing Bodies:</b><br>MoSPI (NSO): CPI, IIP, GDP, ISP.<br>Ministry of Commerce (DPIIT): WPI, Core Industries.</p>
+            <p><br><b>Trick 2: Nistar Class Ships:</b><br>Both start with 'N' - Nistar and Nipun.</p>
+        </div>
+
+        <!-- CONNECT THE DOTS -->
+        <div class="section-title">🔗 CONNECT THE DOTS</div>
+        <table class="fact-table">
+            <tr>
+                <th>Entity / Person</th>
+                <th>News / Event</th>
+            </tr>
+            <tr>
+                <td>Fayaz Tepa & Kara Tepa</td>
+                <td>Buddhist sites in Uzbekistan to be restored with Indian help</td>
+            </tr>
+            <tr>
+                <td>HUMO</td>
+                <td>Uzbekistan's payment system partnering with NIPL for UPI</td>
+            </tr>
+            <tr>
+                <td>Ruu Khan, Tomiko, Boki</td>
+                <td>Winners of the Ramon Magsaysay Award 2026</td>
+            </tr>
+            <tr>
+                <td>INS Nipun</td>
+                <td>Diving Support Vessel commissioned by Indian Navy in Mumbai</td>
+            </tr>
+            <tr>
+                <td>Avantel</td>
+                <td>Got ₹117.88 Cr contract from DRDO (DEAL) for Ground Segment Hub</td>
+            </tr>
+        </table>
+
+        <!-- QUICK REVISION -->
+        <div class="section-title">⚡ QUICK REVISION</div>
+        <div class="news-content">
+            <ul>
+                <li><b>India-Uzbekistan:</b> Bilateral trade target set to $5 Billion by 2030. Upgraded to Comprehensive Strategic Partnership.</li>
+                <li><b>Sone River Dispute:</b> 25-year dispute resolved between Bihar and Jharkhand with Amit Shah's mediation.</li>
+                <li><b>Index of Services Production (ISP):</b> Positive growth in 18 out of 19 sectors. Air transport contracted by 6%.</li>
+                <li><b>Messi Retires:</b> Argentina's captain retired after scoring 125 goals in 207 matches.</li>
+                <li><b>NASA Telescope:</b> Nancy Grace Roman Space Telescope launched for wide-angle universe study.</li>
+            </ul>
+        </div>
+
+        <!-- FINAL MEMORY SHEET -->
+        <div class="section-title">🔥 FINAL MEMORY SHEET</div>
+        <table class="fact-table">
+            <tr>
+                <th>Key Word</th>
+                <th>Final Fact to Remember</th>
+            </tr>
+            <tr>
+                <td>$5 Billion</td>
+                <td>Trade target between India and Uzbekistan by 2030.</td>
+            </tr>
+            <tr>
+                <td>Air Transport</td>
+                <td>The only sub-sector showing negative growth in ISP (June 2026).</td>
+            </tr>
+            <tr>
+                <td>6th Edition</td>
+                <td>The edition of the World Nomad Games held in Bishkek, Kyrgyzstan.</td>
+            </tr>
+            <tr>
+                <td>125 Goals</td>
+                <td>Total international goals scored by Lionel Messi before retiring.</td>
+            </tr>
+        </table>
+
+        <button class="back-btn" onclick="goHome()" style="width: 100%; text-align: center;">← BACK TO HOME</button>
+    </div>
+
+</div>
+
+<script>
+    // Theme Toggle Logic
+    const themeBtn = document.getElementById('theme-btn');
+    const rootElements = document.documentElement;
+    let isDark = true;
+
+    function toggleTheme() {
+        isDark = !isDark;
+        if (isDark) {
+            rootElements.setAttribute('data-theme', 'dark');
+            themeBtn.innerText = '☀️';
+        } else {
+            rootElements.setAttribute('data-theme', 'light');
+            themeBtn.innerText = '🌙';
+        }
+    }
+
+    // --- HARD BEEP SOUND FUNCTION ---
+    function playHardBeep() {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const audioCtx = new AudioContext();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = 'square'; 
+            oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); 
+
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.15);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.15);
+        } catch (e) {
+            console.log("Audio API not supported or blocked");
+        }
+    }
+
+    function attachBeepListeners() {
+        const clickables = document.querySelectorAll('button, .option, .main-btn, .sticky-back-btn, .theme-toggle');
+        clickables.forEach(btn => {
+            btn.removeEventListener('click', playHardBeep);
+            btn.addEventListener('click', playHardBeep);
+        });
+    }
+
+    // Navigation & MCQ Reset Logic
+    const homeScreen = document.getElementById('home-screen');
+    const mcqPage = document.getElementById('mcq-page');
+    const newsPage = document.getElementById('news-page');
+    const stickyHeader = document.getElementById('sticky-header');
+
+    // Global variables for MCQ
+    let currentMcq = 0;
+    let score = 0;
+    let wrongQuestions = [];
+    const mcqBlocks = document.querySelectorAll('.mcq-block:not(#score-screen)');
+    const totalMcqs = mcqBlocks.length;
+    const progressFill = document.getElementById('mcq-progress-fill');
+    const currentQNum = document.getElementById('current-q-num');
+
+    function resetMCQs() {
+        currentMcq = 0;
+        score = 0;
+        wrongQuestions = [];
+        
+        mcqBlocks.forEach((block) => {
+            block.classList.remove('active', 'answered');
+            
+            const options = block.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+                opt.innerHTML = opt.innerHTML.split(" 🟢")[0].split(" 🔴")[0];
+            });
+
+            const explBox = block.querySelector('.explanation-box');
+            if(explBox) explBox.style.display = 'none';
+            
+            const nextBtn = block.querySelector('.next-btn');
+            if(nextBtn) nextBtn.style.display = 'none';
+        });
+
+        if(mcqBlocks.length > 0) {
+            mcqBlocks[0].classList.add('active');
+        }
+
+        document.getElementById('score-screen').classList.remove('active');
+        if (totalMcqs > 0) {
+            document.querySelector('.mcq-progress').style.display = 'block';
+            document.querySelector('.progress-bar-bg').style.display = 'block';
+            document.getElementById('current-q-num').innerText = "1";
+            progressFill.style.width = '0%';
+        }
+        
+        document.getElementById('wrong-revision-section').style.display = 'none';
+        document.getElementById('wrong-questions-list').innerHTML = "";
+    }
+
+    function openSection(sectionId) {
+        homeScreen.style.display = 'none';
+        mcqPage.style.display = 'none';
+        newsPage.style.display = 'none';
+        
+        resetMCQs();
+        
+        document.getElementById(sectionId).style.display = 'block';
+        stickyHeader.style.display = 'flex'; 
+        window.scrollTo(0,0);
+    }
+
+    function goHome() {
+        homeScreen.style.display = 'flex';
+        mcqPage.style.display = 'none';
+        newsPage.style.display = 'none';
+        stickyHeader.style.display = 'none'; 
+        
+        resetMCQs();
+        window.scrollTo(0,0);
+    }
+
+    // MCQ Click Logic
+    mcqBlocks.forEach((block, index) => {
+        const options = block.querySelectorAll('.option');
+        const correctAns = block.getAttribute('data-correct');
+        const nextBtn = block.querySelector('.next-btn');
+        const explBox = block.querySelector('.explanation-box');
+        const questionText = block.querySelector('.question').innerText;
+
+        options.forEach(opt => {
+            opt.addEventListener('click', function() {
+                if (block.classList.contains('answered')) return;
+                block.classList.add('answered');
+
+                const selected = this.getAttribute('data-opt');
+                
+                options.forEach(o => {
+                    if (o.getAttribute('data-opt') === correctAns) {
+                        o.classList.add('correct');
+                        o.innerHTML += " 🟢 CORRECT ✓";
+                    }
+                });
+
+                if (selected === correctAns) {
+                    score++;
+                } else {
+                    this.classList.add('wrong');
+                    this.innerHTML += " 🔴 WRONG ✗";
+                    
+                    let correctText = "";
+                    options.forEach(o => {
+                        if(o.getAttribute('data-opt') === correctAns) correctText = o.innerText.replace(" 🟢 CORRECT ✓","");
+                    });
+                    wrongQuestions.push({
+                        q: questionText,
+                        a: correctText
+                    });
+                }
+
+                explBox.style.display = 'block';
+                nextBtn.style.display = 'block';
+                updateProgress(index + 1);
+            });
+        });
+    });
+
+    function updateProgress(num) {
+        let percentage = (num / totalMcqs) * 100;
+        progressFill.style.width = percentage + '%';
+    }
+
+    function nextMCQ() {
+        mcqBlocks[currentMcq].classList.remove('active');
+        currentMcq++;
+
+        if (currentMcq < totalMcqs) {
+            mcqBlocks[currentMcq].classList.add('active');
+            currentQNum.innerText = currentMcq + 1;
+            window.scrollTo(0,0);
+        } else {
+            showScoreScreen();
+        }
+    }
+
+    function showScoreScreen() {
+        document.getElementById('score-screen').classList.add('active');
+        document.getElementById('final-score').innerText = score + "/" + totalMcqs;
+        document.getElementById('correct-count').innerText = score;
+        document.getElementById('wrong-count').innerText = totalMcqs - score;
+        let accuracy = Math.round((score / totalMcqs) * 100);
+        document.getElementById('accuracy-percent').innerText = accuracy;
+
+        let msg = "";
+        if (score >= Math.floor(totalMcqs * 0.85)) msg = "🏆 Excellent";
+        else if (score >= Math.floor(totalMcqs * 0.70)) msg = "🔥 Very Good";
+        else if (score >= Math.floor(totalMcqs * 0.50)) msg = "👍 Good";
+        else msg = "📚 Revise Again";
+        document.getElementById('score-message').innerText = msg;
+
+        if (wrongQuestions.length > 0) {
+            let revSec = document.getElementById('wrong-revision-section');
+            let list = document.getElementById('wrong-questions-list');
+            revSec.style.display = 'block';
+            let html = "";
+            wrongQuestions.forEach(item => {
+                html += `<div style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.2); padding:12px; margin-top:12px; border-radius:8px;">
+                            <strong style="color:var(--text-highlight); font-size:15px; display:block; margin-bottom:5px;">${item.q}</strong>
+                            <span style="color:var(--success); font-size:15px; font-weight:700;">✓ Correct: ${item.a}</span>
+                         </div>`;
+            });
+            list.innerHTML = html;
+        }
+        
+        document.querySelector('.mcq-progress').style.display = 'none';
+        document.querySelector('.progress-bar-bg').style.display = 'none';
+        window.scrollTo(0,0);
+    }
+
+    document.addEventListener('DOMContentLoaded', attachBeepListeners);
+
+</script>
+
+</body>
+</html>
+
