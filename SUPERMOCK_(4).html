@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPERMOCK - 3</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #e0e6ed;
+            --header-bg: #1a252f;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #333333;
+            --header-bg: #000000;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            padding-top: 60px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        #btn-back {
+            background-color: #95a5a6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #btn-theme {
+            background-color: transparent;
+            font-size: 1.5rem;
+            padding: 5px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .topic-btn {
+            padding: 20px 10px;
+            font-size: 1.1rem;
+            text-align: center;
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s, filter 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            min-height: 100px;
+            word-wrap: break-word;
+        }
+
+        .topic-btn:hover {
+            filter: brightness(1.1);
+        }
+        
+        .topic-btn:active {
+            transform: scale(0.95);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .options-list li {
+            padding: 10px 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin: 20px 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .exam-trick {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .quick-revision {
+            background-color: var(--bg-color);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .mock-option {
+            width: 100%;
+            text-align: left;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--border);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        .mock-option.correct {
+            border-color: var(--secondary);
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        .mock-option.wrong {
+            border-color: var(--danger);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .action-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .score-board {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .score-board h2 {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--bg-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>SUPERMOCK - 3</div>
+        <div class="header-actions">
+            <button id="btn-back" style="display: none;">← BACK</button>
+            <button id="btn-theme">🌙</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Home View -->
+        <div id="view-home" class="view active">
+            <div class="topic-grid" id="home-menu">
+                <!-- Menu populated by JS -->
+            </div>
+        </div>
+
+        <!-- Detail View -->
+        <div id="view-detail" class="view">
+            <div id="detail-content"></div>
+        </div>
+
+        <!-- Practice Mock View -->
+        <div id="view-practice" class="view">
+            <div id="practice-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- Web Audio API for UI Sounds (Hard Beep) ---
+        let audioCtx;
+        
+        function playSound() {
+            try {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (!AudioContext) return; 
+                    audioCtx = new AudioContext();
+                }
+                
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.type = 'square'; 
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime); 
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0, audioCtx.currentTime + 0.1); 
+                
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.1);
+            } catch(e) {
+                console.log("Audio not supported or blocked", e);
+            }
+        }
+
+        // --- Data Source ---
+        const studyData = [
+            {
+                topic: "ERROR DETECTION",
+                questions: [
+                    {
+                        qText: "Despite their eagerness to explore the old mansion, their parents strictly forbade them to set foot on the property.",
+                        options: [
+                            "A) Despite their eagerness",
+                            "B) forbade them to set foot",
+                            "C) on the property",
+                            "D) to explore the old mansion",
+                            "E) No Error"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) forbade them to set foot",
+                        explanation: "Transcript મુજબ, 'forbid' કે તેના ભૂતકાળના રૂપ 'forbade' નો અર્થ થાય છે 'કોઈ કામ કરવાથી રોકવું'. તેની સાથે હંમેશા 'from' preposition આવે છે અને 'from' પછી verb + ing લાગે છે. તેથી 'to set' ના બદલે 'from setting' સાચું છે.",
+                        examples: [
+                            "❌ forbade them to set foot",
+                            "✅ forbade them from setting foot"
+                        ],
+                        trick: "Forbid/Forbade + from + V1-ing.",
+                        quickRev: "Forbid takes 'from' and a gerund (v-ing)."
+                    },
+                    {
+                        qText: "The cool breeze blew from the open windows of the old cottage, carrying with it the scent of blooming lavender from the garden outside.",
+                        options: [
+                            "A) The cool breeze blew from",
+                            "B) carrying with it the scent",
+                            "C) of the old cottage",
+                            "D) from the garden outside",
+                            "E) No Error"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) The cool breeze blew from",
+                        explanation: "Transcript મુજબ, બગીચામાંથી આવતી લેવેન્ડરની સુગંધ હવા દ્વારા બારીઓમાંથી કૉટેજની 'અંદર' જઈ રહી હતી. તેથી હવા બારીઓ 'માંથી' પ્રવેશી રહી હતી. આ ક્રિયા દર્શાવવા માટે 'from' ના બદલે 'through', 'to', અથવા 'towards' આવવું જોઈએ. 'from' નો અર્થ એવો થાય કે હવા બારીમાંથી નીકળીને બગીચા તરફ જતી હતી.",
+                        examples: [
+                            "❌ The breeze blew from the open windows.",
+                            "✅ The breeze blew to/towards/through the open windows."
+                        ],
+                        trick: "હવા અંદર આવતી હોય તો to/towards, બહાર જતી હોય તો from.",
+                        quickRev: "Use 'to/towards' instead of 'from' for inward direction."
+                    },
+                    {
+                        qText: "The company specializes in products that deal in advanced technology, and their customer service team is trained to deal in any technical issues.",
+                        options: [
+                            "A) The company specializes in products",
+                            "B) that deal in advanced technology",
+                            "C) is trained to deal in",
+                            "D) any technical issues",
+                            "E) No Error"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) is trained to deal in",
+                        explanation: "Transcript મુજબ, 'deal in' નો ઉપયોગ વ્યવસાય (business) દર્શાવવા થાય છે, જ્યારે 'deal with' નો ઉપયોગ સમસ્યાનો ઉકેલ લાવવા માટે થાય છે. અહીં કસ્ટમર સર્વિસ ટીમ ટેક્નિકલ સમસ્યાઓ ઉકેલે છે, વેપાર નથી કરતી, તેથી 'deal with' આવવું જોઈએ.",
+                        examples: [
+                            "✅ He deals in computers. (Business)",
+                            "✅ You should deal with your problems. (Solution)"
+                        ],
+                        trick: "Deal IN = Business. Deal WITH = Solve a problem.",
+                        quickRev: "Deal with issues, deal in business."
+                    },
+                    {
+                        qText: "When the billionaire decided to retire, he divided his wealth among his four children, but before doing so, he carefully divided it among equal portions.",
+                        options: [
+                            "A) When the billionaire decided to retire",
+                            "B) divided his wealth among his four children",
+                            "C) carefully divided it among",
+                            "D) equal portions",
+                            "E) No Error"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) carefully divided it among",
+                        explanation: "Transcript મુજબ, જ્યારે 'divide' નો અર્થ વસ્તુઓને લોકો વચ્ચે વહેંચવી એવો થતો હોય ત્યારે 'among' અથવા 'between' નો ઉપયોગ થાય છે. પરંતુ જ્યારે કોઈ વસ્તુના ટુકડા (parts/portions) કરવાના હોય ત્યારે 'into' નો ઉપયોગ થાય છે. અહીં સમાન ભાગ કરવાના હોવાથી 'divided it into' સાચું છે.",
+                        examples: [
+                            "✅ He divided his property among his sons. (વહેંચણી)",
+                            "✅ He divided the class into two parts. (ટુકડા)"
+                        ],
+                        trick: "Divide + લોકો વચ્ચે વહેંચણી = Among/Between. Divide + ટુકડા = Into.",
+                        quickRev: "Divide INTO portions/parts."
+                    },
+                    {
+                        qText: "The rescue team was trained to handle emergencies on land and water, ensuring they were prepared for any situation.",
+                        options: [
+                            "A) The rescue team was trained",
+                            "B) on land and water",
+                            "C) to handle emergencies",
+                            "D) prepared for any situation",
+                            "E) No Error"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) on land and water",
+                        explanation: "Transcript મુજબ, જમીન માટે 'on' preposition વપરાય છે (on land), પરંતુ પાણી માટે 'in' preposition વપરાય છે (in water). અહીં બંને માટે સામાન્ય 'on' વાપરી શકાય નહીં. તેથી 'on land and in water' આવવું જોઈએ.",
+                        examples: [
+                            "❌ emergencies on land and water",
+                            "✅ emergencies on land and in water"
+                        ],
+                        trick: "Land માટે On, Water માટે In.",
+                        quickRev: "Use specific prepositions: on land, in water."
+                    },
+                    {
+                        qText: "The students are used to studying late at night and preparing for challenging exams as it has become a routine part of their academic lives.",
+                        options: [
+                            "A) The students are used to",
+                            "B) studying late at night",
+                            "C) routine part of their",
+                            "D) academic lives",
+                            "E) No Error"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D) academic lives",
+                        explanation: "Transcript મુજબ, જ્યારે 'life' નો અર્થ 'જીવન જીવવાની રીત' કે 'academic/professional life' એવો થતો હોય ત્યારે તે uncountable noun તરીકે વપરાય છે, તેથી તેનું બહુવચન 'lives' થતું નથી. જો શારીરિક જીવન (biological life) ગુમાવવાની વાત હોય (જેમ કે સૈનિકોનું મૃત્યુ), તો જ 'lives' વપરાય.",
+                        examples: [
+                            "✅ Life is beautiful.",
+                            "✅ Hundreds of soldiers lost their lives."
+                        ],
+                        trick: "Biological life ગુમાવવાની વાત હોય તો જ Lives. અન્યથા Life.",
+                        quickRev: "Use 'life' for way of living, 'lives' for physical deaths."
+                    }
+                ]
+            },
+            {
+                topic: "PHRASE REPLACEMENT",
+                questions: [
+                    {
+                        qText: "Despite many efforts to solve the math problem, I did not solve it before the bell rang.",
+                        options: [
+                            "A) did not solve it before",
+                            "B) could not solve it before",
+                            "C) have not solved it before",
+                            "D) am not solving it before",
+                            "E) No Error"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) could not solve it before",
+                        explanation: "Transcript મુજબ, જો તમે કોઈ કામ કરવાનો પ્રયાસ જ ન કર્યો હોય તો 'did not' વપરાય. પરંતુ જો તમે પ્રયાસ કર્યો હોય પણ ક્ષમતાના અભાવે તે કામ ન થઈ શક્યું હોય, તો 'could not' વપરાય. અહીં ઘણા પ્રયાસો (many efforts) કર્યા છતાં ન ઉકેલાયું, તેથી 'could not' સાચું છે.",
+                        examples: [
+                            "✅ I did not complete the work (પ્રયાસ જ ન કર્યો)",
+                            "✅ I could not complete the work (પ્રયાસ કર્યો પણ ક્ષમતા નહોતી)"
+                        ],
+                        trick: "પ્રયાસ છતાં કામ ન થાય તો Could not.",
+                        quickRev: "Use 'could not' when efforts were made but failed due to inability."
+                    },
+                    {
+                        qText: "Always prepare yourself mentally before starting the challenging negotiation, as the client can be tough to handle.",
+                        options: [
+                            "A) prepare yourselves mentally",
+                            "B) prepare yourself mentally",
+                            "C) prepare ourself mentally",
+                            "D) prepare themselves mentally",
+                            "E) No Error"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) prepare yourselves mentally",
+                        explanation: "Transcript મુજબ, Imperative sentence માં હંમેશા છુપો કર્તા 'You' હોય છે. અહીં 'Always prepare' એક imperative sentence છે. 'You' એકવચન હોય તો 'yourself' અને બહુવચન હોય તો 'yourselves' વપરાય. અહીં કોઈ સ્પષ્ટ સંદર્ભ નથી, પરંતુ general statement તરીકે plural form 'yourselves' ને પ્રાધાન્ય અપાય છે.",
+                        examples: [],
+                        trick: "Imperative sentence માં છુપો કર્તા YOU હોય છે. બહુવચન માટે yourselves.",
+                        quickRev: "Imperative sentences take 'yourself/yourselves'."
+                    },
+                    {
+                        qText: "The appetite of banks for funds was lost under the onslaught of the slowdown; corporates refused to borrow even as bank deposits flourished.",
+                        options: [
+                            "A) bank deposits flourishing",
+                            "B) bank deposits swelled",
+                            "C) bank deposits enhanced",
+                            "D) bank deposits flummoxed",
+                            "E) No replacement required"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) No replacement required",
+                        explanation: "Transcript મુજબ, 'flourished' નો અર્થ 'વિકસવું' કે 'વધવું' થાય છે. મંતીને કારણે કંપનીઓએ લોન લેવાની ના પાડી, જેથી બેંકના ડિપોઝિટ વધતા જ રહ્યા. આ સંદર્ભમાં 'flourished' શબ્દ બરાબર બેસે છે. 'Swelled' અને 'enhanced' નો અર્થ પણ વધવું થાય છે, પણ મૂળ વાક્ય સાચું હોવાથી રિપ્લેસમેન્ટની જરૂર નથી.",
+                        examples: [],
+                        trick: "Flourish = વધવું/વિકસવું. Context સાચો છે.",
+                        quickRev: "No replacement required as 'flourished' perfectly fits the context."
+                    },
+                    {
+                        qText: "The 18th-century revival of Byzantine learning is an exemplary phenomenon, and its economic and military precursors are yet to be discovered.",
+                        options: [
+                            "A) is a phenomenon to be discovered",
+                            "B) is a phenomenon incompletely explained",
+                            "C) is an inexplicable phenomenon",
+                            "D) is an explicit phenomenon",
+                            "E) No replacement required"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) is an inexplicable phenomenon",
+                        explanation: "Transcript મુજબ, વાક્યમાં કહેવાયું છે કે તે લર્નિંગના આર્થિક અને લશ્કરી પૂર્વગામીઓ (precursors) 'હજુ સુધી શોધાયા નથી' (yet to be discovered). જો કંઈક શોધાયું જ ન હોય, તો તે 'exemplary' (ઉત્તમ ઉદાહરણરૂપ) ન હોઈ શકે. તેને 'inexplicable' (જે સમજાવી ન શકાય તેવું) કહેવાય.",
+                        examples: [],
+                        trick: "અજાણી વસ્તુને સમજાવી ન શકાય = Inexplicable.",
+                        quickRev: "Inexplicable = Things that cannot be explained."
+                    },
+                    {
+                        qText: "A sculpture by a veteran artist that stood in the lawns of the National Art Gallery was found damaged after the storm last night.",
+                        options: [
+                            "A) that stood in the lawns",
+                            "B) that stands in the lawns",
+                            "C) that has stood in the lawns",
+                            "D) that had stood in the lawns",
+                            "E) No Error"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) that stood in the lawns",
+                        explanation: "Transcript મુજબ, વાક્ય ભૂતકાળમાં છે ('was found damaged'). જ્યારે ભૂતકાળમાં બે ક્રિયાઓ એકસાથે થતી હોય (અહીં મૂર્તિનું ઊભા હોવું અને તેનું ડેમેજ થવું), ત્યારે Past Perfect (had stood) ને બદલે Past Indefinite (stood) વપરાય છે. મૂળ વાક્ય સાચું છે.",
+                        examples: [
+                            "✅ It stood there and was damaged."
+                        ],
+                        trick: "ભૂતકાળની એકસાથે થતી ઘટનાઓમાં V2 (Past Indefinite) વાપરો.",
+                        quickRev: "Simultaneous past actions use Past Indefinite."
+                    }
+                ]
+            },
+            {
+                topic: "VOCABULARY (SYNONYM - ANTONYM PAIRS)",
+                questions: [
+                    {
+                        qText: "Choose the pair where the first word is the Synonym and the second word is the Antonym of the highlighted word: VALOR",
+                        options: [
+                            "A) Audacity - Fortitude",
+                            "B) Timidity - Wimpiness",
+                            "C) Gallantry - Puissance",
+                            "D) Bravery - Cowardice",
+                            "E) None of these"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D) Bravery - Cowardice",
+                        explanation: "Transcript મુજબ, Valor નો અર્થ થાય છે 'વીરતા/બહાદુરી'. તેનો Synonym (સમાનાર્થી) 'Bravery' છે અને Antonym (વિરોધી) 'Cowardice' (કાયરતા) છે.",
+                        examples: [],
+                        trick: "Valor = વીરતા. Bravery (સમાનાર્થી), Cowardice (વિરોધી).",
+                        quickRev: "Valor: Bravery (Synonym), Cowardice (Antonym)."
+                    },
+                    {
+                        qText: "Choose the pair where the first word is the Synonym and the second word is the Antonym of the highlighted word: IMPEDE",
+                        options: [
+                            "A) Extol - Facilitate",
+                            "B) Withstand - Abstruse",
+                            "C) Hinder - Obstruct",
+                            "D) Facilitate - Restrain",
+                            "E) Restrain - Expedite"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) Restrain - Expedite",
+                        explanation: "Transcript મુજબ, Impede નો અર્થ થાય છે 'રોકવું કે અવરોધ ઊભો કરવો' (Block/Hinder). તેનો Synonym 'Restrain' છે અને Antonym 'Expedite' (કામ ઝડપી બનાવવું) થાય છે.",
+                        examples: [],
+                        trick: "Impede = રોકવું. Restrain (રોકવું), Expedite (ઝડપી કરવું).",
+                        quickRev: "Impede: Restrain (Synonym), Expedite (Antonym)."
+                    },
+                    {
+                        qText: "Choose the pair where the first word is the Synonym and the second word is the Antonym of the highlighted word: APPRECIATE",
+                        options: [
+                            "A) Asinine - Rectify",
+                            "B) Acknowledge - Disparage",
+                            "C) Tarnish - Exaggerate",
+                            "D) Belittle - Acknowledge",
+                            "E) None of these"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) Acknowledge - Disparage",
+                        explanation: "Transcript મુજબ, Appreciate નો અર્થ 'કદર કરવી' (Acknowledge). તેનો Antonym 'Disparage' (કોઈને ઉતારી પાડવું/અપમાન કરવું) થાય છે.",
+                        examples: [],
+                        trick: "Appreciate = કદર કરવી. Acknowledge (સમાનાર્થી), Disparage (વિરોધી).",
+                        quickRev: "Appreciate: Acknowledge (Synonym), Disparage (Antonym)."
+                    },
+                    {
+                        qText: "Choose the pair where the first word is the Synonym and the second word is the Antonym of the highlighted word: ELEGANT",
+                        options: [
+                            "A) Diminutive - Conceit",
+                            "B) Graceful - Gauche",
+                            "C) Handy - Appealing",
+                            "D) Awkward - Graceful",
+                            "E) None of these"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) Graceful - Gauche",
+                        explanation: "Transcript મુજબ, Elegant નો અર્થ થાય છે 'આકર્ષક કે સુંદર' (Graceful). તેનો Antonym 'Gauche' (અણઘડ/Awkward) થાય છે.",
+                        examples: [],
+                        trick: "Elegant = સુંદર. Graceful (સમાનાર્થી), Gauche (વિરોધી/અણઘડ).",
+                        quickRev: "Elegant: Graceful (Synonym), Gauche (Antonym)."
+                    }
+                ]
+            },
+            {
+                topic: "CLOZE TEST",
+                questions: [
+                    {
+                        qText: "For decades, a manuscript found in a monastery cellar was dismissed as derivative because several passages resembled an 18th-century treatise. This judgment appeared ______ since the volume carried no date.",
+                        options: [
+                            "A) Anachronistic",
+                            "B) Gratuitous",
+                            "C) Apocryphal",
+                            "D) Tenable",
+                            "E) Incontrovertible"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D) Tenable",
+                        explanation: "Transcript મુજબ, પુસ્તક પર કોઈ તારીખ નહોતી અને તે બીજા પુસ્તકને મળતું આવતું હતું, તેથી તેને 'કોપી કરેલું' માનવાનો લોકોનો નિર્ણય 'તાર્કિક' કે 'સમર્થન આપી શકાય તેવો' (Tenable) લાગતો હતો.",
+                        examples: [],
+                        trick: "લોકોનો નિર્ણય સાચો લાગતો હતો = Tenable (Logical/Defensible).",
+                        quickRev: "Tenable = Logical or reasonable."
+                    },
+                    {
+                        qText: "Carbon analysis, however, established that its paper had been produced 40 years before the treatise appeared. The resemblance could therefore no longer indicate imitation; instead, the manuscript may have ______ the supposedly original work.",
+                        options: [
+                            "A) Superceded",
+                            "B) Substituted",
+                            "C) Garbled",
+                            "D) Informed",
+                            "E) Repudiated"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) Superceded",
+                        explanation: "Transcript મુજબ, કાર્બન એનાલિસિસથી ખબર પડી કે તે હસ્તપ્રત ઓરિજિનલ પુસ્તક કરતા 40 વર્ષ 'જૂની' હતી. કોઈ વસ્તુ અગાઉ આવી હોય અને તેની જગ્યા લીધી હોય તો તેને 'Supercede' કર્યું કહેવાય.",
+                        examples: [],
+                        trick: "કોઈ વસ્તુ પહેલા આવી હોય = Supercede.",
+                        quickRev: "Supercede = To come before or replace."
+                    },
+                    {
+                        qText: "Scholars reconsidered the seemingly ______ marginal notes.",
+                        options: [
+                            "A) Cogent",
+                            "B) Germane",
+                            "C) Desultory",
+                            "D) Deliberate",
+                            "E) Methodical"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) Desultory",
+                        explanation: "Transcript મુજબ, 'seemingly' શબ્દ દર્શાવે છે કે અગાઉ લોકો તે નોંધો વિશે ખરાબ વિચારતા હતા. Cogent, Germane, Deliberate, Methodical એ પોઝિટિવ શબ્દો છે. માત્ર 'Desultory' (અવ્યવસ્થિત/Haphazard) નેગેટિવ શબ્દ છે, જે અહીં બંધબેસે છે.",
+                        examples: [],
+                        trick: "Seemingly પછી નેગેટિવ શબ્દ. Desultory = Haphazard.",
+                        quickRev: "Desultory = Lacking a plan or purpose."
+                    },
+                    {
+                        qText: "What looked like random observations proved to be a consistent numerical code, making the annotations surprisingly ______.",
+                        options: [
+                            "A) Redundant",
+                            "B) Peripheral",
+                            "C) Spurious",
+                            "D) Inchoate",
+                            "E) Systematic"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) Systematic",
+                        explanation: "Transcript મુજબ, પહેલા જે વસ્તુ 'રન્ડમ' લાગતી હતી તે અસલમાં એક 'કન્સિસ્ટન્ટ કોડ' હતો, એટલે કે તે નોંધો ખૂબ જ વ્યવસ્થિત ('Systematic') હતી.",
+                        examples: [],
+                        trick: "Random નો વિરોધી = Systematic.",
+                        quickRev: "Systematic = Done according to a plan."
+                    },
+                    {
+                        qText: "Nevertheless, the discovery did not conclusively identify the author. The monastery's records contained a crucial ______.",
+                        options: [
+                            "A) Corollary",
+                            "B) Lacuna",
+                            "C) Accrual",
+                            "D) Abundance",
+                            "E) Repository"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) Lacuna",
+                        explanation: "Transcript મુજબ, ઓથરનું નામ ન મળી શક્યું કારણ કે રેકોર્ડ્સ પૂરા નહોતા, તેમાં કોઈ કડી ખૂટતી હતી કે કમી હતી. 'Lacuna' નો અર્થ થાય છે 'ખામી કે ખાલી જગ્યા' (Missing part/Gap).",
+                        examples: [],
+                        trick: "લેખકનું નામ ન મળ્યું કારણ કે રેકોર્ડમાં 'કમી' (Lacuna) હતી.",
+                        quickRev: "Lacuna = Gap or missing part."
+                    },
+                    {
+                        qText: "So even researchers remained ______ about who actually completed the work.",
+                        options: [
+                            "A) Dogmatic",
+                            "B) Credulous",
+                            "C) Circumspect",
+                            "D) Exuberant",
+                            "E) Resolute"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) Circumspect",
+                        explanation: "Transcript મુજબ, રેકોર્ડમાં કમી હોવાથી રિસર્ચરો પણ લેખકના નામ વિશે 'શંકાસ્પદ' અથવા 'સાવચેત' રહ્યા. 'Circumspect' નો અર્થ થાય છે સાવધાન કે શંકાસ્પદ રહેવું.",
+                        examples: [],
+                        trick: "લેખક કોણ છે તે સ્પષ્ટ નહોતું, તેથી તેઓ શંકાસ્પદ (Circumspect) રહ્યા.",
+                        quickRev: "Circumspect = Cautious or doubtful."
+                    }
+                ]
+            }
+        ];
+
+        // --- Render UI ---
+        const homeMenu = document.getElementById('home-menu');
+        const detailContent = document.getElementById('detail-content');
+        const practiceContent = document.getElementById('practice-content');
+        const viewHome = document.getElementById('view-home');
+        const viewDetail = document.getElementById('view-detail');
+        const viewPractice = document.getElementById('view-practice');
+        const btnBack = document.getElementById('btn-back');
+        const btnTheme = document.getElementById('btn-theme');
+
+        const tileColors = ['#FF4757', '#2ED573', '#1E90FF', '#FFA502', '#9C88FF', '#FF6348'];
+
+        let isDarkMode = false;
+        btnTheme.addEventListener('click', () => {
+            playSound();
+            isDarkMode = !isDarkMode;
+            document.body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            btnTheme.innerText = isDarkMode ? '☀️' : '🌙';
+        });
+
+        function showView(viewElement) {
+            viewHome.classList.remove('active');
+            viewDetail.classList.remove('active');
+            viewPractice.classList.remove('active');
+            viewElement.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function initHome() {
+            homeMenu.innerHTML = '';
+            
+            studyData.forEach((section, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'topic-btn';
+                btn.innerText = section.topic;
+                btn.style.backgroundColor = tileColors[index % tileColors.length];
+                
+                btn.onclick = () => {
+                    playSound();
+                    renderDetailView(index);
+                };
+                homeMenu.appendChild(btn);
+            });
+
+            const memoryBtn = document.createElement('button');
+            memoryBtn.className = 'topic-btn';
+            memoryBtn.innerText = "🔥 FINAL MEMORY SHEET";
+            memoryBtn.style.backgroundColor = "#5352ED";
+            memoryBtn.onclick = () => {
+                playSound();
+                renderMemorySheet();
+            };
+            homeMenu.appendChild(memoryBtn);
+
+            const mockBtn = document.createElement('button');
+            mockBtn.className = 'topic-btn';
+            mockBtn.innerText = "📝 PRACTICE MOCK";
+            mockBtn.style.backgroundColor = "#34495e";
+            mockBtn.onclick = () => {
+                playSound();
+                renderPracticeMock();
+            };
+            homeMenu.appendChild(mockBtn);
+            
+            btnBack.style.display = 'none';
+            showView(viewHome);
+        }
+
+        btnBack.onclick = () => {
+            playSound();
+            initHome();
+        };
+
+        function renderDetailView(sectionIndex) {
+            const section = studyData[sectionIndex];
+            let html = `<div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">${section.topic}</div>`;
+
+            section.questions.forEach((q, i) => {
+                html += `
+                <div class="card">
+                    <div class="section-title">Question ${i + 1}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    
+                    <ul class="options-list">
+                        ${q.options.map(opt => `<li>${opt}</li>`).join('')}
+                    </ul>
+
+                    <div class="section-title">✅ ANSWER</div>
+                    <p style="font-weight:bold; color:var(--secondary); margin-bottom: 15px; font-size:1.1rem;">${q.answerText}</p>
+
+                    <div class="section-title">🧠 COMPLETE EXPLANATION</div>
+                    <p>${q.explanation}</p>
+                    
+                    ${q.examples.length > 0 ? `
+                        <div class="section-title">✍️ EXAMPLES</div>
+                        ${q.examples.map(ex => `<p>${ex}</p>`).join('')}
+                    ` : ''}
+
+                    ${q.trick ? `
+                        <div class="exam-trick">
+                            <strong>🎯 EXAM TRICK:</strong><br>
+                            ${q.trick.replace(/\n/g, '<br>')}
+                        </div>
+                    ` : ''}
+
+                    <div class="section-title">⚡ QUICK REVISION</div>
+                    <div class="quick-revision">${q.quickRev}</div>
+                </div>
+                `;
+            });
+
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        function renderMemorySheet() {
+            let html = `
+                <div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">🔥 FINAL MEMORY SHEET</div>
+                <div class="card">
+                    <div class="section-title">1. Grammar Rules</div>
+                    <ul>
+                        <li><strong>Forbid:</strong> Forbid/Forbade સાથે 'from + V1-ing' આવે છે (To ના આવે).</li>
+                        <li><strong>From vs To/Through:</strong> બહારથી અંદર આવવાની દિશા માટે to, towards કે through આવે.</li>
+                        <li><strong>Deal in vs Deal with:</strong> Deal IN એટલે વેપાર કરવો, Deal WITH એટલે સમસ્યાનો ઉકેલ લાવવો.</li>
+                        <li><strong>Divide:</strong> વહેંચણી માટે among/between, ટુકડા કરવા માટે 'into' આવે.</li>
+                        <li><strong>On/In:</strong> જમીન પર (On land), પાણીમાં (In water).</li>
+                        <li><strong>Life vs Lives:</strong> જીવનશૈલી માટે 'life', મૃત્યુ પામેલા વ્યક્તિઓ માટે 'lives'.</li>
+                        <li><strong>Could not vs Did not:</strong> પ્રયાસ કર્યા છતાં કામ ન થયું હોય તો 'could not' આવે.</li>
+                        <li><strong>Imperative Sentences:</strong> છુપો કર્તા 'You' હોય છે, તેથી 'yourself/yourselves' નો ઉપયોગ થાય.</li>
+                    </ul>
+
+                    <div class="section-title" style="margin-top:20px;">2. Vocabulary & Synonyms/Antonyms</div>
+                    <table>
+                        <tr><th>Word</th><th>Meaning</th><th>Synonym</th><th>Antonym</th></tr>
+                        <tr><td>Valor</td><td>વીરતા</td><td>Bravery</td><td>Cowardice</td></tr>
+                        <tr><td>Impede</td><td>અવરોધવું</td><td>Restrain / Hinder</td><td>Expedite</td></tr>
+                        <tr><td>Appreciate</td><td>કદર કરવી</td><td>Acknowledge</td><td>Disparage</td></tr>
+                        <tr><td>Elegant</td><td>સુંદર</td><td>Graceful</td><td>Gauche / Awkward</td></tr>
+                    </table>
+
+                    <div class="section-title" style="margin-top:20px;">3. Cloze Test Vocabulary</div>
+                    <ul>
+                        <li><strong>Tenable:</strong> તાર્કિક અથવા માની શકાય તેવો નિર્ણય.</li>
+                        <li><strong>Supercede:</strong> કોઈ વસ્તુ અગાઉ આવી હોય અને તેની જગ્યા લીધી હોય.</li>
+                        <li><strong>Desultory:</strong> અવ્યવસ્થિત / Haphazard (Negative ટૉન).</li>
+                        <li><strong>Systematic:</strong> વ્યવસ્થિત (Random નો વિરોધી).</li>
+                        <li><strong>Lacuna:</strong> ખામી અથવા ખાલી જગ્યા (Gap).</li>
+                        <li><strong>Circumspect:</strong> શંકાસ્પદ કે સાવચેત રહેવું.</li>
+                        <li><strong>Inexplicable:</strong> જેને સમજાવી ન શકાય તેવું.</li>
+                    </ul>
+                </div>
+            `;
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        let mockQuestions = [];
+        let currentMockIndex = 0;
+        let mockScore = { correct: 0, wrong: 0, skipped: 0 };
+        let answered = false;
+
+        function renderPracticeMock() {
+            mockQuestions = [];
+            studyData.forEach(section => {
+                section.questions.forEach(q => {
+                    mockQuestions.push({
+                        ...q,
+                        topicStr: section.topic
+                    });
+                });
+            });
+
+            currentMockIndex = 0;
+            mockScore = { correct: 0, wrong: 0, skipped: 0 };
+            btnBack.style.display = 'block';
+            
+            showMockQuestion();
+            showView(viewPractice);
+        }
+
+        function showMockQuestion() {
+            if (currentMockIndex >= mockQuestions.length) {
+                showMockResult();
+                return;
+            }
+
+            answered = false;
+            const q = mockQuestions[currentMockIndex];
+            let html = `
+                <div class="card-header" style="font-size:1.2rem; display:flex; justify-content:space-between;">
+                    <span>📝 PRACTICE MOCK</span>
+                    <span>Q ${currentMockIndex + 1} / ${mockQuestions.length}</span>
+                </div>
+                <div class="card">
+                    <div style="font-size: 0.9rem; color: #7f8c8d; margin-bottom: 10px;">${q.topicStr}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    <div id="mock-options-container">
+                        ${q.options.map((opt, i) => `
+                            <button class="mock-option" onclick="selectMockOption(${i}, this)">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <button class="action-btn" style="background-color: #95a5a6;" onclick="skipMockQuestion()" id="btn-skip">Skip Question</button>
+                    <button class="action-btn" style="display:none;" onclick="nextMockQuestion()" id="btn-next">Next Question →</button>
+                    
+                    <div class="result-box" id="mock-result-box"></div>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        function selectMockOption(selectedIndex, btnElement) {
+            if (answered) return;
+            answered = true;
+            playSound();
+            
+            const q = mockQuestions[currentMockIndex];
+            const isCorrect = selectedIndex === q.answerIndex;
+            
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                mockScore.correct++;
+            } else {
+                btnElement.classList.add('wrong');
+                mockScore.wrong++;
+                document.querySelectorAll('.mock-option')[q.answerIndex].classList.add('correct');
+            }
+
+            document.getElementById('btn-skip').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'inline-block';
+
+            const resultBox = document.getElementById('mock-result-box');
+            resultBox.style.display = 'block';
+            resultBox.style.backgroundColor = isCorrect ? 'rgba(46, 204, 113, 0.1)' : 'rgba(231, 76, 60, 0.1)';
+            resultBox.innerHTML = `
+                <strong style="color: ${isCorrect ? 'var(--secondary)' : 'var(--danger)'};">
+                    ${isCorrect ? '✅ CORRECT' : '❌ INCORRECT'}
+                </strong><br><br>
+                <strong>Correct Answer:</strong> ${q.answerText}<br>
+                <p style="margin-top:10px; font-size:0.95rem;">${q.explanation}</p>
+            `;
+        }
+
+        function skipMockQuestion() {
+            playSound();
+            mockScore.skipped++;
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function nextMockQuestion() {
+            playSound();
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function showMockResult() {
+            const total = mockQuestions.length;
+            const percentage = Math.round((mockScore.correct / total) * 100);
+            
+            let html = `
+                <div class="card-header" style="font-size:1.5rem;">🏆 FINAL SCORE</div>
+                <div class="card score-board">
+                    <h2>${percentage}%</h2>
+                    <p style="font-size:1.2rem; margin-bottom:10px;">Total Questions: <strong>${total}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--secondary)">Correct: <strong>${mockScore.correct}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--danger)">Wrong: <strong>${mockScore.wrong}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:20px; color:#95a5a6">Skipped: <strong>${mockScore.skipped}</strong></p>
+                    <button class="action-btn" onclick="initHome()">Return to Home</button>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', initHome);
+
+    </script>
+</body>
+</html>
