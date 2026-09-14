@@ -1,0 +1,1058 @@
+
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPERMOCK - 4</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #e0e6ed;
+            --header-bg: #1a252f;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #333333;
+            --header-bg: #000000;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            padding-top: 60px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        #btn-back {
+            background-color: #95a5a6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #btn-theme {
+            background-color: transparent;
+            font-size: 1.5rem;
+            padding: 5px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .topic-btn {
+            padding: 20px 10px;
+            font-size: 1.1rem;
+            text-align: center;
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s, filter 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            min-height: 100px;
+            word-wrap: break-word;
+        }
+
+        .topic-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .topic-btn:active {
+            transform: scale(0.95);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .options-list li {
+            padding: 10px 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin: 20px 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .exam-trick {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .quick-revision {
+            background-color: var(--bg-color);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .mock-option {
+            width: 100%;
+            text-align: left;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--border);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        .mock-option.correct {
+            border-color: var(--secondary);
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        .mock-option.wrong {
+            border-color: var(--danger);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .action-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .score-board {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .score-board h2 {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--bg-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>SUPERMOCK - 4</div>
+        <div class="header-actions">
+            <button id="btn-back" style="display: none;">← BACK</button>
+            <button id="btn-theme">🌙</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Home View -->
+        <div id="view-home" class="view active">
+            <div class="topic-grid" id="home-menu">
+                <!-- Menu populated by JS -->
+            </div>
+        </div>
+
+        <!-- Detail View -->
+        <div id="view-detail" class="view">
+            <div id="detail-content"></div>
+        </div>
+
+        <!-- Practice Mock View -->
+        <div id="view-practice" class="view">
+            <div id="practice-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- Web Audio API for UI Sounds (Hard Beep) ---
+        let audioCtx;
+
+        function playSound() {
+            try {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (!AudioContext) return;
+                    audioCtx = new AudioContext();
+                }
+
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0, audioCtx.currentTime + 0.1);
+
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.1);
+            } catch(e) {
+                console.log("Audio not supported or blocked", e);
+            }
+        }
+
+        // --- Data Source (Combined PDF & Transcript - 100% Complete) ---
+        const studyData = [
+            {
+                topic: "PHRASE REPLACEMENT (1-6)",
+                questions: [
+                    {
+                        qText: "The internal audit report was circulated to senior managers recently, triggering concerns about financial discrepancies.",
+                        options: [
+                            "A) was circulating to senior managers recently",
+                            "B) is circulated to senior managers recently",
+                            "C) has been circulated to senior managers recently",
+                            "D) had been circulated to senior managers recently",
+                            "E) No replacement required"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) has been circulated to senior managers recently",
+                        explanation: "Transcript મુજબ, વાક્યમાં 'recently' (હમણાં જ/હાલ-ફિલહાલમાં) શબ્દનો ઉપયોગ થયો છે. 'Recently', 'lately', 'so far' જેવા શબ્દો દર્શાવે છે કે કાર્ય વર્તમાન (Present) સાથે સંબંધિત છે. 'was circulated' (Past) ખોટું છે. તેથી 'has been circulated' (Present Perfect) સાચો જવાબ છે.",
+                        examples: [
+                            "❌ The report was circulated recently.",
+                            "✅ The report has been circulated recently."
+                        ],
+                        trick: "Recently/Lately = Present Perfect Tense.",
+                        quickRev: "Use Present Perfect with 'recently'."
+                    },
+                    {
+                        qText: "The stranger returned the wallet to the man; he shall keep it.",
+                        options: [
+                            "A) he should keep it",
+                            "B) he could keep it",
+                            "C) he could have kept it",
+                            "D) he should have kept it",
+                            "E) No replacement required"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) he could have kept it",
+                        explanation: "Transcript મુજબ, 'shall/should' એ સલાહ કે નૈતિકતા દર્શાવે છે (જે અહીં ખોટું છે કારણ કે પર્સ પાછું આપી દીધું છે). 'could' એ ભવિષ્યની શક્યતા દર્શાવે છે. પરંતુ, જ્યારે ભૂતકાળમાં કોઈ કાર્ય કરવાની ક્ષમતા હતી પણ કર્યું નહિ (તેણે પર્સ પાછું આપ્યું, પણ ઈચ્છતો હોત તો રાખી શકતો હતો), ત્યારે 'could have + V3' નો ઉપયોગ થાય છે. તેથી 'could have kept it' સાચું છે.",
+                        examples: [
+                            "✅ He could have passed the exam. (પાસ થઈ શકતો હતો, પણ થયો નહિ)"
+                        ],
+                        trick: "Could have + V3 = ભૂતકાળમાં ક્ષમતા હતી પણ કાર્ય ન કર્યું (ઈમેજિનેશન).",
+                        quickRev: "Could have + V3 indicates an unfulfilled past possibility."
+                    },
+                    {
+                        qText: "Despite its transparent image, the organization faces criticism for hiding but proactively sharing information.",
+                        options: [
+                            "A) hiding but proactive sharing information",
+                            "B) hiding and selectively sharing information",
+                            "C) hiding but proactive share information",
+                            "D) hide and selectively share information",
+                            "E) No replacement required"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) hiding and selectively sharing information",
+                        explanation: "Transcript મુજબ, 'Despite' પછી વિરોધાભાસ દર્શાવવામાં આવે છે. જો સંગઠનની છબી પારદર્શક (Positive) હોય, તો આગળનું વાક્ય નકારાત્મક (Negative) હોવું જોઈએ. 'Proactively sharing' (સક્રિયપણે વહેંચવું) એ સકારાત્મક કાર્ય છે. તેથી 'selectively sharing' (પસંદગીપૂર્વક/અડધી-પડધી માહિતી વહેંચવી) એ નકારાત્મક અર્થ આપે છે જે અહીં બંધબેસે છે.",
+                        examples: [],
+                        trick: "Despite = Positive vs Negative. Hiding (Negative) and Selectively sharing (Negative).",
+                        quickRev: "Selectively sharing fits the negative context alongside 'hiding'."
+                    },
+                    {
+                        qText: "No sooner did he entered the premises than the alarm went off.",
+                        options: [
+                            "A) No sooner did he enter",
+                            "B) No sooner does he enter",
+                            "C) No sooner had he enter",
+                            "D) No sooner he entered",
+                            "E) No replacement required"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) No sooner did he enter",
+                        explanation: "Transcript મુજબ, 'No sooner' થી શરૂ થતા વાક્યોમાં Inversion થાય છે (પહેલા Helping Verb, પછી Subject). વાક્ય ભૂતકાળમાં ('went off') હોવાથી 'did' આવશે. અને 'did' સાથે હંમેશા ક્રિયાપદનું મૂળ રૂપ (Base Form - enter) આવે છે. તેથી 'did he enter' સાચું છે.",
+                        examples: [
+                            "❌ No sooner did he entered...",
+                            "✅ No sooner did he enter..."
+                        ],
+                        trick: "No sooner + did + Subject + V1 (Base form).",
+                        quickRev: "Use base form (V1) after 'did'."
+                    },
+                    {
+                        qText: "The company's latest policy aimed at boosting employee productivity, but instead, it sparked resentment, dampened morale, and inspired dissatisfaction.",
+                        options: [
+                            "A) provoked dissatisfaction",
+                            "B) encouraged dissatisfaction",
+                            "C) motivated dissatisfaction",
+                            "D) mixed emotions",
+                            "E) No replacement required"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) provoked dissatisfaction",
+                        explanation: "Transcript મુજબ, 'inspired', 'encouraged' અને 'motivated' એ સકારાત્મક (Positive) શબ્દો છે, જે 'dissatisfaction' (અસંતોષ - Negative) સાથે વાપરી શકાય નહિ. અસંતોષ પેદા કરવા માટે 'provoked' સાચો શબ્દ છે.",
+                        examples: [],
+                        trick: "Dissatisfaction (Negative) સાથે Provoked (Negative) આવે.",
+                        quickRev: "Provoked fits the negative context of 'dissatisfaction'."
+                    }
+                ]
+            },
+            {
+                topic: "IDIOMS",
+                questions: [
+                    {
+                        qText: "Identify the sentence that correctly explains the idiom: FACE THE MUSIC\nWhen the chairman announced sudden budget cuts, most employees realized they had to face the music.",
+                        options: [
+                            "A) They celebrated the decision.",
+                            "B) They had to face the consequences.",
+                            "C) They ignored the announcement.",
+                            "D) They started a musical event.",
+                            "E) None of the above"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) They had to face the consequences.",
+                        explanation: "Transcript મુજબ, 'Face the music' નો અર્થ 'પરિણામો ભોગવવા માટે તૈયાર રહેવું' (to face the consequences - generally negative) થાય છે.",
+                        examples: [],
+                        trick: "Face the music = Face the consequences.",
+                        quickRev: "Face the music: accept negative consequences."
+                    },
+                    {
+                        qText: "Identify the sentence that correctly explains the idiom: BURY THE HATCHET\nAfter years of rivalry, the two tech giants decided to bury the hatchet.",
+                        options: [
+                            "A) They continued to criticize each other.",
+                            "B) They attempted to conceal their wrongdoings.",
+                            "C) They sorted out their differences and made peace.",
+                            "D) They started a new conflict.",
+                            "E) None of the above"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) They sorted out their differences and made peace.",
+                        explanation: "Transcript મુજબ, 'Hatchet' એટલે હથિયાર. 'Bury the hatchet' એટલે હથિયાર દફનાવી દેવા, મતભેદો દૂર કરવા અને શાંતિ સ્થાપવી (sort out differences).",
+                        examples: [],
+                        trick: "Bury the hatchet = શાંતિ સ્થાપવી / મતભેદ ભૂલવા.",
+                        quickRev: "Bury the hatchet: sort out differences."
+                    },
+                    {
+                        qText: "Identify the sentence that correctly explains the idiom: BACK WITH A BANG\nThe cricketer's performance in the finals proved that he was back with a bang.",
+                        options: [
+                            "A) He retired from the sport completely.",
+                            "B) He returned after an injury/failure and delivered an outstanding performance.",
+                            "C) He caused a loud explosion on the field.",
+                            "D) He failed miserably in the finals.",
+                            "E) None of the above"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) He returned after an injury/failure and delivered an outstanding performance.",
+                        explanation: "Transcript મુજબ, નિષ્ફળતા કે ઇજા પછી શાનદાર વાપસી કરવી તેને 'Back with a bang' કહેવાય છે.",
+                        examples: [],
+                        trick: "Back with a bang = શાનદાર વાપસી.",
+                        quickRev: "Back with a bang: successful return after failure/injury."
+                    },
+                    {
+                        qText: "Identify the sentence that correctly explains the idiom: THROW IN THE TOWEL\nWhen the negotiations failed, the CEO decided to throw in the towel.",
+                        options: [
+                            "A) The CEO refused to give up.",
+                            "B) The CEO decided to fight harder.",
+                            "C) The CEO decided to give up or surrender.",
+                            "D) The CEO asked for a break.",
+                            "E) None of the above"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) The CEO decided to give up or surrender.",
+                        explanation: "Transcript મુજબ, 'Throw in the towel' નો અર્થ 'હાર માની લેવી' અથવા 'શરણાગતિ સ્વીકારવી' (Give up / surrender) થાય છે.",
+                        examples: [],
+                        trick: "Throw in the towel = હાર માનવી.",
+                        quickRev: "Throw in the towel: to give up."
+                    },
+                    {
+                        qText: "Identify the sentence that correctly explains the idiom: BLESSING IN DISGUISE\nThe new policy turned out to be a blessing in disguise.",
+                        options: [
+                            "A) It initially caused inconvenience but later improved efficiency.",
+                            "B) It was a complete disaster from the start.",
+                            "C) It looked good but caused massive losses.",
+                            "D) It was a religious event.",
+                            "E) None of the above"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) It initially caused inconvenience but later improved efficiency.",
+                        explanation: "Transcript મુજબ, 'Blessing in disguise' એટલે એવી બાબત જે શરૂઆતમાં ખરાબ કે પ્રતિકૂળ (unfavorable) લાગે, પણ પાછળથી ફાયદાકારક સાબિત થાય.",
+                        examples: [],
+                        trick: "શરૂઆતમાં ખરાબ, પણ પાછળથી સારું = Blessing in disguise.",
+                        quickRev: "Blessing in disguise: seemingly bad, but actually good."
+                    },
+                    {
+                        qText: "Identify the sentence that correctly explains the idiom: ADD FUEL TO THE FIRE\nThe minister's statement on the crisis only added fuel to the fire.",
+                        options: [
+                            "A) He helped to calm the situation.",
+                            "B) He provided resources to solve the crisis.",
+                            "C) His words made the already tense situation even worse.",
+                            "D) He lit a campfire.",
+                            "E) None of the above"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) His words made the already tense situation even worse.",
+                        explanation: "Transcript મુજબ, પહેલેથી જ ખરાબ પરિસ્થિતિને વધુ ખરાબ કરવી (aggravate an already worse situation) તેને 'Add fuel to the fire' કહેવાય છે.",
+                        examples: [],
+                        trick: "Add fuel to the fire = ખરાબ પરિસ્થિતિને વધુ ખરાબ કરવી.",
+                        quickRev: "Add fuel to the fire: make a bad situation worse."
+                    },
+                    {
+                        qText: "Identify the sentence that correctly explains the idiom: LET SLEEPING DOGS LIE\nAfter the failure of her first novel, the author decided to let sleeping dogs lie.",
+                        options: [
+                            "A) She began rewriting and publicly criticizing her critics.",
+                            "B) She adopted several stray dogs.",
+                            "C) She decided not to interfere with a situation to avoid causing trouble.",
+                            "D) She forced everyone to talk about her failure.",
+                            "E) None of the above"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) She decided not to interfere with a situation to avoid causing trouble.",
+                        explanation: "Transcript મુજબ, 'Let sleeping dogs lie' એટલે જે વિવાદ શાંત પડી ગયો હોય તેને ફરી ન ઉખેળવો (to leave an inactive situation alone).",
+                        examples: [],
+                        trick: "શાંત વિવાદને ન છંછેડવો = Let sleeping dogs lie.",
+                        quickRev: "Let sleeping dogs lie: do not interfere to avoid trouble."
+                    },
+                    {
+                        qText: "Identify the sentence that correctly explains the idiom: PAY OFF\nThe startup's success story proved that the founders' risky decisions had paid off.",
+                        options: [
+                            "A) The venture collapsed entirely.",
+                            "B) They had to pay all their debts immediately.",
+                            "C) Their hard work yielded a positive and desired result.",
+                            "D) They bribed the officials.",
+                            "E) None of the above"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) Their hard work yielded a positive and desired result.",
+                        explanation: "Transcript મુજબ, 'Paid off' એટલે કોઈ મહેનત કે જોખમનું 'હકારાત્મક અને ઈચ્છિત પરિણામ' મળવું.",
+                        examples: [],
+                        trick: "Paid off = સકારાત્મક પરિણામ મળવું.",
+                        quickRev: "Pay off: yield positive results."
+                    }
+                ]
+            },
+            {
+                topic: "VOCABULARY (ANTONYMS)",
+                questions: [
+                    {
+                        qText: "Find the antonym of the highlighted word: LUCID\nAlthough the initial report was lucid, the subsequent findings were highly confusing.",
+                        options: [
+                            "A) Cogent",
+                            "B) Explicit",
+                            "C) Abstruse",
+                            "D) Terse",
+                            "E) Succinct"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) Abstruse",
+                        explanation: "Transcript મુજબ, 'Lucid' એટલે સ્પષ્ટ (clear). Cogent, Explicit, Terse, Succinct એ બ્રીફ અને ક્લિયર હોવાના સમાનાર્થી છે. 'Abstruse' એટલે સમજવામાં અઘરું (difficult to understand / unclear), જે તેનું Antonym (વિરોધી) છે.",
+                        examples: [],
+                        trick: "Lucid = સ્પષ્ટ. Abstruse = અસ્પષ્ટ / સમજવામાં અઘરું.",
+                        quickRev: "Lucid (Clear) x Abstruse (Unclear)."
+                    },
+                    {
+                        qText: "Find the antonym of the highlighted word: CONCILIATORY\nUnlike her conciliatory predecessors, the newly appointed negotiator took a highly ______ stance.",
+                        options: [
+                            "A) Heinous",
+                            "B) Pusillanimous",
+                            "C) Craven",
+                            "D) Belligerent",
+                            "E) Placatory"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D) Belligerent",
+                        explanation: "Transcript મુજબ, 'Conciliatory' એટલે શાંતિ સ્થાપવાવાળું (Placatory). તેનું વિરોધી 'લડાકુ' કે 'ઝઘડાળુ' થાય. 'Belligerent' (લડાકુ / Bellicose) એ યોગ્ય વિરોધી શબ્દ છે. (Heinous = Hostile દુશ્મનાવટ, પણ Belligerent લડાઈ માટે વધુ યોગ્ય છે).",
+                        examples: [],
+                        trick: "Conciliatory = શાંતિપ્રિય. Belligerent = લડાકુ.",
+                        quickRev: "Conciliatory (Peaceful) x Belligerent (Aggressive)."
+                    },
+                    {
+                        qText: "Find the antonym of the highlighted word: EQUANIMITY\nRepeated criticism eventually caused her customary equanimity to give way to visible ______.",
+                        options: [
+                            "A) Composure",
+                            "B) Placidity",
+                            "C) Serenity",
+                            "D) Restraint",
+                            "E) Agitation"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) Agitation",
+                        explanation: "Transcript મુજબ, 'Equanimity' એટલે શાંતિ (calmness / composure). Composure, Placidity, Serenity, Restraint તેના સમાનાર્થી છે. 'Agitation' (તણાવ / બેચેની / anxiety) એ તેનું Antonym છે.",
+                        examples: [],
+                        trick: "Equanimity = શાંતિ. Agitation = બેચેની/તણાવ.",
+                        quickRev: "Equanimity (Calmness) x Agitation (Anxiety)."
+                    },
+                    {
+                        qText: "Find the antonym of the highlighted word: SPURIOUS\nThe witness's first statement was dismissed as spurious.",
+                        options: [
+                            "A) Fallacious",
+                            "B) Specious",
+                            "C) Dubious",
+                            "D) Fabricated",
+                            "E) Authentic"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) Authentic",
+                        explanation: "Transcript મુજબ, 'Spurious' એટલે નકલી, શંકાસ્પદ કે ધોકો આપવા બનાવેલું (Doubtful/Fake). Fallacious, Specious, Dubious, Fabricated તેના સમાનાર્થી છે. 'Authentic' (અસલી) એ તેનું Antonym છે.",
+                        examples: [],
+                        trick: "Spurious = નકલી. Authentic = અસલી.",
+                        quickRev: "Spurious (Fake) x Authentic (Real)."
+                    }
+                ]
+            },
+            {
+                topic: "INFERENCE BASED QUESTIONS",
+                questions: [
+                    {
+                        qText: "A school introduced a mobile app that allowed parents to check their children's homework. After the app was launched, fewer students failed to submit assignments, but the average marks of the students remained unchanged. Which inference is best supported?",
+                        options: [
+                            "A) The app caused students to perform worse in exams.",
+                            "B) Parents did not use the app effectively.",
+                            "C) Students submitted homework more regularly, but their academic performance did not improve significantly.",
+                            "D) The app was a complete failure.",
+                            "E) None of the above"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) Students submitted homework more regularly, but their academic performance did not improve significantly.",
+                        explanation: "Transcript મુજબ, એપ આવ્યા પછી હોમવર્ક ન આપનાર બાળકોની સંખ્યા ઘટી (એટલે હોમવર્ક વધુ નિયમિત થયું), પણ માર્ક્સ બદલાયા નહિ (એકેડેમિક પરફોર્મન્સ સુધર્યું નહિ). તેથી વિકલ્પ C સાચો છે.",
+                        examples: [],
+                        trick: "ફકરામાં આપેલી બંને બાબતો (Homework વધ્યું, Marks એ જ રહ્યા) જે વિકલ્પમાં હોય તે સાચો.",
+                        quickRev: "Homework submission increased, but grades remained the same."
+                    },
+                    {
+                        qText: "Archaeologists discovered farming tools, grain storage jars, and cooking vessels in an ancient settlement. However, they found no weapons or defensive structures. Which inference is best supported?",
+                        options: [
+                            "A) The inhabitants regularly fought with neighboring tribes.",
+                            "B) The inhabitants imported all their food.",
+                            "C) The settlement was abandoned due to floods.",
+                            "D) The community depended mainly on hunting.",
+                            "E) The settlement probably belonged to a largely peaceful farming community."
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) The settlement probably belonged to a largely peaceful farming community.",
+                        explanation: "Transcript મુજબ, ત્યાંથી ખેતીના ઓજારો અને અનાજ ભરવાના વાસણો મળ્યા (એટલે farming community હતી), અને હથિયારો ન મળ્યા (એટલે peaceful હતી). તેથી વિકલ્પ E યોગ્ય છે.",
+                        examples: [],
+                        trick: "ખેતીના સાધનો = Farming. હથિયાર નહિ = Peaceful.",
+                        quickRev: "No weapons + farming tools = peaceful farming community."
+                    }
+                ]
+            },
+            {
+                topic: "ADVANCED ERROR DETECTION",
+                questions: [
+                    {
+                        qText: "The senator, along with his aides, and despite numerous objections from the opposition, has decided to oppose the new healthcare bill.",
+                        options: [
+                            "A) The senator, along with his aides,",
+                            "B) and despite numerous objections",
+                            "C) from the opposition,",
+                            "D) has decided to oppose",
+                            "E) the new healthcare bill."
+                        ],
+                        answerIndex: 3,
+                        answerText: "D) has decided to oppose",
+                        explanation: "Transcript મુજબ, વિરોધ પક્ષ (opposition) પહેલાથી જ બિલનો વિરોધ (objections) કરી રહ્યો છે. 'Despite' (તેમ છતાં) નો ઉપયોગ દર્શાવે છે કે સેનેટરે વિરોધ પક્ષ કરતા કંઈક 'અલગ' નિર્ણય લીધો હશે. જો વિરોધ પક્ષ પણ બિલનો વિરોધ કરતો હોય અને સેનેટર પણ 'oppose' કરે, તો 'despite' નો અર્થ રહેતો નથી. તેથી અહીં 'oppose' ના બદલે 'support/propose/advocate' આવવું જોઈએ.",
+                        examples: [],
+                        trick: "Context નો ખેલ છે. વિરોધ પક્ષનો વિરોધ હોય, તો 'despite' પછી સમર્થન (support) આવવું જોઈએ.",
+                        quickRev: "Contextual error: 'oppose' contradicts 'despite objections'."
+                    },
+                    {
+                        qText: "Neither the complexity of the experiment nor the limited availability of resources were considered as a valid excuse for the failure.",
+                        options: [
+                            "A) Neither the complexity of the experiment",
+                            "B) nor the limited availability",
+                            "C) of resources were considered",
+                            "D) as a valid excuse for the failure.",
+                            "E) No Error"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) of resources were considered",
+                        explanation: "Transcript મુજબ, 'Neither... nor' માં Verb નજીકના Subject મુજબ લાગે છે. અહીં નજીકનો શબ્દ 'resources' છે, પણ તેની આગળ 'of' preposition છે. Preposition પછી આવતો શબ્દ ક્યારેય Subject હોતો નથી. અસલ Subject 'availability' (Singular) છે, તેથી 'were' ના બદલે 'was' આવશે.",
+                        examples: [
+                            "❌ availability of resources were...",
+                            "✅ availability of resources was..."
+                        ],
+                        trick: "Preposition (of) પહેલાનો શબ્દ (availability) Subject છે, જે એકવચન છે.",
+                        quickRev: "Subject is 'availability' (singular), not 'resources'."
+                    },
+                    {
+                        qText: "The manager was accused for embezzlement and faced a lengthy trial.",
+                        options: [
+                            "A) The manager was",
+                            "B) accused for",
+                            "C) embezzlement and faced",
+                            "D) a lengthy trial.",
+                            "E) No Error"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) accused for",
+                        explanation: "Transcript મુજબ, 'Accused' (આરોપી હોવું) અને 'Acquit' (આરોપમુક્ત થવું) બંને શબ્દો સાથે હંમેશા 'of' preposition આવે છે. 'for' નો ઉપયોગ ખોટો છે.",
+                        examples: [
+                            "❌ accused for theft",
+                            "✅ accused of theft"
+                        ],
+                        trick: "Accused/Acquit + OF.",
+                        quickRev: "Use 'accused of', not 'accused for'."
+                    },
+                    {
+                        qText: "In spite the heavy rain, the match continued without interruption.",
+                        options: [
+                            "A) In spite the heavy rain,",
+                            "B) the match continued",
+                            "C) without",
+                            "D) interruption.",
+                            "E) No Error"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) In spite the heavy rain,",
+                        explanation: "Transcript મુજબ, 'બાવજૂદ' માટે બે જ ફ્રેઝ સાચા છે: 'Despite' (જેની સાથે કોઈ preposition ન આવે) અથવા 'In spite of' (જેની સાથે of ફરજિયાત છે). અહીં 'of' ગાયબ છે, તેથી 'In spite of' આવવું જોઈએ.",
+                        examples: [
+                            "❌ In spite the rain",
+                            "✅ In spite of the rain / Despite the rain"
+                        ],
+                        trick: "In spite + OF. Despite + Nothing.",
+                        quickRev: "'In spite' must be followed by 'of'."
+                    },
+                    {
+                        qText: "By the time the board had convened to discuss the crisis, the impact of the financial downturn had already began to manifest in global markets.",
+                        options: [
+                            "A) By the time the board had convened",
+                            "B) to discuss the crisis,",
+                            "C) the impact of the financial downturn",
+                            "D) had already began to manifest",
+                            "E) No Error"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) By the time the board had convened",
+                        explanation: "Transcript મુજબ, જ્યારે બે ભૂતકાળની ઘટનાઓ બને, ત્યારે જે ઘટના 'પહેલા' બની હોય તેમાં Past Perfect (had + V3) આવે, અને જે 'પછી' બની હોય તેમાં Past Indefinite (V2) આવે. અહીં 'impact શરૂ થઈ ગયો હતો' એ ક્રિયા પહેલા બની છે (had already begun), અને 'બોર્ડની મીટિંગ' પછી મળી છે. તેથી 'had convened' ના બદલે 'convened' (V2) આવશે. (નોંધ: મૂળ વાક્યમાં 'began' લખ્યું હતું જે 'begun' હોવું જોઈએ એવો ઉલ્લેખ સર દ્વારા કરાયો હતો).",
+                        examples: [],
+                        trick: "એક વાક્યમાં બે Past Perfect (had + V3) ક્યારેય ના આવે.",
+                        quickRev: "First action: Past Perfect. Second action: Past Indefinite."
+                    }
+                ]
+            }
+        ];
+
+        // --- Render UI ---
+        const homeMenu = document.getElementById('home-menu');
+        const detailContent = document.getElementById('detail-content');
+        const practiceContent = document.getElementById('practice-content');
+        const viewHome = document.getElementById('view-home');
+        const viewDetail = document.getElementById('view-detail');
+        const viewPractice = document.getElementById('view-practice');
+        const btnBack = document.getElementById('btn-back');
+        const btnTheme = document.getElementById('btn-theme');
+
+        const tileColors = ['#FF4757', '#2ED573', '#1E90FF', '#FFA502', '#9C88FF', '#FF6348'];
+
+        let isDarkMode = false;
+        btnTheme.addEventListener('click', () => {
+            playSound();
+            isDarkMode = !isDarkMode;
+            document.body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            btnTheme.innerText = isDarkMode ? '☀️' : '🌙';
+        });
+
+        function showView(viewElement) {
+            viewHome.classList.remove('active');
+            viewDetail.classList.remove('active');
+            viewPractice.classList.remove('active');
+            viewElement.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function initHome() {
+            homeMenu.innerHTML = '';
+
+            studyData.forEach((section, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'topic-btn';
+                btn.innerText = section.topic;
+                btn.style.backgroundColor = tileColors[index % tileColors.length];
+
+                btn.onclick = () => {
+                    playSound();
+                    renderDetailView(index);
+                };
+                homeMenu.appendChild(btn);
+            });
+
+            const memoryBtn = document.createElement('button');
+            memoryBtn.className = 'topic-btn';
+            memoryBtn.innerText = "🔥 FINAL MEMORY SHEET";
+            memoryBtn.style.backgroundColor = "#5352ED";
+            memoryBtn.onclick = () => {
+                playSound();
+                renderMemorySheet();
+            };
+            homeMenu.appendChild(memoryBtn);
+
+            const mockBtn = document.createElement('button');
+            mockBtn.className = 'topic-btn';
+            mockBtn.innerText = "📝 PRACTICE MOCK";
+            mockBtn.style.backgroundColor = "#34495e";
+            mockBtn.onclick = () => {
+                playSound();
+                renderPracticeMock();
+            };
+            homeMenu.appendChild(mockBtn);
+
+            btnBack.style.display = 'none';
+            showView(viewHome);
+        }
+
+        btnBack.onclick = () => {
+            playSound();
+            initHome();
+        };
+
+        function renderDetailView(sectionIndex) {
+            const section = studyData[sectionIndex];
+            let html = `<div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">${section.topic}</div>`;
+
+            section.questions.forEach((q, i) => {
+                html += `
+                <div class="card">
+                    <div class="section-title">Question ${i + 1}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    
+                    <ul class="options-list">
+                        ${q.options.map(opt => `<li>${opt}</li>`).join('')}
+                    </ul>
+
+                    <div class="section-title">✅ ANSWER</div>
+                    <p style="font-weight:bold; color:var(--secondary); margin-bottom: 15px; font-size:1.1rem;">${q.answerText}</p>
+
+                    <div class="section-title">🧠 COMPLETE EXPLANATION</div>
+                    <p>${q.explanation}</p>
+                    
+                    ${q.examples.length > 0 ? `
+                        <div class="section-title">✍️ EXAMPLES</div>
+                        ${q.examples.map(ex => `<p>${ex}</p>`).join('')}
+                    ` : ''}
+
+                    ${q.trick ? `
+                        <div class="exam-trick">
+                            <strong>🎯 EXAM TRICK:</strong><br>
+                            ${q.trick.replace(/\n/g, '<br>')}
+                        </div>
+                    ` : ''}
+
+                    <div class="section-title">⚡ QUICK REVISION</div>
+                    <div class="quick-revision">${q.quickRev}</div>
+                </div>
+                `;
+            });
+
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        function renderMemorySheet() {
+            let html = `
+                <div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">🔥 FINAL MEMORY SHEET</div>
+                <div class="card">
+                    <div class="section-title">1. Grammar Rules</div>
+                    <ul>
+                        <li><strong>Forbid:</strong> Forbid/Forbade સાથે 'from + V1-ing' આવે છે (To ના આવે).</li>
+                        <li><strong>From vs To/Through:</strong> બહારથી અંદર આવવાની દિશા માટે to, towards કે through આવે.</li>
+                        <li><strong>Deal in vs Deal with:</strong> Deal IN એટલે વેપાર કરવો, Deal WITH એટલે સમસ્યાનો ઉકેલ લાવવો.</li>
+                        <li><strong>Divide:</strong> વહેંચણી માટે among/between, ટુકડા કરવા માટે 'into' આવે.</li>
+                        <li><strong>On/In:</strong> જમીન પર (On land), પાણીમાં (In water).</li>
+                        <li><strong>Life vs Lives:</strong> જીવનશૈલી માટે 'life', મૃત્યુ પામેલા વ્યક્તિઓ માટે 'lives'.</li>
+                        <li><strong>Could not vs Did not:</strong> પ્રયાસ કર્યા છતાં કામ ન થયું હોય તો 'could not' આવે.</li>
+                        <li><strong>Imperative Sentences:</strong> છુપો કર્તા 'You' હોય છે, તેથી 'yourself/yourselves' નો ઉપયોગ થાય.</li>
+                        <li><strong>Tense with 'Recently':</strong> Recently, lately, so far સાથે Present Perfect Tense નો ઉપયોગ થાય છે.</li>
+                        <li><strong>Could have + V3:</strong> ભૂતકાળની શક્યતા જે પૂરી ન થઈ હોય (અફસોસ કે ઈમેજિનેશન).</li>
+                        <li><strong>No Sooner:</strong> No sooner + did + Subject + V1 (Base form) + than.</li>
+                        <li><strong>Accused / Acquit:</strong> આ બંને શબ્દો સાથે 'of' preposition આવે છે.</li>
+                        <li><strong>Despite vs In spite of:</strong> Despite સાથે કોઈ preposition ન આવે, In spite સાથે 'of' આવે.</li>
+                    </ul>
+
+                    <div class="section-title" style="margin-top:20px;">2. Vocabulary & Synonyms/Antonyms</div>
+                    <table>
+                        <tr><th>Word</th><th>Meaning</th><th>Synonym</th><th>Antonym</th></tr>
+                        <tr><td>Valor</td><td>વીરતા</td><td>Bravery</td><td>Cowardice</td></tr>
+                        <tr><td>Impede</td><td>અવરોધવું</td><td>Restrain / Hinder</td><td>Expedite</td></tr>
+                        <tr><td>Appreciate</td><td>કદર કરવી</td><td>Acknowledge</td><td>Disparage</td></tr>
+                        <tr><td>Elegant</td><td>સુંદર</td><td>Graceful</td><td>Gauche / Awkward</td></tr>
+                        <tr><td>Lucid</td><td>સ્પષ્ટ</td><td>Clear / Cogent</td><td>Abstruse</td></tr>
+                        <tr><td>Conciliatory</td><td>શાંતિપ્રિય</td><td>Placatory</td><td>Belligerent</td></tr>
+                        <tr><td>Equanimity</td><td>શાંતિ</td><td>Composure</td><td>Agitation</td></tr>
+                        <tr><td>Spurious</td><td>નકલી / શંકાસ્પદ</td><td>Fallacious / Fake</td><td>Authentic</td></tr>
+                    </table>
+
+                    <div class="section-title" style="margin-top:20px;">3. Idioms Recap</div>
+                    <ul>
+                        <li><strong>Face the music:</strong> પરિણામો ભોગવવા તૈયાર રહેવું.</li>
+                        <li><strong>Bury the hatchet:</strong> મતભેદ દૂર કરી શાંતિ સ્થાપવી.</li>
+                        <li><strong>Back with a bang:</strong> નિષ્ફળતા/ઇજા બાદ શાનદાર વાપસી.</li>
+                        <li><strong>Throw in the towel:</strong> હાર માની લેવી કે શરણાગતિ સ્વીકારવી.</li>
+                        <li><strong>Blessing in disguise:</strong> શરૂઆતમાં ખરાબ, પણ પાછળથી ફાયદાકારક સાબિત થવું.</li>
+                        <li><strong>Add fuel to the fire:</strong> ખરાબ પરિસ્થિતિને વધુ વણસાવવી.</li>
+                        <li><strong>Let sleeping dogs lie:</strong> શાંત પડેલા વિવાદને ન છંછેડવો.</li>
+                        <li><strong>Pay off:</strong> મહેનત કે જોખમનું સકારાત્મક પરિણામ મળવું.</li>
+                    </ul>
+                </div>
+            `;
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        let mockQuestions = [];
+        let currentMockIndex = 0;
+        let mockScore = { correct: 0, wrong: 0, skipped: 0 };
+        let answered = false;
+
+        function renderPracticeMock() {
+            mockQuestions = [];
+            studyData.forEach(section => {
+                section.questions.forEach(q => {
+                    mockQuestions.push({
+                        ...q,
+                        topicStr: section.topic
+                    });
+                });
+            });
+
+            currentMockIndex = 0;
+            mockScore = { correct: 0, wrong: 0, skipped: 0 };
+            btnBack.style.display = 'block';
+
+            showMockQuestion();
+            showView(viewPractice);
+        }
+
+        function showMockQuestion() {
+            if (currentMockIndex >= mockQuestions.length) {
+                showMockResult();
+                return;
+            }
+
+            answered = false;
+            const q = mockQuestions[currentMockIndex];
+            let html = `
+                <div class="card-header" style="font-size:1.2rem; display:flex; justify-content:space-between;">
+                    <span>📝 PRACTICE MOCK</span>
+                    <span>Q ${currentMockIndex + 1} / ${mockQuestions.length}</span>
+                </div>
+                <div class="card">
+                    <div style="font-size: 0.9rem; color: #7f8c8d; margin-bottom: 10px;">${q.topicStr}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    <div id="mock-options-container">
+                        ${q.options.map((opt, i) => `
+                            <button class="mock-option" onclick="selectMockOption(${i}, this)">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <button class="action-btn" style="background-color: #95a5a6;" onclick="skipMockQuestion()" id="btn-skip">Skip Question</button>
+                    <button class="action-btn" style="display:none;" onclick="nextMockQuestion()" id="btn-next">Next Question →</button>
+                    
+                    <div class="result-box" id="mock-result-box"></div>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        function selectMockOption(selectedIndex, btnElement) {
+            if (answered) return;
+            answered = true;
+            playSound();
+
+            const q = mockQuestions[currentMockIndex];
+            const isCorrect = selectedIndex === q.answerIndex;
+
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                mockScore.correct++;
+            } else {
+                btnElement.classList.add('wrong');
+                mockScore.wrong++;
+                document.querySelectorAll('.mock-option')[q.answerIndex].classList.add('correct');
+            }
+
+            document.getElementById('btn-skip').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'inline-block';
+
+            const resultBox = document.getElementById('mock-result-box');
+            resultBox.style.display = 'block';
+            resultBox.style.backgroundColor = isCorrect ? 'rgba(46, 204, 113, 0.1)' : 'rgba(231, 76, 60, 0.1)';
+            resultBox.innerHTML = `
+                <strong style="color: ${isCorrect ? 'var(--secondary)' : 'var(--danger)'};">
+                    ${isCorrect ? '✅ CORRECT' : '❌ INCORRECT'}
+                </strong><br><br>
+                <strong>Correct Answer:</strong> ${q.answerText}<br>
+                <p style="margin-top:10px; font-size:0.95rem;">${q.explanation}</p>
+            `;
+        }
+
+        function skipMockQuestion() {
+            playSound();
+            mockScore.skipped++;
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function nextMockQuestion() {
+            playSound();
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function showMockResult() {
+            const total = mockQuestions.length;
+            const percentage = Math.round((mockScore.correct / total) * 100);
+
+            let html = `
+                <div class="card-header" style="font-size:1.5rem;">🏆 FINAL SCORE</div>
+                <div class="card score-board">
+                    <h2>${percentage}%</h2>
+                    <p style="font-size:1.2rem; margin-bottom:10px;">Total Questions: <strong>${total}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--secondary)">Correct: <strong>${mockScore.correct}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--danger)">Wrong: <strong>${mockScore.wrong}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:20px; color:#95a5a6">Skipped: <strong>${mockScore.skipped}</strong></p>
+                    <button class="action-btn" onclick="initHome()">Return to Home</button>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', initHome);
+
+    </script>
+</body>
+</html>
