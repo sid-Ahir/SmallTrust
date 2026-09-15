@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPERMOCK - 6</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #e0e6ed;
+            --header-bg: #1a252f;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --border: #333333;
+            --header-bg: #000000;
+            --header-text: #ffffff;
+            --shadow: 0 4px 6px rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            padding-top: 60px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        #btn-back {
+            background-color: #95a5a6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #btn-theme {
+            background-color: transparent;
+            font-size: 1.5rem;
+            padding: 5px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .topic-btn {
+            padding: 20px 10px;
+            font-size: 1.1rem;
+            text-align: center;
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s, filter 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            min-height: 100px;
+            word-wrap: break-word;
+        }
+
+        .topic-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .topic-btn:active {
+            transform: scale(0.95);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .options-list li {
+            padding: 10px 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin: 20px 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .exam-trick {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .quick-revision {
+            background-color: var(--bg-color);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .mock-option {
+            width: 100%;
+            text-align: left;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--border);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        .mock-option.correct {
+            border-color: var(--secondary);
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        .mock-option.wrong {
+            border-color: var(--danger);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .action-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .score-board {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .score-board h2 {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--bg-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>SUPERMOCK - 6</div>
+        <div class="header-actions">
+            <button id="btn-back" style="display: none;">← BACK</button>
+            <button id="btn-theme">🌙</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Home View -->
+        <div id="view-home" class="view active">
+            <div class="topic-grid" id="home-menu">
+                <!-- Menu populated by JS -->
+            </div>
+        </div>
+
+        <!-- Detail View -->
+        <div id="view-detail" class="view">
+            <div id="detail-content"></div>
+        </div>
+
+        <!-- Practice Mock View -->
+        <div id="view-practice" class="view">
+            <div id="practice-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- Web Audio API for UI Sounds (Hard Beep) ---
+        let audioCtx;
+
+        function playSound() {
+            try {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (!AudioContext) return;
+                    audioCtx = new AudioContext();
+                }
+
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0, audioCtx.currentTime + 0.1);
+
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.1);
+            } catch(e) {
+                console.log("Audio not supported or blocked", e);
+            }
+        }
+
+        // --- Data Source (Based strictly on Transcript) ---
+        const studyData = [
+            {
+                topic: "ATTITUDE & BEHAVIOR (VOCABULARY)",
+                questions: [
+                    {
+                        qText: "Although the proposed policy promised immediate economic gains, A carefully examined its hidden costs, questioned its long-term viability, and refused to endorse it without compelling evidence. What most appropriately describes the attitude of person A?",
+                        options: [
+                            "A) Credulous",
+                            "B) Complacent",
+                            "C) Impetuous",
+                            "D) Dogmatic",
+                            "E) Skeptical"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) Skeptical",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, વ્યક્તિ 'A' સરળતાથી વિશ્વાસ નથી કરતો, પુરાવા માંગે છે અને સવાલો ઉઠાવે છે. જે વ્યક્તિ સરળતાથી વાત ન માને અને શંકા (doubt) કરે તેને 'Skeptical' (Dubious) કહેવાય. (Credulous=સરળતાથી માની જનાર, Complacent=લાપરવાહ/Self-satisfied, Impetuous=ઉતાવળિયો, Dogmatic=પોતાનો જ મત માનનાર).",
+                        examples: [],
+                        trick: "પુરાવા માંગે અને શંકા કરે = Skeptical.",
+                        quickRev: "Skeptical = Doubtful, not easily convinced."
+                    },
+                    {
+                        qText: "Whenever disagreements arise within the department, B deliberately intensifies them by spreading provocative rumors and encouraging colleagues to confront one another. What most appropriately describes the attitude of person B?",
+                        options: [
+                            "A) Conciliatory",
+                            "B) Impartial",
+                            "C) Reticent",
+                            "D) Magnanimous",
+                            "E) Incendiary"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) Incendiary",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, વ્યક્તિ 'B' જાણીજોઈને વિવાદ વધારે છે, અફવાઓ ફેલાવે છે અને લોકોને લડાવે છે. જે વ્યક્તિ આગ લગાવવાનું કે ઉશ્કેરવાનું કામ કરે તેને 'Incendiary' (Provocative/Instigating) કહેવાય. (Conciliatory=શાંતિ સ્થાપનાર, Reticent=શાંત રહેનાર, Magnanimous=ઉદાર).",
+                        examples: [],
+                        trick: "વિવાદ વધારે અને ઉશ્કેરે = Incendiary.",
+                        quickRev: "Incendiary = Provocative or instigating conflict."
+                    },
+                    {
+                        qText: "D frequently praises senior officials, agrees with all their opinions, and offers excessive compliments to gain professional advantages. What most appropriately describes the attitude of person D?",
+                        options: [
+                            "A) Obsequious",
+                            "B) Intransigent",
+                            "C) Candid",
+                            "D) Belligerent",
+                            "E) Laconic"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) Obsequious",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, વ્યક્તિ 'D' ફાયદો મેળવવા માટે ઉપરી અધિકારીઓની અતિશય પ્રશંસા કરે છે અને તેમની દરેક વાતમાં સહમત થાય છે. આવા ચાપલૂસ (Sycophant) પ્રકારના વ્યક્તિને 'Obsequious' કહેવાય. (Intransigent=બળવાખોર, Candid=સ્પષ્ટવક્તા, Belligerent=લડાકુ, Laconic=ઓછું બોલનાર).",
+                        examples: [],
+                        trick: "વધુ પડતી પ્રશંસા અને ચાપલૂસી = Obsequious.",
+                        quickRev: "Obsequious = Obedient or attentive to an excessive or servile degree (Sycophant)."
+                    }
+                ]
+            },
+            {
+                topic: "ERROR DETECTION",
+                questions: [
+                    {
+                        qText: "The research team presented several groundbreaking theories, and these theory have already begun to reshape our understanding of the universe.",
+                        options: [
+                            "A) The research team presented",
+                            "B) several groundbreaking theories,",
+                            "C) and these theory have already begun",
+                            "D) to reshape our understanding of the universe.",
+                            "E) No Error"
+                        ],
+                        answerIndex: 2,
+                        answerText: "C) and these theory have already begun",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, 'these' એ બહુવચન (plural) દર્શાવે છે. અહીં 'theories' ની વાત થઈ રહી છે, તેથી 'these theory' ની જગ્યાએ બહુવચન રૂપ 'these theories' આવવું જોઈએ.",
+                        examples: [
+                            "❌ these theory",
+                            "✅ these theories"
+                        ],
+                        trick: "These સાથે Plural Noun આવે.",
+                        quickRev: "Use 'these theories' instead of 'these theory'."
+                    },
+                    {
+                        qText: "Few people seldom use CD players nowadays as streaming services and digital downloads have become the preferred methods.",
+                        options: [
+                            "A) Few people seldom use",
+                            "B) CD players nowadays as streaming",
+                            "C) services and digital downloads",
+                            "D) have become the preferred methods.",
+                            "E) No Error"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) Few people seldom use",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, 'Few' નો અર્થ 'ના બરાબર' (negative) થાય છે અને 'seldom' નો અર્થ પણ 'લગભગ ક્યારેય નહિ' (negative) થાય છે. અંગ્રેજીમાં બે નકારાત્મક શબ્દો (double negatives) એકસાથે વપરાતા નથી. વાક્યનો અર્થ છે કે આજકાલ લોકો સીડી પ્લેયર ઓછું વાપરે છે (negative tone). તેથી 'seldom' શબ્દને દૂર કરવો જોઈએ. (અથવા 'Few' ની આગળ 'A' લગાવીને 'A few' - positive બનાવી શકાય, પણ વાક્યનો ટોન negative હોવાથી 'seldom' હટાવવું જ યોગ્ય છે).",
+                        examples: [
+                            "❌ I do not have no money.",
+                            "✅ I have no money."
+                        ],
+                        trick: "Double Negatives (Few + Seldom) એકસાથે ના આવે.",
+                        quickRev: "Remove 'seldom' to avoid a double negative with 'few'."
+                    },
+                    {
+                        qText: "Her explanation was as clear crystal, making it easy for everyone to grasp even the most complex concepts.",
+                        options: [
+                            "A) Her explanation was as clear crystal,",
+                            "B) making it easy for everyone",
+                            "C) to grasp even the most",
+                            "D) complex concepts.",
+                            "E) No Error"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) Her explanation was as clear crystal,",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, જ્યારે બે વસ્તુઓની સમાનતા (similarity) દર્શાવવાની હોય, ત્યારે 'as + adjective + as' નું માળખું વપરાય છે. અહી 'as clear as crystal' હોવું જોઈએ. બીજો રસ્તો એ છે કે 'clear like crystal' વાપરી શકાય, પણ મૂળ વાક્યમાં એક 'as' ખૂટે છે.",
+                        examples: [
+                            "❌ You are as beautiful moon.",
+                            "✅ You are as beautiful as moon."
+                        ],
+                        trick: "સમાનતા દર્શાવવા 'As + Adjective + As' નો ઉપયોગ કરો.",
+                        quickRev: "Use 'as clear as crystal'."
+                    },
+                    {
+                        qText: "The scientists have been monitoring the endangered dolphins for three years, documenting their migration patterns, feeding habits, and responses to climate change in coastal water.",
+                        options: [
+                            "A) The scientists have been monitoring",
+                            "B) documenting their migration patterns,",
+                            "C) feeding habits, and responses",
+                            "D) to climate change in coastal water.",
+                            "E) No Error"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D) to climate change in coastal water.",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, સમુદ્ર કે મોટા જળાશયોની વાત થતી હોય ત્યારે તેને 'waters' (બહુવચન) કહેવાય છે, 'water' નહિ. અહી 'coastal waters' (દરિયાકાંઠાના પાણી/સમુદ્ર) સાચો શબ્દ છે.",
+                        examples: [],
+                        trick: "સમુદ્ર કે મોટા જળાશય માટે 'waters' નો ઉપયોગ થાય છે.",
+                        quickRev: "Use 'coastal waters' instead of 'coastal water'."
+                    },
+                    {
+                        qText: "All bridges damaged during the devastating floods have been carefully inspected, and authorities will reopen them only after necessary repairs are completed.",
+                        options: [
+                            "A) All bridges damaged during",
+                            "B) the devastating floods have been",
+                            "C) carefully inspected, and authorities",
+                            "D) will reopen them only after necessary repairs.",
+                            "E) No Error"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) All bridges damaged during",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, જો 'All' પછી આવતું નાઉન ચોક્કસ (definite) હોય (જેમ કે અહી પૂરથી નુકસાન પામેલા ચોક્કસ પુલોની વાત છે), તો તેની આગળ 'the' લગાડવો ફરજિયાત છે. 'All the bridges' આવવું જોઈએ.",
+                        examples: [
+                            "✅ All apples are tasty. (સામાન્ય વાત)",
+                            "❌ All apples in this basket are tasty.",
+                            "✅ All the apples in this basket are tasty. (ચોક્કસ)"
+                        ],
+                        trick: "All + The + Definite Noun.",
+                        quickRev: "Use 'All the bridges' because they are specific."
+                    }
+                ]
+            },
+            {
+                topic: "ERROR DETECTION (MULTIPLE PARTS)",
+                questions: [
+                    {
+                        qText: "Five persons killed and a baby injured in a fatal road accident involving a speeding truck.",
+                        options: [
+                            "A) Five persons killed",
+                            "B) and a baby injured",
+                            "C) in a fatal road accident",
+                            "D) involving a speeding truck."
+                        ],
+                        answerIndex: 0,
+                        answerText: "A and B (Five persons were killed... a baby was injured)",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, અહી 5 લોકોએ કોઈને માર્યા નથી, પણ તેઓ પોતે મૃત્યુ પામ્યા છે (Receive action). તે જ રીતે, બાળકે કોઈને ઈજા પહોંચાડી નથી, પણ તેને ઈજા થઈ છે. આથી બંને ક્રિયાઓ Passive Voice માં હોવી જોઈએ. 'Five persons were killed' અને 'a baby was injured' સાચું છે.",
+                        examples: [
+                            "❌ Ravana killed. (રાવણે કોઈને માર્યો)",
+                            "✅ Ravana was killed. (રાવણ મરાયો - Passive Voice)"
+                        ],
+                        trick: "જો subject પર ક્રિયા થતી હોય તો Passive (was/were + V3) વાપરો.",
+                        quickRev: "Requires passive voice: were killed, was injured."
+                    },
+                    {
+                        qText: "The committee, which comprises of experts from various fields, aim to bring about significant changes that will pervade through the entire organization.",
+                        options: [
+                            "A) The committee, which comprises of",
+                            "B) experts from various fields, aim to",
+                            "C) bring about significant changes that",
+                            "D) will pervade through the entire organization."
+                        ],
+                        answerIndex: 3,
+                        answerText: "A, B, and D",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ અહી ત્રણ ભૂલો છે:\n1. 'Comprise' પછી ક્યારેય 'of' આવતો નથી (A).\n2. 'Committee' એકવચન હોવાથી 'aim' ની જગ્યાએ 'aims' આવશે (B).\n3. 'Pervade' એક transitive verb છે, તેથી તેની પાછળ 'through' preposition ન આવે (D).",
+                        examples: [],
+                        trick: "Comprise = Consist of (No 'of' after comprise). Pervade = NO preposition.",
+                        quickRev: "Errors: 'comprise of', 'aim' (plural verb for singular subject), 'pervade through'."
+                    },
+                    {
+                        qText: "Even though he was usually a good-mannered person, he got nervous and appeared anxiously when it was his turn to speak in the front of the crowd.",
+                        options: [
+                            "A) Even though he was usually a good-mannered person",
+                            "B) he got nervous and appeared anxiously",
+                            "C) when it was his turn",
+                            "D) to speak in the front of the crowd."
+                        ],
+                        answerIndex: 1,
+                        answerText: "A, B, and D",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ:\n1. (A) માં 'good-mannered' ના બદલે 'well-mannered' આવે (Good=Adjective, Well=Adverb).\n2. (B) માં 'appeared anxiously' માં anxiously (adverb) ના બદલે 'anxious' (adjective) આવે, કારણ કે તે પ્રોનાઉન 'he' ની વિશેષતા દર્શાવે છે.\n3. (D) માં 'in the front of' (લાઈનમાં સૌથી આગળ) ના બદલે 'in front of' (ભીડની સામે) આવે.",
+                        examples: [],
+                        trick: "Well-mannered. Appeared anxious. In front of.",
+                        quickRev: "Errors: good-mannered, anxiously, in the front of."
+                    },
+                    {
+                        qText: "He need comes on time and dare fights with me so that he can achieve all that he had hoped for.",
+                        options: [
+                            "A) He need comes on time",
+                            "B) and dare fights with me",
+                            "C) so that he can achieve",
+                            "D) all that he had hoped for."
+                        ],
+                        answerIndex: 0,
+                        answerText: "A, B, and D",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ:\n1. (A & B) Need અને Dare અહી મોડલ (Models) તરીકે વપરાયા છે, તેથી તેમની પાછળ ક્રિયાપદનું મૂળ રૂપ (Base Form) આવે (comes/fights નહિ, come/fight આવે).\n2. (D) વાક્ય વર્તમાનકાળમાં છે, તેથી પાછળ Past Perfect (had hoped) ના આવી શકે, ત્યાં 'has hoped' આવવું જોઈએ.",
+                        examples: [
+                            "❌ He need comes.",
+                            "✅ He need come."
+                        ],
+                        trick: "Need/Dare (as models) + Base form. Tense consistency.",
+                        quickRev: "Errors: comes (come), fights (fight), had hoped (has hoped)."
+                    },
+                    {
+                        qText: "Despite feeling under the weather and longing for a day of rest, he will work late into the night because the project deadline was looming, ensuring everything was completed to highest standards.",
+                        options: [
+                            "A) Despite feeling under the weather",
+                            "B) he will work late into the night",
+                            "C) because the project deadline was looming",
+                            "D) ensuring everything was completed to highest standards."
+                        ],
+                        answerIndex: 1,
+                        answerText: "B and D",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ:\n1. (B) વાક્યનો કાળ ભૂતકાળ ('was looming', 'was completed') છે, તેથી 'will' ના બદલે 'would' આવવું જોઈએ.\n2. (D) 'highest' એ Superlative Degree છે, તેથી તેની આગળ 'the' લાગવો ફરજિયાત છે ('to the highest standards').",
+                        examples: [],
+                        trick: "Past tense consistency (will -> would). Superlative + The.",
+                        quickRev: "Errors: will (would), highest (the highest)."
+                    }
+                ]
+            },
+            {
+                topic: "CLOZE TEST",
+                questions: [
+                    {
+                        qText: "Public institutions increasingly rely on algorithms to allocate benefits... Although such systems can accelerate decision-making, they may also ______ prejudices embedded within historical data.",
+                        options: [
+                            "A) Extirpate",
+                            "B) Ameliorate",
+                            "C) Repudiate",
+                            "D) Circumscribe",
+                            "E) Perpetuate"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) Perpetuate",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, Although (જોકે) દર્શાવે છે કે વાક્યના બીજા ભાગમાં નકારાત્મક બાબત હશે. એલ્ગોરિધમ ડેટામાં રહેલા ભેદભાવને 'લંબા સમય સુધી ચાલુ રાખી શકે છે' (Perpetuate). (Extirpate=નાશ કરવો, Ameliorate=સુધારવું, Repudiate=નકારવું એ બધું ભેદભાવ ઘટાડવાની વાત કરે છે જે અહી બંધ બેસતું નથી).",
+                        examples: [],
+                        trick: "ભેદભાવ ચાલુ રહે = Perpetuate.",
+                        quickRev: "Perpetuate = Make (something, typically an undesirable situation or an unfounded belief) continue indefinitely."
+                    },
+                    {
+                        qText: "Officials sometimes defend algorithmic opacity as technically unavoidable, but secrecy can ______ public confidence.",
+                        options: [
+                            "A) Consolidate",
+                            "B) Vindicate",
+                            "C) Galvanize",
+                            "D) Undermine",
+                            "E) Resuscitate"
+                        ],
+                        answerIndex: 3,
+                        answerText: "D) Undermine",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, ગુપ્તતા (secrecy) ને કારણે લોકોનો વિશ્વાસ 'ઘટી' શકે છે અથવા 'નબળો' પડી શકે છે. 'Undermine' નો અર્થ 'નબળું પાડવું' થાય છે. (Consolidate/Galvanize=મજબૂત કરવું).",
+                        examples: [],
+                        trick: "ગુપ્તતાથી વિશ્વાસ ઘટે = Undermine.",
+                        quickRev: "Undermine = Lessen the effectiveness, power, or ability of."
+                    },
+                    {
+                        qText: "Effective oversight therefore requires procedures ensuring that automated judgments are ______ to ordinary citizens.",
+                        options: [
+                            "A) Immutable",
+                            "B) Inimical",
+                            "C) Incidental",
+                            "D) Inscrutable",
+                            "E) Intelligible"
+                        ],
+                        answerIndex: 4,
+                        answerText: "E) Intelligible",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, ઓટોમેટેડ જજમેન્ટ એવા હોવા જોઈએ જે સામાન્ય નાગરિકો 'સમજી શકે'. 'Intelligible' નો અર્થ 'સમજી શકાય તેવું' (understandable) થાય છે. (Inscrutable=રહસ્યમય/ન સમજી શકાય તેવું).",
+                        examples: [],
+                        trick: "સામાન્ય નાગરિક સમજી શકે = Intelligible.",
+                        quickRev: "Intelligible = Able to be understood; comprehensible."
+                    },
+                    {
+                        qText: "Regulators must also resist treating efficiency as an ______ virtue; rapid decisions are not invariably equitable ones.",
+                        options: [
+                            "A) Unalloyed",
+                            "B) Ostensible",
+                            "C) Derivative",
+                            "D) Contentious",
+                            "E) Perfunctory"
+                        ],
+                        answerIndex: 0,
+                        answerText: "A) Unalloyed",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, ઝડપથી નિર્ણય લેવાય એટલે તે સંપૂર્ણ સાચા જ હોય તેવું ન માની લેવાય. એટલે કે efficiency ને 'સંપૂર્ણ/શુદ્ધ' (Unalloyed) ગુણ ન માનવો જોઈએ. 'Unalloyed' એટલે Pure અથવા Complete જેમાં કોઈ કમી ન હોય.",
+                        examples: [],
+                        trick: "સંપૂર્ણ ગુણ ન માનવો = Unalloyed virtue ન માનવું.",
+                        quickRev: "Unalloyed = (chiefly of emotions) complete and unreserved; pure."
+                    },
+                    {
+                        qText: "Unless accountability mechanisms evolve alongside technology, administrative convenience may ______ democratic scrutiny.",
+                        options: [
+                            "A) Facilitate",
+                            "B) Supplant",
+                            "C) Augment",
+                            "D) Subordinate",
+                            "E) Champion"
+                        ],
+                        answerIndex: 1,
+                        answerText: "B) Supplant",
+                        explanation: "ટ્રાન્સક્રિપ્ટ મુજબ, જો જવાબદારી નક્કી નહિ થાય, તો માત્ર વહીવટી સરળતા (convenience) જ લોકશાહી તપાસ (democratic scrutiny) ની 'જગ્યા લઈ લેશે'. 'Supplant' નો અર્થ 'કોઈની જગ્યા લેવી કે રિપ્લેસ કરવું' (Replace) થાય છે.",
+                        examples: [],
+                        trick: "એક વસ્તુ બીજી વસ્તુની જગ્યા લઈ લે = Supplant (Replace).",
+                        quickRev: "Supplant = Supersede and replace."
+                    }
+                ]
+            }
+        ];
+
+        // --- Render UI ---
+        const homeMenu = document.getElementById('home-menu');
+        const detailContent = document.getElementById('detail-content');
+        const practiceContent = document.getElementById('practice-content');
+        const viewHome = document.getElementById('view-home');
+        const viewDetail = document.getElementById('view-detail');
+        const viewPractice = document.getElementById('view-practice');
+        const btnBack = document.getElementById('btn-back');
+        const btnTheme = document.getElementById('btn-theme');
+
+        const tileColors = ['#FF4757', '#2ED573', '#1E90FF', '#FFA502', '#9C88FF', '#FF6348', '#3498db'];
+
+        let isDarkMode = false;
+        btnTheme.addEventListener('click', () => {
+            playSound();
+            isDarkMode = !isDarkMode;
+            document.body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            btnTheme.innerText = isDarkMode ? '☀️' : '🌙';
+        });
+
+        function showView(viewElement) {
+            viewHome.classList.remove('active');
+            viewDetail.classList.remove('active');
+            viewPractice.classList.remove('active');
+            viewElement.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function initHome() {
+            homeMenu.innerHTML = '';
+
+            studyData.forEach((section, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'topic-btn';
+                btn.innerText = section.topic;
+                btn.style.backgroundColor = tileColors[index % tileColors.length];
+
+                btn.onclick = () => {
+                    playSound();
+                    renderDetailView(index);
+                };
+                homeMenu.appendChild(btn);
+            });
+
+            const memoryBtn = document.createElement('button');
+            memoryBtn.className = 'topic-btn';
+            memoryBtn.innerText = "🔥 FINAL MEMORY SHEET";
+            memoryBtn.style.backgroundColor = "#5352ED";
+            memoryBtn.onclick = () => {
+                playSound();
+                renderMemorySheet();
+            };
+            homeMenu.appendChild(memoryBtn);
+
+            const mockBtn = document.createElement('button');
+            mockBtn.className = 'topic-btn';
+            mockBtn.innerText = "📝 PRACTICE MOCK";
+            mockBtn.style.backgroundColor = "#34495e";
+            mockBtn.onclick = () => {
+                playSound();
+                renderPracticeMock();
+            };
+            homeMenu.appendChild(mockBtn);
+
+            btnBack.style.display = 'none';
+            showView(viewHome);
+        }
+
+        btnBack.onclick = () => {
+            playSound();
+            initHome();
+        };
+
+        function renderDetailView(sectionIndex) {
+            const section = studyData[sectionIndex];
+            let html = `<div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">${section.topic}</div>`;
+
+            section.questions.forEach((q, i) => {
+                html += `
+                <div class="card">
+                    <div class="section-title">Question ${i + 1}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    
+                    <ul class="options-list">
+                        ${q.options.map(opt => `<li>${opt}</li>`).join('')}
+                    </ul>
+
+                    <div class="section-title">✅ ANSWER</div>
+                    <p style="font-weight:bold; color:var(--secondary); margin-bottom: 15px; font-size:1.1rem;">${q.answerText}</p>
+
+                    <div class="section-title">🧠 COMPLETE EXPLANATION</div>
+                    <p>${q.explanation}</p>
+                    
+                    ${q.examples.length > 0 ? `
+                        <div class="section-title">✍️ EXAMPLES</div>
+                        ${q.examples.map(ex => `<p>${ex}</p>`).join('')}
+                    ` : ''}
+
+                    ${q.trick ? `
+                        <div class="exam-trick">
+                            <strong>🎯 EXAM TRICK:</strong><br>
+                            ${q.trick.replace(/\n/g, '<br>')}
+                        </div>
+                    ` : ''}
+
+                    <div class="section-title">⚡ QUICK REVISION</div>
+                    <div class="quick-revision">${q.quickRev}</div>
+                </div>
+                `;
+            });
+
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        function renderMemorySheet() {
+            let html = `
+                <div class="card-header" style="font-size:1.5rem; border-bottom: 3px solid var(--primary); margin-bottom: 25px;">🔥 FINAL MEMORY SHEET</div>
+                <div class="card">
+                    <div class="section-title">1. Grammar Rules</div>
+                    <ul>
+                        <li><strong>Lay vs Lie (Past Tense):</strong> Intransitive (પડ્યા હોવું) માટે 'lay' અને Transitive (મૂકવું) માટે 'laid' વપરાય.</li>
+                        <li><strong>From vs By:</strong> Source (જ્યાંથી આવતું હોય) દર્શાવવા 'From' અને Doer (જે કરતું હોય) દર્શાવવા 'By' વપરાય.</li>
+                        <li><strong>One of:</strong> 'One of' પછી હમેશા Plural Noun અને કોઈ Determiner (the, my) આવે.</li>
+                        <li><strong>Exchange:</strong> અદલાબદલી માટે Exchange સાથે 'for' આવે (with નહિ).</li>
+                        <li><strong>Must vs Should:</strong> ફરજિયાત કાર્ય (Mandatory) માટે Must, સલાહ/પસંદગી માટે Should.</li>
+                        <li><strong>Double Negatives:</strong> Few અને Seldom એકસાથે ન આવે.</li>
+                        <li><strong>Similarity:</strong> સમાનતા દર્શાવવા 'As + Adjective + As' વપરાય.</li>
+                        <li><strong>Water vs Waters:</strong> સમુદ્ર કે મોટા જળાશય માટે 'waters' નો ઉપયોગ થાય.</li>
+                        <li><strong>All + Definite Noun:</strong> ચોક્કસ વસ્તુ માટે 'All the' વપરાય.</li>
+                        <li><strong>Passive Voice:</strong> જ્યારે કર્તા પર ક્રિયા થતી હોય ત્યારે was/were + V3 આવે (e.g. were killed).</li>
+                    </ul>
+
+                    <div class="section-title" style="margin-top:20px;">2. Vocabulary Recap</div>
+                    <table>
+                        <tr><th>Word</th><th>Meaning</th></tr>
+                        <tr><td>Skeptical</td><td>સરળતાથી ન માને તેવું, શંકાશીલ</td></tr>
+                        <tr><td>Incendiary</td><td>વિવાદ વધારે અને ઉશ્કેરણી કરે તેવું</td></tr>
+                        <tr><td>Obsequious</td><td>અતિશય પ્રશંસા કરનાર, ચાપલૂસ</td></tr>
+                        <tr><td>Perpetuate</td><td>કોઈ ખરાબ બાબતને લંબા સમય સુધી ચાલુ રાખવી</td></tr>
+                        <tr><td>Undermine</td><td>નબળું પાડવું, વિશ્વાસ ઘટાડવો</td></tr>
+                        <tr><td>Intelligible</td><td>સરળતાથી સમજી શકાય તેવું</td></tr>
+                        <tr><td>Unalloyed</td><td>સંપૂર્ણ, શુદ્ધ (Pure/Complete)</td></tr>
+                        <tr><td>Supplant</td><td>કોઈની જગ્યા લેવી (Replace)</td></tr>
+                    </table>
+
+                    <div class="section-title" style="margin-top:20px;">3. Exam Tricks</div>
+                    <ul>
+                        <li><strong>Comprise:</strong> Comprise પછી ક્યારેય 'of' આવતો નથી.</li>
+                        <li><strong>Pervade:</strong> Pervade પછી 'through' ન આવે.</li>
+                        <li><strong>Models Need/Dare:</strong> Need/Dare જો model તરીકે વપરાય તો Base form (V1) લે છે.</li>
+                        <li><strong>Tense Consistency:</strong> વાક્યનો કાળ ભૂતકાળ હોય તો Will નું Would અને Has/Have નું Had થાય.</li>
+                    </ul>
+                </div>
+            `;
+            detailContent.innerHTML = html;
+            btnBack.style.display = 'block';
+            showView(viewDetail);
+        }
+
+        let mockQuestions = [];
+        let currentMockIndex = 0;
+        let mockScore = { correct: 0, wrong: 0, skipped: 0 };
+        let answered = false;
+
+        function renderPracticeMock() {
+            mockQuestions = [];
+            studyData.forEach(section => {
+                section.questions.forEach(q => {
+                    mockQuestions.push({
+                        ...q,
+                        topicStr: section.topic
+                    });
+                });
+            });
+
+            currentMockIndex = 0;
+            mockScore = { correct: 0, wrong: 0, skipped: 0 };
+            btnBack.style.display = 'block';
+
+            showMockQuestion();
+            showView(viewPractice);
+        }
+
+        function showMockQuestion() {
+            if (currentMockIndex >= mockQuestions.length) {
+                showMockResult();
+                return;
+            }
+
+            answered = false;
+            const q = mockQuestions[currentMockIndex];
+            let html = `
+                <div class="card-header" style="font-size:1.2rem; display:flex; justify-content:space-between;">
+                    <span>📝 PRACTICE MOCK</span>
+                    <span>Q ${currentMockIndex + 1} / ${mockQuestions.length}</span>
+                </div>
+                <div class="card">
+                    <div style="font-size: 0.9rem; color: #7f8c8d; margin-bottom: 10px;">${q.topicStr}</div>
+                    <div class="question-text">${q.qText.replace(/\n/g, '<br>')}</div>
+                    <div id="mock-options-container">
+                        ${q.options.map((opt, i) => `
+                            <button class="mock-option" onclick="selectMockOption(${i}, this)">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <button class="action-btn" style="background-color: #95a5a6;" onclick="skipMockQuestion()" id="btn-skip">Skip Question</button>
+                    <button class="action-btn" style="display:none;" onclick="nextMockQuestion()" id="btn-next">Next Question →</button>
+                    
+                    <div class="result-box" id="mock-result-box"></div>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        function selectMockOption(selectedIndex, btnElement) {
+            if (answered) return;
+            answered = true;
+            playSound();
+
+            const q = mockQuestions[currentMockIndex];
+            const isCorrect = selectedIndex === q.answerIndex;
+
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                mockScore.correct++;
+            } else {
+                btnElement.classList.add('wrong');
+                mockScore.wrong++;
+                document.querySelectorAll('.mock-option')[q.answerIndex].classList.add('correct');
+            }
+
+            document.getElementById('btn-skip').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'inline-block';
+
+            const resultBox = document.getElementById('mock-result-box');
+            resultBox.style.display = 'block';
+            resultBox.style.backgroundColor = isCorrect ? 'rgba(46, 204, 113, 0.1)' : 'rgba(231, 76, 60, 0.1)';
+            resultBox.innerHTML = `
+                <strong style="color: ${isCorrect ? 'var(--secondary)' : 'var(--danger)'};">
+                    ${isCorrect ? '✅ CORRECT' : '❌ INCORRECT'}
+                </strong><br><br>
+                <strong>Correct Answer:</strong> ${q.answerText}<br>
+                <p style="margin-top:10px; font-size:0.95rem;">${q.explanation}</p>
+            `;
+        }
+
+        function skipMockQuestion() {
+            playSound();
+            mockScore.skipped++;
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function nextMockQuestion() {
+            playSound();
+            currentMockIndex++;
+            showMockQuestion();
+        }
+
+        function showMockResult() {
+            const total = mockQuestions.length;
+            const percentage = Math.round((mockScore.correct / total) * 100);
+
+            let html = `
+                <div class="card-header" style="font-size:1.5rem;">🏆 FINAL SCORE</div>
+                <div class="card score-board">
+                    <h2>${percentage}%</h2>
+                    <p style="font-size:1.2rem; margin-bottom:10px;">Total Questions: <strong>${total}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--secondary)">Correct: <strong>${mockScore.correct}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:10px; color:var(--danger)">Wrong: <strong>${mockScore.wrong}</strong></p>
+                    <p style="font-size:1.2rem; margin-bottom:20px; color:#95a5a6">Skipped: <strong>${mockScore.skipped}</strong></p>
+                    <button class="action-btn" onclick="initHome()">Return to Home</button>
+                </div>
+            `;
+            practiceContent.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', initHome);
+
+    </script>
+</body>
+</html>
