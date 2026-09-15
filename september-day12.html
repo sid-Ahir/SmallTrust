@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Current Affairs Revision</title>
+    <style>
+        :root {
+            /* Dark Theme Colors */
+            --bg-main: #0a0f18;
+            --bg-card: #131c2a;
+            --bg-card-hover: #1c263a;
+            --text-highlight: #ffffff;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --header-bg: rgba(10, 15, 24, 0.95);
+        }
+
+        [data-theme="light"] {
+            /* Light Theme Colors */
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f1f5f9;
+            --text-highlight: #0f172a;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --accent-purple: #7e22ce;
+            --accent-blue: #2563eb;
+            --accent-cyan: #0284c7;
+            --accent-orange: #d97706;
+            --accent-red: #dc2626;
+            --success: #059669;
+            --danger: #dc2626;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --header-bg: rgba(248, 250, 252, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 40px;
+        }
+
+        /* --- HOME SCREEN --- */
+        #home-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #111827 0%, #0a0f18 100%) !important;
+            color: #e2e8f0 !important;
+        }
+
+        .date-badge {
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+
+        .main-btn {
+            width: 100%;
+            padding: 22px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 20px;
+            font-weight: 900;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 1px;
+        }
+
+        .main-btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-mcq {
+            background: linear-gradient(135deg, #7e22ce, #a855f7);
+            box-shadow: 0 5px 20px rgba(168, 85, 247, 0.4);
+            border: 1px solid rgba(216, 180, 254, 0.3);
+        }
+
+        .btn-news {
+            background: linear-gradient(135deg, #0284c7, #06b6d4);
+            box-shadow: 0 5px 20px rgba(6, 182, 212, 0.4);
+            border: 1px solid rgba(165, 243, 252, 0.3);
+        }
+
+        .btn-magic {
+            background: linear-gradient(135deg, #d97706, #ef4444);
+            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.4);
+            border: 1px solid rgba(252, 165, 165, 0.3);
+        }
+
+        .btn-icon {
+            font-size: 30px;
+        }
+
+        .badge-count {
+            position: absolute;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* --- STICKY HEADER --- */
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 600px;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            display: none; 
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sticky-back-btn {
+            background: rgba(128, 128, 128, 0.15);
+            border: 1px solid var(--border-color);
+            color: var(--text-highlight);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .sticky-back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--text-highlight);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-highlight);
+        }
+
+        /* --- CONTENT PAGES --- */
+        .page-content {
+            display: none;
+            padding: 80px 15px 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            color: var(--text-highlight);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 22px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* --- MAGIC SLIDE INFOGRAPHIC CSS --- */
+        .magic-slide-poster {
+            background: linear-gradient(145deg, #1e1b4b, #312e81);
+            border: 2px solid var(--accent-orange);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .magic-slide-poster::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .magic-header {
+            text-align: center;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .magic-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .m-item {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            border-left: 4px solid var(--accent-orange);
+            padding: 12px 15px;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 14px;
+            line-height: 1.5;
+            transition: transform 0.2s;
+        }
+
+        .m-item:hover {
+            transform: scale(1.02);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .m-title {
+            font-weight: 800;
+            color: #fbbf24;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+        .m-title.purple { color: #c084fc; border-color: #c084fc;}
+        .m-title.green { color: #34d399; border-color: #34d399;}
+        .m-title.pink { color: #f472b6; border-color: #f472b6;}
+
+        /* News Styles */
+        .news-item {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .news-badge {
+            background: var(--accent-cyan);
+            color: #ffffff;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .news-headline {
+            font-size: 21px;
+            font-weight: 800;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            color: var(--accent-cyan);
+        }
+
+        .sub-heading {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-highlight);
+            margin: 20px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .news-content {
+            font-size: 16px;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+        
+        .news-content b {
+            color: var(--text-highlight);
+        }
+
+        .news-content ul {
+            padding-left: 22px;
+            margin-top: 10px;
+        }
+
+        .news-content li {
+            margin-bottom: 8px;
+        }
+
+        .fact-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 15px;
+            background: var(--bg-main);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .fact-table th, .fact-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+        .fact-table th {
+            background: rgba(128, 128, 128, 0.1);
+            font-weight: 800;
+            color: var(--text-highlight);
+        }
+
+        .exam-point {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-left: 4px solid var(--danger);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 20px;
+            color: var(--text-main);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-highlight);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 16px;
+            text-decoration: none;
+            transition: background 0.3s;
+            width: 100%;
+            text-align: center;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-card-hover);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 18px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- STICKY HEADER -->
+    <div class="sticky-header" id="sticky-header">
+        <div class="header-left">
+            <button class="sticky-back-btn" onclick="goHome()">← BACK</button>
+            <div class="header-title" id="header-title">📅 12 SEP 2026</div>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️</button>
+    </div>
+
+    <!-- HOME SCREEN -->
+    <div id="home-screen">
+        <div class="date-badge">
+            <span>📅</span> 12 SEP 2026 • REVISION APP
+        </div>
+
+        <button class="main-btn btn-mcq" onclick="openSection('mcq-page')">
+            <span class="btn-icon">📝</span>
+            MCQs
+            <span class="badge-count">0 MCQs</span>
+        </button>
+
+        <button class="main-btn btn-news" onclick="openSection('news-page')">
+            <span class="btn-icon">📰</span>
+            NEWS
+            <span class="badge-count">15 NEWS</span>
+        </button>
+
+        <button class="main-btn btn-magic" onclick="openSection('magic-page')">
+            <span class="btn-icon">✨</span>
+            MAGICAL SLIDE
+        </button>
+    </div>
+
+    <!-- MAGICAL SLIDE SECTION -->
+    <div id="magic-page" class="page-content">
+        <div class="section-title">✨ MAGICAL SLIDE</div>
+        
+        <div class="magic-slide-poster">
+            <div class="magic-header">QUICK REVISION (12th Sept)</div>
+            <div class="magic-grid">
+                
+                <div class="m-item">
+                    <div class="m-title">🏛️ Government Schemes</div>
+                    <b>DILRMP 3.0:</b> ₹565.50 કરોડના ખર્ચે જમીન રેકોર્ડ્સનું ડિજિટાઈઝેશન અને 14-digit 'Bhu-Aadhaar'.<br>
+                    <b>Pluxee India:</b> RBI દ્વારા પેમેન્ટ એગ્રીગેટર (Payment Aggregator) તરીકે મંજૂરી.
+                </div>
+                
+                <div class="m-item" style="border-left-color: #c084fc;">
+                    <div class="m-title purple">💸 Banking & Finance</div>
+                    <b>BharatPe Flex:</b> ક્રેડિટ લાઇન ઓન UPI દ્વારા ₹60,000 સુધીની લિમિટ. યસ બેંક સાથે પાર્ટનરશિપ.
+                </div>
+                
+                <div class="m-item" style="border-left-color: #34d399;">
+                    <div class="m-title green">🌍 International Relations</div>
+                    <b>Thirukkural:</b> પીએમ મોદીએ રશિયન રાષ્ટ્રપતિ પુતિનને આ તમિલ ગ્રંથ ભેટમાં આપ્યો.<br>
+                    <b>BRICS 2026:</b> ભારતની અધ્યક્ષતામાં 18મું સંસ્કરણ દિલ્હીમાં યોજાયું.<br>
+                    <b>Colombo Security Conclave:</b> 6 સભ્યોની ટેબલ ટોપ એક્સરસાઇઝ વિશાખાપટ્ટનમમાં.
+                </div>
+                
+                <div class="m-item" style="border-left-color: #f472b6;">
+                    <div class="m-title pink">🏆 Sports & Defence</div>
+                    <b>Dhiraj Bommadevara:</b> આર્ચરી વર્લ્ડ કપ જીતનાર પ્રથમ ભારતીય પુરુષ.<br>
+                    <b>Townsend-Siniakova:</b> મહિલા ડબલ્સમાં 'કરિયર ગ્રાન્ડ સ્લેમ' પૂર્ણ.<br>
+                    <b>Kimi Antonelli:</b> સ્પેનિશ ગ્રાન્ડ પ્રિકસ (Spanish Grand Prix) 2026 ના વિજેતા.<br>
+                    <b>INS Udaygiri:</b> શ્રીલંકાના કોલંબો પોર્ટની મુલાકાત લીધી.
+                </div>
+                
+                <div class="m-item">
+                    <div class="m-title yellow">📅 Important Days & Obituaries</div>
+                    <b>Swami Vivekananda:</b> 11 સપ્ટેમ્બર 1893 શિકાગો સ્પીચની યાદગીરી.<br>
+                    <b>World Duchenne Awareness Day:</b> 7 સપ્ટેમ્બર.<br>
+                    <b>National Forest Martyrs Day:</b> 11 સપ્ટેમ્બર (રાજસ્થાનના ખેજડલી ગામના બલિદાનની યાદમાં).<br>
+                    <b>Solomon Pappaiah:</b> 90 વર્ષની વયે નિધન (તમિલ વિદ્વાન).
+                </div>
+
+            </div>
+        </div>
+        <button class="back-btn" onclick="goHome()">← BACK TO HOME</button>
+    </div>
+
+    <!-- MCQs SECTION (EMPTY AS PER PDF) -->
+    <div id="mcq-page" class="page-content">
+        <div class="section-title">📝 MCQs REVISION</div>
+        
+        <div class="card empty-state">
+            <span style="font-size: 40px; display: block; margin-bottom: 15px;">🚫</span>
+            આજની PDF માં કોઈ જ MCQs આપેલ નથી.
+        </div>
+        
+        <button class="back-btn" onclick="goHome()">← BACK TO HOME</button>
+    </div>
+
+    <!-- TODAY'S CURRENT AFFAIRS SECTION -->
+    <div id="news-page" class="page-content">
+
+        <div class="section-title">📰 TODAY'S NEWS</div>
+        
+        <!-- NEWS 1 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 1</span>
+            <div class="news-headline">Operational Guidelines Released for DILRMP 3.0</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ગ્રામીણ વિકાસ મંત્રી <b>Shivraj Singh Chouhan</b> દ્વારા જમીનના રેકોર્ડ્સના ડિજિટાઈઝેશન માટે <b>DILRMP 3.0 (Digital India Land Records Modernization Programme 3.0)</b> ની ઓપરેશનલ ગાઈડલાઈન્સ બહાર પાડવામાં આવી છે.[span_1](start_span)[span_1](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ પ્રોગ્રામ <b>5 વર્ષ (2026 થી 2031)</b> સુધી ચાલશે. તેનો ઉદ્દેશ્ય અલગ-અલગ જમીનના રેકોર્ડ્સને બદલે <b>Integrated Digital Land Administration System</b> ઊભું કરવાનો છે.[span_2](start_span)[span_2](end_span)
+                <br>આ માટે <b>₹565.50 કરોડ</b> નું બજેટ ફાળવવામાં આવ્યું છે, અને તમામ રાજ્યો અને UTs માં આ <b>100% Central Government Funding</b> થી ચાલશે.[span_3](start_span)[span_3](end_span)
+                <br>આ અંતર્ગત જમીનની ચોક્કસ ઓળખ માટે <b>'Bhu-Aadhaar' (ભૂ-આધાર / ULPIN)</b> આપવામાં આવશે, જે જમીનના જીઓ-કોઓર્ડિનેટ્સ (અક્ષાંશ અને રેખાંશ) પર આધારિત <b>14-digit</b> નો આલ્ફાન્યુમેરિક નંબર હશે.[span_4](start_span)[span_4](end_span)
+                <br>અગાઉ આ પ્રોગ્રામ 2008 માં NLRMP તરીકે મંજૂર થયો હતો, જે 2016 માં રિવેમ્પ થઈને DILRMP બન્યો અને સેન્ટ્રલ સેક્ટર સ્કીમ ઘોષિત કરાયો.[span_5](start_span)[span_5](end_span)
+            </div>
+            <div class="exam-point">🎯 EXAM POINT: Bhu-Aadhaar is a 14-digit unique ID for land parcels. The budget for DILRMP 3.0 is ₹565.50 Crore.</div>
+        </div>
+
+        <!-- NEWS 2 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 2</span>
+            <div class="news-headline">BharatPe Unveils 'BharatPe Flex' with Credit Line on UPI</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>BharatPe (ભારતપે)</b> કંપનીએ મુંબઈના ગ્લોબલ ફિનટેક ફેસ્ટ 2026 માં <b>'BharatPe Flex'</b> નામની કન્ઝ્યુમર ક્રેડિટ પ્રોડક્ટ લોન્ચ કરી છે.[span_6](start_span)[span_6](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ ફીચર NPCI ના <b>'Credit Line on UPI'</b> ઇન્ફ્રાસ્ટ્રક્ચર પર આધારિત છે.[span_7](start_span)[span_7](end_span) આનો મતલબ એ છે કે જો તમારા બેંક ખાતામાં ઝીરો બેલેન્સ હોય, છતાં બેંકની પ્રી-એપ્રુવ્ડ લિમિટ દ્વારા તમે UPI પેમેન્ટ કરી શકશો. 
+                <br>ભારતપે ફ્લેક્સ હેઠળ લાયક ગ્રાહકોને <b>₹60,000 સુધીની માસિક લિમિટ</b> મળી શકશે.[span_8](start_span)[span_8](end_span) આ માટે કંપનીએ <b>YES BANK</b> સાથે પાર્ટનરશિપ કરી છે. બ્રાન્ડ એમ્બેસેડર <b>Rohit Sharma</b> છે.[span_9](start_span)[span_9](end_span) 
+                <br>(ભારતપે ની પેરન્ટ કંપની Resilient Innovations Pvt Ltd છે જે 2018 માં બની હતી, અને તેણે ભારતનો પ્રથમ 0 MDR ક્યુઆર કોડ આપ્યો હતો).[span_10](start_span)[span_10](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 3 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 3</span>
+            <div class="news-headline">Pluxee India Receives RBI Payment Aggregator Licence</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>Pluxee (પ્લક્સી)</b> ઇન્ડિયાને <b>Payment Aggregator (PA)</b> તરીકે કામ કરવા માટે રિઝર્વ બેંક (RBI) તરફથી ઔપચારિક મંજૂરી મળી ગઈ છે.[span_11](start_span)[span_11](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                પેમેન્ટ એગ્રીગેટર ગ્રાહક પાસેથી ડિજિટલ પેમેન્ટ કલેક્ટ કરીને વેપારીના (Merchant) ખાતામાં જમા કરાવે છે.[span_12](start_span)[span_12](end_span) પ્લક્સીને ઓનલાઈન <b>(PA-O)</b> અને ઓફલાઈન-POS <b>(PA-P)</b> બંને પ્રકારના પેમેન્ટ માટે મંજૂરી મળી છે.[span_13](start_span)[span_13](end_span) પ્લક્સી પાસે 2009 થી પ્રીપેડ પેમેન્ટ ઇન્સ્ટ્રુમેન્ટ (PPI) લાયસન્સ પહેલેથી જ છે.[span_14](start_span)[span_14](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 4 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 4</span>
+            <div class="news-headline">Kishor Makwana Conferred Dr. APJ Abdul Kalam Jan Seva Award</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                NCSC ના ચેરમેન <b>Kishor Makwana (કિશોર મકવાણા)</b> ને <b>Dr. APJ Abdul Kalam Jan Seva Award 2026</b> થી સન્માનિત કરવામાં આવ્યા છે.[span_15](start_span)[span_15](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                તેઓને અનુસૂચિત જાતિઓના સશક્તિકરણ અને સામાજિક ન્યાયના યોગદાન બદલ આ એવોર્ડ અપાયો છે.[span_16](start_span)[span_16](end_span)
+                <br>આ એવોર્ડ નવી દિલ્હીના ડૉ. આંબેડકર ઇન્ટરનેશનલ સેન્ટર ખાતે યોજાયેલ <b>16મા 'સંસદ રત્ન એવોર્ડ 2026'</b> સમારોહમાં અપાયો હતો (ચીફ ગેસ્ટ: જી કિશન રેડ્ડી).[span_17](start_span)[span_17](end_span) આ એવોર્ડ 2010 માં Prime Point Foundation દ્વારા પૂર્વ રાષ્ટ્રપતિની સલાહ પર શરૂ કરાયો હતો.[span_18](start_span)[span_18](end_span) 
+                <br>NCSC (National Commission for Scheduled Castes) એ બંધારણની આર્ટિકલ 338 અંતર્ગત બનેલ બંધારણીય સંસ્થા છે.[span_19](start_span)[span_19](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 5 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 5</span>
+            <div class="news-headline">PM Modi Gifts Russian Translation of 'Thirukkural' to Putin</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                વડાપ્રધાન મોદીએ રશિયન રાષ્ટ્રપતિ <b>Vladimir Putin</b> ને <b>'Thirukkural' (તિરુક્કુરલ)</b> નું રશિયન ભાષાંતર ભેટમાં આપ્યું.[span_20](start_span)[span_20](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                તિરુક્કુરલ એ એક પ્રાચીન તમિલ ગ્રંથ છે, જેની રચના મહાન તમિલ કવિ <b>Thiruvalluvar (તિરુવલ્લુવર)</b> દ્વારા કરવામાં આવી હતી.[span_21](start_span)[span_21](end_span) આ પુસ્તક નવી દિલ્હીમાં 18મી બ્રિક્સ સમિટ દરમિયાન આપવામાં આવ્યું.[span_22](start_span)[span_22](end_span)
+                <br>આ 2026 નું રશિયન એડિશન ચેન્નઈની <b>CICT (Central Institute of Classical Tamil)</b> દ્વારા પબ્લિશ કરાયું છે અને <b>Naira Mkrtchyan</b> દ્વારા તેનું રશિયન ભાષાંતર કરાયું છે.[span_23](start_span)[span_23](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 6 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 6</span>
+            <div class="news-headline">India Hosts 18th BRICS Summit in New Delhi</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ભારતે નવી દિલ્હીના <b>Bharat Mandapam</b> ખાતે <b>18મી BRICS Summit 2026</b> ની સફળતાપૂર્વક યજમાની કરી.[span_24](start_span)[span_24](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                પીએમ મોદીએ ભારતની 2026 ની બ્રિક્સ ચેરમેનશિપ હેઠળ આ સમિટની અધ્યક્ષતા કરી હતી.[span_25](start_span)[span_25](end_span)
+                <br><b>Theme:</b> "Building for Resilience, Innovation, Cooperation and Sustainability".[span_26](start_span)[span_26](end_span)
+                <br>આમાં 11 સભ્ય દેશોના નેતાઓ ઉપરાંત પાર્ટનર દેશોએ (બેલારુસ, બોલિવિયા, કઝાકિસ્તાન, ક્યુબા, મલેશિયા, નાઇજિરિયા, થાઇલેન્ડ, યુગાન્ડા, ઉઝબેકિસ્તાન અને વિયેતનામ) પણ ભાગ લીધો હતો.[span_27](start_span)[span_27](end_span)
+                <br>'BRIC' શબ્દ 2001 માં જીમ ઓ'નીલે આપ્યો હતો. 2006 માં ગૃપ બન્યું. પહેલી સમિટ 2009 માં રશિયામાં થઈ.[span_28](start_span)[span_28](end_span) 2010 માં સાઉથ આફ્રિકા જોડાયું (જેણે 2011 ની સાન્યા સમિટમાં ભાગ લીધો).[span_29](start_span)[span_29](end_span) જાન્યુઆરી 2024 થી ઇજિપ્ત, ઇથોપિયા, ઇરાન, સાઉદી અરેબિયા અને UAE પણ ફૂલ મેમ્બર બન્યા, અને જાન્યુઆરી 2025 માં ઇન્ડોનેશિયા જોડાયું.[span_30](start_span)[span_30](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 7 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 7</span>
+            <div class="news-headline">PM Remembers Swami Vivekananda's Historic Chicago Address</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                પીએમ મોદીએ <b>11 સપ્ટેમ્બર 1893</b> ના રોજ <b>સ્વામી વિવેકાનંદ</b> દ્વારા શિકાગોની 'વિશ્વ ધર્મ સંસદ' માં અપાયેલા ઐતિહાસિક ભાષણને યાદ કર્યું.[span_31](start_span)[span_31](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                સ્વામી વિવેકાનંદે પોતાના ભાષણની શરૂઆત "Sisters and Brothers of America" કહીને કરી હતી, જેણે ભારતીય સનાતન પરંપરાને વિશ્વ સમક્ષ ઉજાગર કરી.[span_32](start_span)[span_32](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 8 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 8</span>
+            <div class="news-headline">Colombo Security Conclave Table-Top Exercise in Visakhapatnam</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                આંધ્રપ્રદેશના <b>Visakhapatnam (વિશાખાપટ્ટનમ)</b> ખાતે ઇસ્ટર્ન નેવલ કમાન્ડ હેઠળ <b>Colombo Security Conclave (CSC)</b> ની 'ટેબલ-ટોપ એક્સરસાઇઝ (TTX)' યોજાઈ ગઈ.[span_33](start_span)[span_33](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ એક્સરસાઇઝનો હેતુ હિંદ મહાસાગરમાં ગેરકાયદેસર પ્રવૃત્તિઓ રોકવા માટે "Coordinated Response to Illicit Maritime Activities in the IOR" પર ફોકસ કરવાનો હતો.[span_34](start_span)[span_34](end_span)
+                <br>CSC ના કુલ <b>6 સભ્યો</b> છે: ભારત, શ્રીલંકા, માલદીવ્સ, મોરેશિયસ, બાંગ્લાદેશ, અને સેશેલ્સ (જે 2025 માં છઠ્ઠો સભ્ય બન્યો).[span_35](start_span)[span_35](end_span) તેનું વડુંમથક કોલંબો, શ્રીલંકા છે.[span_36](start_span)[span_36](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 9 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 9</span>
+            <div class="news-headline">INS Udaygiri Visits Colombo</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ભારતીય નેવીનું સ્વદેશી જહાજ (મલ્ટી રોલ સ્ટીલ્થ ફ્રિગેટ) <b>INS Udaygiri</b> ઓપરેશનલ ટર્નઅરાઉન્ડ (OTR) માટે કોલંબો પોર્ટ (શ્રીલંકા) પહોંચ્યું.[span_37](start_span)[span_37](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ મુલાકાત સંરક્ષણ મંત્રી રાજનાથ સિંહની શ્રીલંકા મુલાકાત સાથે કોઇન્સાઇડ થઈ હતી.[span_38](start_span)[span_38](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 10 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 10</span>
+            <div class="news-headline">Dhiraj Bommadevara Wins Archery World Cup Final</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ભારતના <b>Dhiraj Bommadevara (ધીરજ બોમ્માદેવરા)</b> એ મેક્સિકોમાં આર્ચરી વર્લ્ડ કપ ફાઇનલ જીતી લીધી છે.[span_39](start_span)[span_39](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                તેઓ આર્ચરી (તીરંદાજી) વર્લ્ડ કપમાં મેન્સ રિકર્વ કેટેગરીમાં ગોલ્ડ મેડલ જીતનાર <b>પ્રથમ ભારતીય પુરુષ</b> બની ગયા છે.[span_40](start_span)[span_40](end_span) તેમણે મેક્સિકોના સાલ્ટિલોમાં જાપાનના Nakanishi Junya ને શૂટ ઓફ માં 6-5 થી હરાવ્યા હતા. ધીરજ આંધ્રપ્રદેશના છે.[span_41](start_span)[span_41](end_span) (અગાઉ 2010 માં જયંત તાલુકાદરે મેન્સ રિકર્વ વર્લ્ડ કપ ફાઇનલમાં બ્રોન્ઝ મેડલ જીત્યો હતો).[span_42](start_span)[span_42](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 11 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 11</span>
+            <div class="news-headline">Townsend-Siniakova Complete Career Grand Slam in Doubles</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                <b>Taylor Townsend</b> (USA) અને <b>Katerina Siniakova</b> (ચેક રિપબ્લિક) ની જોડીએ <b>US Open 2026 Women's Double</b> નો ખિતાબ જીતીને પોતાનો 'કરિયર ગ્રાન્ડ સ્લેમ' પૂર્ણ કર્યો છે.[span_43](start_span)[span_43](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                તેમણે ફાઇનલમાં અમેરિકાની Ashlyn Krueger અને Robin Montgomery ની જોડીને હરાવી.[span_44](start_span)[span_44](end_span) જ્યારે કોઈ ખેલાડી/ટીમ પોતાના કરિયરમાં ચારેય ગ્રાન્ડ સ્લેમ ઓછામાં ઓછી એક વાર જીતે, ત્યારે તેને 'Career Grand Slam' કહેવાય છે.[span_45](start_span)[span_45](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 12 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 12</span>
+            <div class="news-headline">Kimi Antonelli Wins Spanish Grand Prix 2026</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                મર્સિડીઝ (Mercedes) ટીમના ડ્રાઇવર <b>Kimi Antonelli (કિમી એન્ટોનેલી - ઇટાલી)</b> એ ફોર્મ્યુલા વનની <b>Spanish Grand Prix 2026</b> રેસ જીતી લીધી છે.[span_46](start_span)[span_46](end_span) 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ 2026 ની સિઝનમાં એન્ટોનેલીની આ 8મી ગ્રાન્ડ પ્રિકસ જીત છે.[span_47](start_span)[span_47](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 13 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 13</span>
+            <div class="news-headline">Veteran Tamil Scholar Solomon Pappaiah Passed Away</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                પ્રખ્યાત તમિલ વિદ્વાન, વક્તા અને સાંસ્કૃતિક હસ્તી <b>Solomon Pappaiah (સોલોમન પપૈયા)</b> નું 90 વર્ષની વયે નિધન થયું છે.[span_48](start_span)[span_48](end_span) 
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                સાહિત્ય અને શિક્ષણ ક્ષેત્રે તેમના યોગદાન બદલ ભારત સરકારે તેમને 2021 માં પ્રતિષ્ઠિત પદ્મશ્રી એવોર્ડ આપ્યો હતો.[span_49](start_span)[span_49](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 14 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 14</span>
+            <div class="news-headline">World Duchenne Awareness Day - 7 September</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                યુનાઇટેડ નેશન્સ જનરલ એસેમ્બલી દ્વારા <b>7 સપ્ટેમ્બર</b> ના રોજ <b>World Duchenne Awareness Day</b> મનાવવામાં આવે છે.[span_50](start_span)[span_50](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                <b>Theme:</b> "Access changes lives" (એક્સેસથી જીવનમાં બદલાવ આવે છે).[span_51](start_span)[span_51](end_span) 
+                <br>Duchenne Muscular Dystrophy (DMD) એ એક દુર્લભ આનુવંશિક (genetic) બીમારી છે, જેના કારણે સમય જતાં માંસપેશીઓ નબળી પડી જાય છે.[span_52](start_span)[span_52](end_span)
+            </div>
+        </div>
+
+        <!-- NEWS 15 -->
+        <div class="card news-item">
+            <span class="news-badge">🔥 NEWS 15</span>
+            <div class="news-headline">National Forest Martyrs Day - 11 September</div>
+            <div class="sub-heading">📖 શું થયું?</div>
+            <div class="news-content">
+                ભારતમાં દર વર્ષે <b>11 સપ્ટેમ્બર</b> ના રોજ <b>National Forest Martyrs Day (રાષ્ટ્રીય વન શહીદ દિવસ)</b> મનાવવામાં આવે છે.[span_53](start_span)[span_53](end_span)
+            </div>
+            <div class="sub-heading">📚 COMPLETE TEACHER EXPLANATION</div>
+            <div class="news-content">
+                આ દિવસ એ વન રક્ષકો અને લોકોના સન્માનમાં છે જેમણે જંગલ અને વન્યજીવોના રક્ષણ કાજે જીવ આપ્યો.[span_54](start_span)[span_54](end_span) 
+                <br>1730 માં આ જ દિવસે, રાજસ્થાનના ખેજડલી (Khejarli) માં અમૃતા દેવીના નેતૃત્વમાં <b>બિશ્નોઈ સમાજના 360 થી વધુ લોકોએ</b> વૃક્ષો કાપવાનો વિરોધ કર્યો હતો, અને રાજાના આદેશ પર તેઓને મારી નાખવામાં આવ્યા હતા.[span_55](start_span)[span_55](end_span)
+            </div>
+        </div>
+
+        <button class="back-btn" onclick="goHome()">← BACK TO HOME</button>
+    </div>
+
+</div>
+
+<script>
+    let audioCtx = null;
+    function playBeep() {
+        try {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sawtooth'; 
+            oscillator.frequency.setValueAtTime(1000, audioCtx.currentTime); 
+            gainNode.gain.setValueAtTime(0.8, audioCtx.currentTime); 
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.15);
+        } catch(e) {
+            console.log("Audio not supported");
+        }
+    }
+
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('button') || e.target.closest('.option') || e.target.closest('.main-btn') || e.target.closest('.sticky-back-btn')) {
+            playBeep();
+        }
+    });
+
+    const themeBtn = document.getElementById('theme-btn');
+    const rootElements = document.documentElement;
+    let isDark = true;
+
+    function toggleTheme() {
+        isDark = !isDark;
+        if (isDark) {
+            rootElements.setAttribute('data-theme', 'dark');
+            themeBtn.innerText = '☀️';
+        } else {
+            rootElements.setAttribute('data-theme', 'light');
+            themeBtn.innerText = '🌙';
+        }
+    }
+
+    const homeScreen = document.getElementById('home-screen');
+    const mcqPage = document.getElementById('mcq-page');
+    const newsPage = document.getElementById('news-page');
+    const magicPage = document.getElementById('magic-page');
+    const stickyHeader = document.getElementById('sticky-header');
+
+    function openSection(sectionId) {
+        homeScreen.style.display = 'none';
+        mcqPage.style.display = 'none';
+        newsPage.style.display = 'none';
+        magicPage.style.display = 'none';
+        document.getElementById(sectionId).style.display = 'block';
+        stickyHeader.style.display = 'flex'; 
+        window.scrollTo(0,0);
+    }
+
+    function goHome() {
+        homeScreen.style.display = 'flex';
+        mcqPage.style.display = 'none';
+        newsPage.style.display = 'none';
+        magicPage.style.display = 'none';
+        stickyHeader.style.display = 'none'; 
+        window.scrollTo(0,0);
+    }
+</script>
+
+</body>
+</html>
