@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sid Ahir - Banking Prep & 150-Day Hard Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body id="main-body" class="bg-gradient-to-tr from-indigo-900 via-purple-900 to-slate-950 text-slate-100 min-h-screen p-4 flex flex-col items-center justify-center transition-colors duration-500">
+
+    <!-- SCREEN 1: HOME DASHBOARD (4 Exam Buttons & Live Countdowns with Dates) -->
+    <div id="dashboard-screen" class="w-full max-w-md bg-slate-900/95 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 border border-indigo-500/40">
+        <h1 class="text-xl font-black text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-fuchsia-400 mb-4">🎯 Banking Exam Countdowns</h1>
+        
+        <div class="grid grid-cols-2 gap-2 mb-4">
+            <button onclick="showExamDetails('sbi')" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 text-white font-bold py-2.5 px-3 rounded-2xl text-xs shadow-md">🏦 SBI</button>
+            <button onclick="showExamDetails('ibps')" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white font-bold py-2.5 px-3 rounded-2xl text-xs shadow-md">🏛️ IBPS Clerk</button>
+            <button onclick="showExamDetails('rrbpo')" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-90 text-white font-bold py-2.5 px-3 rounded-2xl text-xs shadow-md">🌾 RRB PO</button>
+            <button onclick="showExamDetails('rrbclerk')" class="bg-gradient-to-r from-amber-600 to-orange-600 hover:opacity-90 text-white font-bold py-2.5 px-3 rounded-2xl text-xs shadow-md">🏢 RRB Clerk</button>
+        </div>
+
+        <div id="exam-countdown-box" class="bg-indigo-950/60 border border-indigo-500/30 p-4 rounded-2xl mb-4 text-center">
+            <h3 id="exam-title" class="text-sm font-bold text-amber-300 mb-1">એક્ઝામ પસંદ કરો</h3>
+            <p id="exam-date-label" class="text-[11px] text-cyan-400 font-semibold mb-3"></p>
+            <div id="exam-timers-content" class="text-xs space-y-2 text-slate-300"></div>
+        </div>
+
+        <button onclick="openChallengeScreen()" class="w-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 hover:opacity-90 text-white font-black py-3 rounded-2xl text-xs transition duration-200 shadow-lg active:scale-95">
+            🔥 150-Day Hard Challenge & Tracker
+        </button>
+    </div>
+
+    <!-- SCREEN 2: 150-DAY HARD CHALLENGE TRACKER -->
+    <div id="challenge-screen" class="w-full max-w-md bg-slate-900/90 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 border border-indigo-500/30 shadow-indigo-500/10 relative hidden">
+        
+        <div class="flex justify-between items-center mb-3">
+            <button onclick="openMistakeBook()" class="bg-indigo-600/40 hover:bg-indigo-600/60 text-indigo-200 border border-indigo-500/40 text-xs font-semibold py-1.5 px-2.5 rounded-xl transition">
+                📓 Mistakes
+            </button>
+            <div class="flex items-center space-x-1.5">
+                <button onclick="exportData()" title="Backup" class="bg-emerald-600/40 text-emerald-200 border border-emerald-500/40 text-[10px] font-semibold py-1.5 px-2 rounded-xl">📥 Backup</button>
+                <label class="bg-cyan-600/40 text-cyan-200 border border-cyan-500/40 text-[10px] font-semibold py-1.5 px-2 rounded-xl cursor-pointer">
+                    📤 Restore <input type="file" id="import-file" onchange="importData(event)" class="hidden">
+                </label>
+                <select id="theme-selector" onchange="changeTheme(this.value)" class="bg-slate-950 text-[11px] text-cyan-300 font-bold px-1.5 py-1 rounded-xl border border-indigo-500/40 focus:outline-none">
+                    <option value="indigo">Indigo</option>
+                    <option value="emerald">Emerald</option>
+                    <option value="amber">Amber</option>
+                </select>
+            </div>
+        </div>
+
+        <h1 class="text-2xl font-black text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-fuchsia-400 mb-2 drop-shadow">🔥 150-Day Hard Challenge 🔥</h1>
+        
+        <div id="quote-banner" class="mb-4 bg-gradient-to-r from-purple-900/40 to-indigo-900/40 border border-indigo-500/30 p-3 rounded-2xl text-center text-xs font-semibold text-indigo-200 italic shadow-inner leading-relaxed">
+            💬 "લોડ થઈ રહ્યું છે..."
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 mb-3">
+            <div id="challenge-day-badge" class="text-center text-xs font-bold text-amber-300 bg-gradient-to-r from-amber-600/40 to-yellow-600/40 py-2 px-1 rounded-2xl border border-amber-400/40 shadow-inner"></div>
+            <div id="streak-badge" class="text-center text-xs font-bold text-emerald-300 bg-gradient-to-r from-emerald-600/40 to-teal-600/40 py-2 px-1 rounded-2xl border border-emerald-400/40 shadow-inner"></div>
+            <div id="freeze-badge" class="text-center text-xs font-bold text-cyan-300 bg-gradient-to-r from-cyan-600/40 to-blue-600/40 py-2 px-1 rounded-2xl border border-cyan-400/40 shadow-inner" title="માત્ર ૨૦ વાર ફ્રીઝ વાપરી શકાશે"></div>
+        </div>
+
+        <div id="reward-badge" class="mb-3 text-center text-xs font-bold py-2 px-3 rounded-2xl bg-gradient-to-r from-fuchsia-600/30 to-pink-600/30 border border-fuchsia-400/40 text-fuchsia-300 shadow-md">
+            🏆 આજનું ઈનામ: બાકી છે
+        </div>
+
+        <button id="freeze-btn" onclick="useExamFreeze()" class="w-full mb-4 bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 hover:opacity-90 text-white font-extrabold py-2.5 rounded-2xl text-xs transition duration-200 shadow-lg shadow-indigo-500/25 active:scale-95">
+            🛡️ Exam Day Freeze (સ્ટ્રીક બચાવો)
+        </button>
+        
+        <div class="mb-4 flex items-center justify-between bg-indigo-950/40 p-3 rounded-2xl border border-indigo-500/20">
+            <div>
+                <p class="text-xs text-indigo-300 font-medium">આજની તારીખ:</p>
+                <p id="current-date-display" class="text-sm font-black text-cyan-400"></p>
+            </div>
+            <div>
+                <label for="history-date" class="text-xs text-indigo-300 block mb-1 font-medium">જૂનો ડેટા જુઓ:</label>
+                <input type="date" id="history-date" onchange="onHistoryDateChange()" class="bg-slate-950 text-amber-300 text-xs font-bold px-2.5 py-1.5 rounded-xl border border-indigo-500/40 focus:outline-none">
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <div class="flex justify-between text-sm mb-1.5">
+                <span class="text-slate-300 font-semibold">આજની પ્રગતિ (Progress)</span>
+                <span id="progress-text" class="text-fuchsia-400 font-black">૦%</span>
+            </div>
+            <div class="w-full bg-slate-950 h-3.5 rounded-full overflow-hidden p-0.5 border border-indigo-500/30">
+                <div id="progress-bar" class="bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500 h-full w-0 transition-all duration-500 rounded-full shadow-lg"></div>
+            </div>
+        </div>
+
+        <div id="activity-list" class="space-y-3 mb-4"></div>
+
+        <div id="history-notice" class="hidden text-center text-xs font-bold text-amber-300 bg-amber-950/60 p-2.5 rounded-xl border border-amber-500/50 shadow-md">
+            ⚠️ તમે જૂનો ડેટા જોઈ રહ્યા છો. અહીં ચેકમાર્ક બદલી શકાશે નહીં.
+        </div>
+        
+        <button onclick="backToDashboard()" class="w-full mt-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 font-bold py-2 rounded-xl text-xs border border-indigo-500/30">
+            ⬅️ Back to Home Dashboard
+        </button>
+    </div>
+
+    <!-- SCREEN 3: 25-QUESTIONS DAILY SPEED BOOSTER TEST -->
+    <div id="speed-test-screen" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+        <div class="w-full max-w-md bg-slate-900 border border-indigo-500/50 rounded-3xl p-6 shadow-2xl">
+            <h2 class="text-xl font-black text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-fuchsia-400 mb-1">⚡ Daily Speed Booster Test</h2>
+            <p id="quiz-counter-title" class="text-xs text-amber-400 text-center font-bold mb-3"></p>
+            
+            <div id="quiz-container" class="space-y-3"></div>
+            <div id="quiz-feedback" class="mt-3 text-center text-xs font-bold"></div>
+        </div>
+    </div>
+
+    <!-- Mistake Book Modal -->
+    <div id="mistake-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-cyan-400">📓 My Mistake Book</h2>
+                <button onclick="closeMistakeBook()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
+            </div>
+            <textarea id="mistake-input" rows="3" placeholder="અહીં ભૂલ અથવા અઘરો નિયમ લખો..." class="w-full bg-slate-950 border border-indigo-500/30 rounded-xl p-3 text-xs text-slate-100 focus:outline-none mb-3"></textarea>
+            <button onclick="saveMistake()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-xs shadow-md mb-4">સંગ્રહ કરો (Save)</button>
+            <div class="max-h-36 overflow-y-auto space-y-2" id="mistake-list-container"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- SOUND EFFECTS ---
+        function playBeep(freq = 880, duration = 0.15) {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const audioCtx = new AudioContext();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.type = 'square';
+                oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); // Lighter beep boost
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        // LOUD & MASSIVE 10,000 Ladi Bomb + Sutli Bombs + Skyshots Audio Synthesizer
+        function playMassiveLoudFirecrackerAudio() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const audioCtx = new AudioContext();
+
+                // 1. Skyshots (Loud Whistle & Blast)
+                for (let s = 0; s < 8; s++) {
+                    setTimeout(() => {
+                        let osc = audioCtx.createOscillator();
+                        let gain = audioCtx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+                        osc.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.4);
+                        gain.gain.setValueAtTime(0.6, audioCtx.currentTime); // High volume boost
+                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 0.5);
+                    }, s * 250);
+                }
+
+                // 2. Ladi Bomb & Sutli Bombs (Maximum Loud Explosions)
+                for (let i = 0; i < 90; i++) {
+                    setTimeout(() => {
+                        let bufferSize = audioCtx.sampleRate * 0.5;
+                        let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                        let data = buffer.getChannelData(0);
+                        for (let j = 0; j < bufferSize; j++) {
+                            data[j] = (Math.random() * 2 - 1) * Math.exp(-j / (audioCtx.sampleRate * 0.12));
+                        }
+                        let noise = audioCtx.createBufferSource();
+                        noise.buffer = buffer;
+                        let filter = audioCtx.createBiquadFilter();
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(i % 4 === 0 ? 250 : 800, audioCtx.currentTime);
+
+                        let gain = audioCtx.createGain();
+                        gain.gain.setValueAtTime(i % 4 === 0 ? 3.0 : 1.8, audioCtx.currentTime); // MAXIMUM LOUD GAIN
+                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+
+                        noise.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        noise.start();
+                    }, i * 60 + 300);
+                }
+            } catch (e) {}
+        }
+
+        function triggerFireworks() {
+            playMassiveLoudFirecrackerAudio();
+            let duration = 6 * 1000;
+            let end = Date.now() + duration;
+            let interval = setInterval(function() {
+                if (Date.now() > end) return clearInterval(interval);
+                confetti({ particleCount: 250, angle: 60, spread: 120, origin: { x: 0, y: 0.8 } });
+                confetti({ particleCount: 250, angle: 120, spread: 120, origin: { x: 1, y: 0.8 } });
+            }, 200);
+        }
+
+        // --- EXAM COUNTDOWN WITH DATES ---
+        const examData = {
+            sbi: { name: "SBI Clerk 2026", preDate: "26 September 2026", mainDate: "21 November 2026", pre: "September 26, 2026 00:00:00", main: "November 21, 2026 00:00:00" },
+            ibps: { name: "IBPS Clerk 2026 (CSA-XVI)", preDate: "10 & 11 October 2026", mainDate: "27 December 2026", pre: "October 10, 2026 00:00:00", main: "December 27, 2026 00:00:00" },
+            rrbpo: { name: "IBPS RRB PO 2026", preDate: "21 & 22 November 2026", mainDate: "20 December 2026", pre: "November 21, 2026 00:00:00", main: "December 20, 2026 00:00:00" },
+            rrbclerk: { name: "IBPS RRB Clerk 2026", preDate: "6, 12 & 13 December 2026", mainDate: "30 January 2027", pre: "December 6, 2026 00:00:00", main: "January 30, 2027 00:00:00" }
+        };
+
+        let activeExamTimerInterval = null;
+
+        function showExamDetails(key) {
+            let ex = examData[key];
+            let titleEl = document.getElementById('exam-title');
+            let dateLabel = document.getElementById('exam-date-label');
+            if (titleEl) titleEl.innerText = ex.name;
+            if (dateLabel) dateLabel.innerText = `તારીખ: Prelims (${ex.preDate}) | Mains (${ex.mainDate})`;
+
+            if(activeExamTimerInterval) clearInterval(activeExamTimerInterval);
+
+            function updateBox() {
+                let contentEl = document.getElementById('exam-timers-content');
+                if (!contentEl) return;
+                let now = new Date().getTime();
+                let preDist = new Date(ex.pre).getTime() - now;
+                let mainDist = new Date(ex.main).getTime() - now;
+
+                contentEl.innerHTML = `
+                    <div class="bg-indigo-900/40 p-2 rounded-xl border border-indigo-500/20">
+                        <p class="text-[11px] text-amber-300 font-bold">⚡ Prelims Countdown (${ex.preDate})</p>
+                        <p class="text-xs font-black text-cyan-300">${formatTimeDist(preDist)}</p>
+                    </div>
+                    <div class="bg-indigo-900/40 p-2 rounded-xl border border-indigo-500/20 mt-2">
+                        <p class="text-[11px] text-fuchsia-300 font-bold">🔥 Mains Countdown (${ex.mainDate})</p>
+                        <p class="text-xs font-black text-pink-300">${formatTimeDist(mainDist)}</p>
+                    </div>
+                `;
+            }
+            updateBox();
+            activeExamTimerInterval = setInterval(updateBox, 1000);
+        }
+
+        function formatTimeDist(dist) {
+            if(dist < 0) return "Exam Completed ✅";
+            let days = Math.floor(dist / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let mins = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
+            let secs = Math.floor((dist % (1000 * 60)) / 1000);
+            return `${days}d : ${hours}h : ${mins}m : ${secs}s`;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            showExamDetails('sbi');
+            renderMistakes();
+        });
+
+        function openChallengeScreen() {
+            let dash = document.getElementById('dashboard-screen');
+            let chal = document.getElementById('challenge-screen');
+            if(dash) dash.style.display = 'none';
+            if(chal) chal.style.display = 'block';
+            displayHeaderDate();
+            renderActivities();
+        }
+
+        function backToDashboard() {
+            let dash = document.getElementById('dashboard-screen');
+            let chal = document.getElementById('challenge-screen');
+            if(chal) chal.style.display = 'none';
+            if(dash) dash.style.display = 'block';
+        }
+
+        // --- 30-DAY ROTATING 25 SPEED QUESTIONS ---
+        let currentDailyQuestions = [];
+        let currentQuizStep = 0;
+
+        function getToday25Questions() {
+            let startDate = new Date('2026-09-16');
+            let today = new Date();
+            startDate.setHours(0,0,0,0);
+            today.setHours(0,0,0,0);
+            let diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+            let dayIndex = Math.abs(diffDays) % 30;
+
+            let qList = [];
+            for(let i = 1; i <= 25; i++) {
+                let seed = (dayIndex + 1) * i;
+                let type = i % 6;
+
+                if(type === 0) {
+                    let a = (seed % 30) + 1;
+                    let b = (i % 10) + 2;
+                    qList.push({ q: `${a} × ${b} = ?`, ans: a * b });
+                } else if(type === 1) {
+                    let a = (seed % 20) + 1;
+                    qList.push({ q: `Cube of ${a} (${a}³) = ?`, ans: a * a * a });
+                } else if(type === 2) {
+                    let a = (seed % 50) + 1;
+                    qList.push({ q: `Square of ${a} (${a}²) = ?`, ans: a * a });
+                } else if(type === 3) {
+                    let a = (seed % 100) + 1;
+                    qList.push({ q: `Double of ${a} (${a} × 2) = ?`, ans: a * 2 });
+                } else if(type === 4) {
+                    let a = (seed % 89) + 10;
+                    qList.push({ q: `${a} માં કેટલા ઉમેરીએ તો 100 થાય?`, ans: 100 - a });
+                } else {
+                    let a = (seed % 600) + 200;
+                    let b = (seed % a) + 1;
+                    qList.push({ q: `${a} - ${b} = ?`, ans: a - b });
+                }
+            }
+            return qList;
+        }
+
+        function triggerSpeedQuiz() {
+            currentDailyQuestions = getToday25Questions();
+            currentQuizStep = 0;
+            renderQuizStep();
+            let screen = document.getElementById('speed-test-screen');
+            if(screen) screen.style.display = 'flex';
+        }
+
+        function renderQuizStep() {
+            if(currentQuizStep >= currentDailyQuestions.length) {
+                triggerFireworks();
+                
+                let todayKey = getRealDateKey();
+                localStorage.setItem(`quiz_done_${todayKey}`, 'true');
+
+                let screen = document.getElementById('speed-test-screen');
+                if(screen) screen.style.display = 'none';
+                
+                renderActivities();
+                calculateStreakAndFreezes();
+                return;
+            }
+
+            let qData = currentDailyQuestions[currentQuizStep];
+            let counterEl = document.getElementById('quiz-counter-title');
+            if(counterEl) counterEl.innerText = `પ્રશ્ન ${currentQuizStep + 1} / 25`;
+            
+            let container = document.getElementById('quiz-container');
+            if(container) {
+                container.innerHTML = `
+                    <div class="bg-indigo-950/60 p-4 rounded-2xl border border-indigo-500/30 text-center">
+                        <p class="text-base font-black text-cyan-300 my-2">${qData.q}</p>
+                        <input type="number" id="auto-quiz-input" autofocus oninput="checkAutoAnswer(this, ${qData.ans})" placeholder="જવાબ ટાઈપ કરો..." class="w-full bg-slate-950 border border-indigo-500/40 rounded-xl p-2.5 text-center text-sm font-bold text-white focus:outline-none">
+                    </div>
+                `;
+            }
+            setTimeout(() => {
+                let inp = document.getElementById('auto-quiz-input');
+                if(inp) inp.focus();
+            }, 100);
+        }
+
+        function checkAutoAnswer(inputElem, correctAns) {
+            let val = parseInt(inputElem.value);
+            let feedback = document.getElementById('quiz-feedback');
+            if(!feedback) return;
+            if(val === correctAns) {
+                playBeep(1200, 0.15);
+                feedback.innerHTML = `<span class="text-emerald-400">સાચો જવાબ! ✅ આગલો પ્રશ્ન...</span>`;
+                currentQuizStep++;
+                setTimeout(() => {
+                    feedback.innerHTML = '';
+                    renderQuizStep();
+                }, 300);
+            } else {
+                feedback.innerHTML = `<span class="text-slate-400">ટાઈપ કરો...</span>`;
+            }
+        }
+
+        // --- CHALLENGE LOGIC ---
+        const activities = [
+            { time: "૪:૪૫ AM", name: "ઉત્થાવું (Wake up)" },
+            { time: "સવારે", name: "Meditation" },
+            { time: "સવારે", name: "Gym" },
+            { time: "૮:૦૦ - ૯:૩૦", name: "Current affairs" },
+            { time: "૧૦:૦૦ - ૧૨:૩૦", name: "Reasoning" },
+            { time: "૧:૩૦ - ૫:૩૦", name: "Maths" },
+            { time: "૫:૩૦ - ૮:૦૦", name: "Computer / GA" },
+            { time: "૯:૦૦ થી ૧૧:૦૦", name: "Mock Test" },
+            { time: "૧૧:૦૦ થી ૧૨:૦૦", name: "Hindi" }
+        ];
+
+        const familyQuotes = [
+            "પપ્પા, તમારી થાકેલી આંખો અને મહેનતથી ભરેલા હાથ જોઈને મને થાય છે કે હવે તમારી બધી જ ચિંતાઓ મારે મારા ખભા પર ઉઠાવી લેવી છે.",
+            "રસોડામાં ગરમ તાપ વચ્ચે પરસેવે રેબઝેબ થઈને મારા ભવિષ્ય માટે પ્રાર્થના કરતી મમ્મીનો ચહેરો યાદ આવે એટલે થાક ક્યાંય ભાગી જાય છે.",
+            "મારો ભાઈ જેણે પોતાની બધી જ ઈચ્છાઓ મારી ખુશી માટે મોકૂફ રાખી દીધી, એના સપનાં પૂરા કરવાની જવાબદારી મારી છે."
+        ];
+
+        const CHALLENGE_START_DATE = '2026-09-16'; 
+        let viewingDateKey = '';
+
+        function formatDateString(date) {
+            let d = new Date(date);
+            let month = '' + (d.getMonth() + 1);
+            let day = '' + d.getDate();
+            let year = d.getFullYear();
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+            return `${year}_${month}_${day}`;
+        }
+
+        function getRealDateKey() {
+            return `activities_${formatDateString(new Date())}`;
+        }
+
+        viewingDateKey = getRealDateKey();
+
+        function displayHeaderDate() {
+            let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            let dateEl = document.getElementById('current-date-display');
+            if(dateEl) dateEl.innerText = new Date().toLocaleDateString('gu-IN', options);
+
+            let startDate = new Date(CHALLENGE_START_DATE);
+            let today = new Date();
+            startDate.setHours(0,0,0,0);
+            today.setHours(0,0,0,0);
+
+            let diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
+            if (diffDays < 1) diffDays = 1;
+            if (diffDays > 150) diffDays = 150;
+
+            let dayBadge = document.getElementById('challenge-day-badge');
+            let quoteBan = document.getElementById('quote-banner');
+            if(dayBadge) dayBadge.innerText = `🔥 Day ${diffDays} / 150`;
+            if(quoteBan) quoteBan.innerText = `💬 "${familyQuotes[(diffDays - 1) % familyQuotes.length]}"`;
+
+            calculateStreakAndFreezes();
+        }
+
+        function getRemainingFreezes() {
+            let freezes = localStorage.getItem('exam_freezes_left');
+            if (freezes === null) {
+                freezes = 20;
+                localStorage.setItem('exam_freezes_left', freezes);
+            }
+            return parseInt(freezes);
+        }
+
+        function calculateStreakAndFreezes() {
+            let streak = 0;
+            let d = new Date();
+            let todayKey = getRealDateKey();
+            let todaySaved = JSON.parse(localStorage.getItem(todayKey)) || {};
+            let todayCompleted = Object.values(todaySaved).filter(val => val === true).length === activities.length;
+            let todayQuizDone = localStorage.getItem(`quiz_done_${todayKey}`) === 'true';
+
+            for (let i = 0; i < 150; i++) {
+                let key = `activities_${formatDateString(d)}`;
+                let savedData = JSON.parse(localStorage.getItem(key)) || {};
+                let isFrozen = localStorage.getItem(`freeze_${formatDateString(d)}`) === 'true';
+                let completedCount = Object.values(savedData).filter(val => val === true).length;
+                let quizDone = localStorage.getItem(`quiz_done_${key}`) === 'true';
+
+                let isPassedDay = (i > 0);
+                let isValidDay = isPassedDay ? (isFrozen || (completedCount === activities.length && quizDone)) : (isFrozen || (todayCompleted && todayQuizDone));
+
+                if (isValidDay) {
+                    streak++;
+                } else if (i > 0) {
+                    break;
+                }
+                d.setDate(d.getDate() - 1);
+            }
+            let streakEl = document.getElementById('streak-badge');
+            let freezeEl = document.getElementById('freeze-badge');
+            if(streakEl) streakEl.innerText = `⚡ Streak: ${streak}`;
+            if(freezeEl) freezeEl.innerText = `🛡️ Freezes: ${getRemainingFreezes()}/20`;
+        }
+
+        function useExamFreeze() {
+            let remaining = getRemainingFreezes();
+            if (remaining <= 0) {
+                alert("તમારા બધા જ ૨૦ ફ્રીઝ પાસ પૂરા થઈ ગયા છે!");
+                return;
+            }
+            if (confirm(`આજનો દિવસ Exam Freeze કરવો છે? (બાકી: ${remaining - 1})`)) {
+                playBeep(1000, 0.2);
+                let todayKey = getRealDateKey();
+                let savedData = {};
+                activities.forEach((_, idx) => savedData[idx] = true);
+                localStorage.setItem(todayKey, JSON.stringify(savedData));
+                localStorage.setItem(`quiz_done_${todayKey}`, 'true'); 
+                localStorage.setItem(`freeze_${formatDateString(new Date())}`, 'true');
+                localStorage.setItem('exam_freezes_left', remaining - 1);
+                alert("ફ્રીઝ અપ્લાય થઈ ગયું!");
+                renderActivities();
+                calculateStreakAndFreezes();
+            }
+        }
+
+        function changeTheme(themeName) {
+            let body = document.getElementById('main-body');
+            if (!body) return;
+            if (themeName === 'emerald') {
+                body.className = "bg-gradient-to-tr from-slate-950 via-emerald-950 to-slate-900 text-slate-100 min-h-screen p-4 flex flex-col items-center justify-center transition-colors duration-500";
+            } else if (themeName === 'amber') {
+                body.className = "bg-gradient-to-tr from-slate-950 via-amber-950 to-stone-900 text-slate-100 min-h-screen p-4 flex flex-col items-center justify-center transition-colors duration-500";
+            } else {
+                body.className = "bg-gradient-to-tr from-indigo-900 via-purple-900 to-slate-950 text-slate-100 min-h-screen p-4 flex flex-col items-center justify-center transition-colors duration-500";
+            }
+            localStorage.setItem('selected_theme', themeName);
+        }
+
+        function openMistakeBook() {
+            playBeep(600, 0.1);
+            let modal = document.getElementById('mistake-modal');
+            if(modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeMistakeBook() {
+            let modal = document.getElementById('mistake-modal');
+            if(modal) {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }
+        }
+
+        function saveMistake() {
+            let inputEl = document.getElementById('mistake-input');
+            if(!inputEl) return;
+            let text = inputEl.value.trim();
+            if (!text) return;
+            playBeep(900, 0.15);
+            let mistakes = JSON.parse(localStorage.getItem('my_mistakes_book')) || [];
+            mistakes.unshift({ date: new Date().toLocaleDateString('gu-IN'), content: text });
+            localStorage.setItem('my_mistakes_book', JSON.stringify(mistakes));
+            inputEl.value = '';
+            renderMistakes();
+        }
+
+        function renderMistakes() {
+            let container = document.getElementById('mistake-list-container');
+            if (!container) return;
+            let mistakes = JSON.parse(localStorage.getItem('my_mistakes_book')) || [];
+            container.innerHTML = '';
+            if (mistakes.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">કોઈ ભૂલ નથી.</p>`;
+                return;
+            }
+            mistakes.forEach((m) => {
+                container.innerHTML += `
+                    <div class="bg-slate-950 p-2 rounded-xl border border-indigo-500/20 text-xs">
+                        <span class="text-amber-400 text-[10px] block">${m.date}</span>
+                        <p class="text-slate-200">${m.content}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function exportData() {
+            playBeep(800, 0.1);
+            let backupObj = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                backupObj[key] = localStorage.getItem(key);
+            }
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj));
+            let downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "sid_ahir_backup.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let backupObj = JSON.parse(e.target.result);
+                    for (let key in backupObj) localStorage.setItem(key, backupObj[key]);
+                    alert("રીસ્ટોર સફળ!");
+                    location.reload();
+                } catch (err) { alert("ફાઇલ એરર!"); }
+            };
+            reader.readAsText(file);
+        }
+
+        function toggleActivity(checkbox) {
+            if (viewingDateKey !== getRealDateKey()) {
+                alert("માત્ર આજની તારીખમાં જ ચેકમાર્ક કરી શકો છો!");
+                checkbox.checked = !checkbox.checked;
+                return;
+            }
+
+            playBeep(700, 0.1);
+            const index = checkbox.getAttribute('data-index');
+            let savedData = JSON.parse(localStorage.getItem(getRealDateKey())) || {};
+            savedData[index] = checkbox.checked;
+            localStorage.setItem(getRealDateKey(), JSON.stringify(savedData));
+            
+            let completedCount = Object.values(savedData).filter(val => val === true).length;
+            let todayKey = getRealDateKey();
+            if (completedCount < activities.length) {
+                localStorage.removeItem(`quiz_done_${todayKey}`);
+            }
+
+            updateProgress();
+            calculateStreakAndFreezes();
+            renderActivities();
+
+            if(completedCount === activities.length) {
+                if(localStorage.getItem(`quiz_done_${todayKey}`) !== 'true') {
+                    setTimeout(triggerSpeedQuiz, 300);
+                }
+            }
+        }
+
+        function renderActivities() {
+            const listContainer = document.getElementById('activity-list');
+            if(!listContainer) return;
+            listContainer.innerHTML = '';
+            let savedData = JSON.parse(localStorage.getItem(viewingDateKey)) || {};
+            let isToday = (viewingDateKey === getRealDateKey());
+
+            activities.forEach((act, index) => {
+                let isChecked = savedData[index] || false;
+                listContainer.innerHTML += `
+                    <label class="flex items-center justify-between p-3.5 bg-indigo-950/40 hover:bg-indigo-900/40 rounded-2xl cursor-pointer border border-indigo-500/20 transition">
+                        <div class="flex items-center space-x-3.5">
+                            <input type="checkbox" data-index="${index}" ${isChecked ? 'checked' : ''} ${!isToday ? 'disabled' : ''} onchange="toggleActivity(this)" class="w-5 h-5 text-indigo-500 rounded-lg bg-slate-950 accent-indigo-500 cursor-pointer">
+                            <div>
+                                <p class="font-bold text-slate-200 ${isChecked ? 'line-through text-slate-500' : ''}">${act.name}</p>
+                                <span class="text-xs font-semibold text-indigo-300">${act.time}</span>
+                            </div>
+                        </div>
+                    </label>
+                `;
+            });
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let savedData = JSON.parse(localStorage.getItem(viewingDateKey)) || {};
+            let completedCount = Object.values(savedData).filter(val => val === true).length;
+            let percentage = Math.round((completedCount / activities.length) * 100);
+            
+            let bar = document.getElementById('progress-bar');
+            let txt = document.getElementById('progress-text');
+            if(bar) bar.style.width = percentage + '%';
+            if(txt) txt.innerText = percentage + '%';
+            
+            let reward = document.getElementById('reward-badge');
+            let todayKey = getRealDateKey();
+            let quizDone = localStorage.getItem(`quiz_done_${todayKey}`) === 'true';
+
+            if(reward) {
+                if(percentage === 100) {
+                    if(quizDone) {
+                        reward.innerText = "🏆 આજની ચેલેન્જ અને સ્પીડ ટેસ્ટ સફળતાપૂર્વક પૂર્ણ! 🎉";
+                    } else {
+                        reward.innerText = "🏆 ૧૦૦% પૂર્ણ! સ્પીડ ક્વિઝ શરૂ થાય છે... 🎉";
+                    }
+                } else {
+                    reward.innerText = "🏆 આજનું ઈનામ: ૧૦૦% પૂર્ણ કરવા પર અનલોક થશે";
+                }
+            }
+        }
+
+        function onHistoryDateChange() {
+            let histInput = document.getElementById('history-date');
+            if(!histInput) return;
+            let selectedVal = histInput.value;
+            if (selectedVal) {
+                let parts = selectedVal.split('-');
+                viewingDateKey = `activities_${parts[0]}_${parts[1]}_${parts[2]}`;
+            } else {
+                viewingDateKey = getRealDateKey();
+            }
+            renderActivities();
+        }
+    </script>
+</body>
+</html>
