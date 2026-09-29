@@ -1,68 +1,108 @@
-const TOKEN = "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"; 
-const OWNER = "Sid-Ahir";
-const REPO = "SmallTrust";
-const BRANCH = "main";
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete GitHub Files</title>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; padding: 20px; }
+        button { background-color: #ef4444; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
+        button:hover { background-color: #dc2626; }
+        #log-box { background-color: #1e293b; padding: 15px; border-radius: 8px; max-height: 400px; overflow-y: auto; font-family: monospace; font-size: 13px; line-height: 1.5; border: 1px solid #334155; }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+        .warning { color: #fbbf24; }
+    </style>
+</head>
+<body>
 
-async function deleteFiles() {
-  let filesToDelete = [];
+    <h2>🗑️ GitHub Auto File Deleter</h2>
+    <button onclick="startDeleting()" id="start-btn">Start Deleting Files</button>
+    <div id="log-box">અહીં સ્ટેટસ દેખાશે...</div>
 
-  // 1. SBI Clerk Mock Test 1 થી 30
-  for (let i = 1; i <= 30; i++) {
-    filesToDelete.push(`Full_Length_Test_SBI_Clerk_2025_Prelims_Mock_Test_${i}_BILINGUAL.html`);
-  }
+    <script>
+        const TOKEN = "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"; 
+        const OWNER = "Sid-Ahir";
+        const REPO = "SmallTrust";
+        const BRANCH = "main";
 
-  // 2. Computer Awareness Set 1 થી 60
-  for (let i = 1; i <= 60; i++) {
-    filesToDelete.push(`Computer Awareness Bundle PDF Course 2025 Set-${i}.html`);
-  }
-
-  for (const fileName of filesToDelete) {
-    try {
-      const getResponse = await fetch(
-        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${fileName}?ref=${BRANCH}`,
-        {
-          headers: {
-            "Authorization": `token ${TOKEN}`,
-            "Accept": "application/vnd.github.v3+json"
-          }
+        function logToScreen(message, type = '') {
+            const logBox = document.getElementById('log-box');
+            logBox.innerHTML += `<div class="${type}">${message}</div>`;
+            logBox.scrollTop = logBox.scrollHeight;
         }
-      );
-      
-      if (!getResponse.ok) {
-        console.log(`❌ ${fileName} મળી નહીં.`);
-        continue;
-      }
-      
-      const fileData = await getResponse.json();
-      const sha = fileData.sha;
 
-      const deleteResponse = await fetch(
-        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${fileName}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Authorization": `token ${TOKEN}`,
-            "Accept": "application/vnd.github.v3+json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: `Delete ${fileName} via script`,
-            sha: sha,
-            branch: BRANCH
-          })
+        async function startDeleting() {
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('start-btn').innerText = "Deleting in progress...";
+            logToScreen("🚀 પ્રોસેસ ચાલુ થઈ ગઈ છે...", "warning");
+
+            let filesToDelete = [];
+
+            // 1. SBI Clerk Mock Test 1 થી 30
+            for (let i = 1; i <= 30; i++) {
+                filesToDelete.push(`Full_Length_Test_SBI_Clerk_2025_Prelims_Mock_Test_${i}_BILINGUAL.html`);
+            }
+
+            // 2. Computer Awareness Set 1 થી 60
+            for (let i = 1; i <= 60; i++) {
+                filesToDelete.push(`Computer Awareness Bundle PDF Course 2025 Set-${i}.html`);
+            }
+
+            for (const fileName of filesToDelete) {
+                // સ્પેસવાળા નામને બરાબર કરવા માટે encodeURIComponent વાપરવું જરૂરી છે
+                const encodedFileName = encodeURIComponent(fileName);
+
+                try {
+                    const getResponse = await fetch(
+                        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodedFileName}?ref=${BRANCH}`,
+                        {
+                            headers: {
+                                "Authorization": `token ${TOKEN}`,
+                                "Accept": "application/vnd.github.v3+json"
+                            }
+                        }
+                    );
+                    
+                    if (!getResponse.ok) {
+                        logToScreen(`❌ મળી નહીં (કદાચ પહેલા જ ડિલીટ થઈ ગઈ છે): ${fileName}`, "warning");
+                        continue;
+                    }
+                    
+                    const fileData = await getResponse.json();
+                    const sha = fileData.sha;
+
+                    const deleteResponse = await fetch(
+                        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodedFileName}`,
+                        {
+                            method: "DELETE",
+                            headers: {
+                                "Authorization": `token ${TOKEN}`,
+                                "Accept": "application/vnd.github.v3+json",
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                message: `Delete ${fileName} via script`,
+                                sha: sha,
+                                branch: BRANCH
+                            })
+                        }
+                    );
+                    
+                    if (deleteResponse.ok) {
+                        logToScreen(`✅ ડિલીટ થઈ ગઈ: ${fileName}`, "success");
+                    } else {
+                        const errorDetails = await deleteResponse.json();
+                        logToScreen(`⚠️ ડિલીટ ન થઈ શકી: ${fileName} - (Error: ${errorDetails.message})`, "error");
+                    }
+                } catch (error) {
+                    logToScreen(`❌ સિસ્ટમ એરર ${fileName}: ${error.message}`, "error");
+                }
+            }
+            
+            logToScreen("🎉 બધી નિર્ધારિત ફાઇલોનું કામ પૂરું થયું!", "success");
+            document.getElementById('start-btn').innerText = "Done!";
         }
-      );
-      
-      if (deleteResponse.ok) {
-        console.log(`✅ ડિલીટ થઈ ગઈ: ${fileName}`);
-      } else {
-        console.log(`⚠️ ડિલીટ ન થઈ શકી: ${fileName}`);
-      }
-    } catch (error) {
-      console.log(`❌ એરર આવી ${fileName}:`, error);
-    }
-  }
-  console.log("🎉 બધી નિર્ધારિત ફાઇલો ડિલીટ કરવાનું કામ પૂરું થયું!");
-}
-
-deleteFiles();
+    </script>
+</body>
+</html>
