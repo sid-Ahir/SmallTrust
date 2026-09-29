@@ -1,65 +1,55 @@
-const TOKEN = "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"; 
-const OWNER = "Sid-Ahir";
-const REPO = "SmallTrust";
-const BRANCH = "main";
+name: Delete Old Mock and Computer Awareness Files
 
-async function deleteSpecificFiles() {
-  let filesToDelete = [];
+on:
+  workflow_dispatch: # આનાથી તમે GitHub પર જઈને મેન્યુઅલી 'Run workflow' કરી શકશો
 
-  // 1. Mock Test 1 થી 30 ની લિસ્ટ બનાવો
-  for (let i = 1; i <= 30; i++) {
-    filesToDelete.push(`Full_Length_Test_SBI_Clerk_2025_Prelims_Mock_Test_${i}_BILINGUAL.html`);
-  }
+jobs:
+  delete-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-  // 2. Computer Awareness Set 1 થી 60 ની લિસ્ટ બનાવો
-  for (let i = 1; i <= 60; i++) {
-    filesToDelete.push(`Computer Awareness Bundle PDF Course 2025 Set-${i}.html`);
-  }
+      - name: Delete Files via Script
+        env:
+          GH_TOKEN: "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"
+          OWNER: "Sid-Ahir"
+          REPO: "SmallTrust"
+          BRANCH: "main"
+        run: |
+          node -e '
+          const TOKEN = process.env.GH_TOKEN;
+          const OWNER = process.env.OWNER;
+          const REPO = process.env.REPO;
+          const BRANCH = process.env.BRANCH;
 
-  for (const fileName of filesToDelete) {
-    try {
-      const getResponse = await fetch(
-        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${fileName}?ref=${BRANCH}`,
-        {
-          headers: {
-            "Authorization": `token ${TOKEN}`,
-            "Accept": "application/vnd.github.v3+json"
+          async function run() {
+            let filesToDelete = [];
+            for (let i = 1; i <= 30; i++) {
+              filesToDelete.push(`Full_Length_Test_SBI_Clerk_2025_Prelims_Mock_Test_${i}_BILINGUAL.html`);
+            }
+            for (let i = 1; i <= 60; i++) {
+              filesToDelete.push(`Computer Awareness Bundle PDF Course 2025 Set-${i}.html`);
+            }
+
+            for (const fileName of filesToDelete) {
+              try {
+                const getRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(fileName)}?ref=${BRANCH}`, {
+                  headers: { "Authorization": `token ${TOKEN}`, "Accept": "application/vnd.github.v3+json" }
+                });
+                if (!getRes.ok) continue;
+                const fileData = await getRes.json();
+                
+                const delRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(fileName)}`, {
+                  method: "DELETE",
+                  headers: { "Authorization": `token ${TOKEN}`, "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json" },
+                  body: JSON.stringify({ message: `Delete ${fileName} via workflow`, sha: fileData.sha, branch: BRANCH })
+                });
+                if (delRes.ok) console.log(`✅ Deleted: ${fileName}`);
+              } catch (e) {
+                console.log(`❌ Error ${fileName}:`, e.message);
+              }
+            }
           }
-        }
-      );
-      if (!getResponse.ok) {
-        console.log(`❌ ${fileName} મળી નહીં.`);
-        continue;
-      }
-      const fileData = await getResponse.json();
-      const sha = fileData.sha;
-
-      const deleteResponse = await fetch(
-        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${fileName}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Authorization": `token ${TOKEN}`,
-            "Accept": "application/vnd.github.v3+json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: `Delete ${fileName} via script`,
-            sha: sha,
-            branch: BRANCH
-          })
-        }
-      );
-      if (deleteResponse.ok) {
-        console.log(`✅ ડિલીટ થઈ ગઈ: ${fileName}`);
-      } else {
-        console.log(`⚠️ ડિલીટ ન થઈ શકી: ${fileName}`);
-      }
-    } catch (error) {
-      console.log(`❌ એરર આવી ${fileName}:`, error);
-    }
-  }
-  console.log("🎉 બધી નિર્ધારિત ફાઇલો ડિલીટ કરવાનું કામ પૂરું થયું!");
-}
-
-deleteSpecificFiles();
+          run();
+          '
