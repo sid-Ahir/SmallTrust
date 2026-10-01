@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Current Affairs - 23 Sept 2026</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #8b5cf6;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --correct-bg: #064e3b;
+            --correct-border: #10b981;
+            --wrong-bg: #7f1d1d;
+            --wrong-border: #ef4444;
+            --accent: #f59e0b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Sticky Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border-bottom: 1px solid #334155;
+            display: none;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.1s;
+        }
+        .nav-btn:active { transform: scale(0.95); }
+
+        /* Pages */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 80px 15px 30px 15px;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .page.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home Page */
+        #home-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .home-title {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+        .menu-btn {
+            width: 100%;
+            max-width: 320px;
+            padding: 18px;
+            margin: 12px 0;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .menu-btn:active { transform: scale(0.95); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+        /* Content Styling */
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--accent);
+            border-bottom: 2px solid #334155;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card h3 { color: #60a5fa; margin-bottom: 12px; font-size: 1.2rem; }
+        .card ul { padding-left: 20px; color: var(--text-muted); }
+        .card li { margin-bottom: 8px; }
+        .card strong { color: var(--text-main); }
+
+        /* MCQ Styling */
+        .mcq-q {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #f1f5f9;
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+            margin: 8px 0;
+            background: #334155;
+            border: 2px solid transparent;
+            color: #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        .option-btn:hover { background: #475569; }
+        
+        .option-btn.correct {
+            background: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: #fff;
+        }
+        .option-btn.wrong {
+            background: var(--wrong-bg) !important;
+            border-color: var(--wrong-border) !important;
+            color: #fff;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #0f172a;
+            border-left: 4px solid var(--accent);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+        .explanation ul { padding-left: 15px; margin-top: 10px; }
+        .explanation li { margin-bottom: 6px; }
+        .explanation strong { color: #fcd34d; }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Navigation -->
+    <div class="top-nav" id="topNav">
+        <button class="nav-btn" onclick="navigate('home-page')">🏠 Home</button>
+        <button class="nav-btn" onclick="goBack()">↩️ Back</button>
+    </div>
+
+    <!-- 🏠 HOME PAGE -->
+    <div id="home-page" class="page active" style="padding-top: 20px;">
+        <h1 class="home-title">Daily Current Affairs<br><span style="font-size: 1.3rem; color: #cbd5e1;">23 September 2026</span></h1>
+        <button class="menu-btn" onclick="navigate('mcqs-page')">1️⃣ MCQs</button>
+        <button class="menu-btn" onclick="navigate('news-page')">2️⃣ આજના News</button>
+        <button class="menu-btn" onclick="navigate('magical-page')">3️⃣ Magical Slide</button>
+    </div>
+
+    <!-- 1️⃣ MCQS PAGE -->
+    <div id="mcqs-page" class="page">
+        <h2 class="section-title">MCQs (23 September 2026)</h2>
+
+        <!-- MCQ 1 -->
+        <div class="card">
+            <div class="mcq-q">Q.1 10 સપ્ટેમ્બર 2026 ના રોજ છ વર્ષ પૂર્ણ કરનારી અને ભારતના મત્સ્યોદ્યોગ અને જળચરઉછેર ક્ષેત્રના સર્વગ્રાહી વિકાસ માટે કુલ અંદાજિત ₹20,750 કરોડના ખર્ચવાળી યોજના કઈ છે?</div>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp1')">1. PM-KISAN / પીએમ-કિસાન</button>
+            <button class="option-btn" onclick="checkAns(this, true, 'exp1')">2. PMMSY / પીએમએમએસવાય</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp1')">3. PMFBY / પીએમએફબીવાય</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp1')">4. PM-KUSUM / પીએમ-કુસુમ</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp1')">5. PMFME / પીએમએફએમઈ</button>
+            <div id="exp1" class="explanation">
+                <strong>સાચો જવાબ: 2 (PMMSY - પ્રધાનમંત્રી મત્સ્ય સંપદા યોજના)</strong>
+                <ul>
+                    <li>10 સપ્ટેમ્બર 2026 ના રોજ 6 વર્ષ પૂર્ણ કર્યા.</li>
+                    <li>ભારતના મત્સ્યઉદ્યોગ અને જળચરઉછેર ક્ષેત્રના સર્વગ્રાહી વિકાસ માટે 2020 માં લોન્ચ કરવામાં આવી.</li>
+                    <li>કુલ અંદાજિત ખર્ચ: ₹20,750 કરોડ.</li>
+                    <li>બજેટ 2026-27: ₹2,500 કરોડ (રેકોર્ડ ફાળવણી).</li>
+                    <li>આ યોજના સપ્ટેમ્બર 2026 સુધી ચાલશે.</li>
+                    <li><strong>PM મત્સ્ય કિસાન સમૃદ્ધિ સહ-યોજના (PM-MKSSY):</strong> PMMSY હેઠળ સેન્ટ્રલ સેક્ટર સબ-સ્કીમ છે. તમામ રાજ્યો અને UTs માં કાર્યરત છે. સમયગાળો: 2023-24 થી 2026-27 (4 વર્ષ). અંદાજિત ખર્ચ: ₹6,000 કરોડ.</li>
+                    <li><strong>માછલીનું ઉત્પાદન (Fish production):</strong> 141.64 લાખ ટન (2019-20) થી વધીને 197.75 લાખ ટન (2024-25).</li>
+                    <li><strong>મત્સ્યઉદ્યોગની નિકાસ (Fisheries exports):</strong> ₹46,663 કરોડ (2019-20) થી વધીને ₹73,890 કરોડ (2025-26).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MCQ 2 -->
+        <div class="card">
+            <div class="mcq-q">Q.2 ભારત સરકારે સબસિડીવાળા ઘરેલુ LPG રિફિલ માટે બાયોમેટ્રિક આધાર પ્રમાણીકરણ (Authentication) ફરજિયાત કર્યું છે જેથી સબસિડી માત્ર સાચા અને પાત્ર પરિવારો સુધી પહોંચે. આ નિયમ કઈ તારીખથી લાગુ થશે?</div>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp2')">1. 1 September 2026</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp2')">2. 15 September 2026</button>
+            <button class="option-btn" onclick="checkAns(this, true, 'exp2')">3. 1 October 2026</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp2')">4. 15 October 2026</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp2')">5. 1 November 2026</button>
+            <div id="exp2" class="explanation">
+                <strong>સાચો જવાબ: 3 (1 October 2026)</strong>
+                <ul>
+                    <li>1 ઓક્ટોબર 2026 થી સબસિડીવાળા ડોમેસ્ટિક LPG રિફિલ માટે બાયોમેટ્રિક આધાર ઓથેન્ટિકેશન ફરજિયાત છે.</li>
+                    <li>ગ્રાહકોએ લાગુ પડતી સબસિડી સાથે રેગ્યુલેટેડ રિટેલ સેલિંગ પ્રાઇસ (RSP) પર રિફિલ બુક કરાવવા માટે આ ઓથેન્ટિકેશન પૂર્ણ કરવું ફરજિયાત છે.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MCQ 3 -->
+        <div class="card">
+            <div class="mcq-q">Q.3 નાણાકીય વર્ષ 2025-26 માં વિકાસશીલ અર્થતંત્રો માટે રેકોર્ડ $112 બિલિયનની ખાનગી મૂડી (Private Capital) એકત્ર કરવામાં આવી, જે તેના ઈતિહાસમાં સૌથી વધુ છે. આ સિદ્ધિ કઈ આંતરરાષ્ટ્રીય નાણાકીય સંસ્થાએ મેળવી?</div>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp3')">1. International Monetary Fund (IMF)</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp3')">2. Asian Development Bank (ADB)</button>
+            <button class="option-btn" onclick="checkAns(this, true, 'exp3')">3. World Bank Group</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp3')">4. International Finance Corporation (IFC)</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp3')">5. New Development Bank (NDB)</button>
+            <div id="exp3" class="explanation">
+                <strong>સાચો જવાબ: 3 (World Bank Group)</strong>
+                <ul>
+                    <li>નાણાકીય વર્ષ 2025-2026 માં વિકાસશીલ અર્થતંત્રો માટે રેકોર્ડ $112 બિલિયનની ખાનગી મૂડી એકત્રિત કરવામાં આવી.</li>
+                    <li>આ વર્લ્ડ બેંક ગ્રુપના ઈતિહાસમાં સૌથી વધુ પ્રાઈવેટ કેપિટલ મોબિલાઈઝેશન છે.</li>
+                    <li>વર્લ્ડ બેંક ગ્રુપે $25 બિલિયનથી વધુની ગેરંટી પણ ઇશ્યૂ કરી છે, જે 2030 સુધીમાં વાર્ષિક $20 બિલિયનના અગાઉના લક્ષ્યાંકને નિર્ધારિત સમય પહેલા જ પાર કરી ગઈ છે.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MCQ 4 -->
+        <div class="card">
+            <div class="mcq-q">Q.4 2026 વર્લ્ડ એરલાઈન એવોર્ડ્સમાં, કઈ એરલાઈનને "ભારત અને દક્ષિણ એશિયાની શ્રેષ્ઠ લો-કોસ્ટ એરલાઈન" તરીકે ઓળખવામાં આવી અને તે જ ક્ષેત્રમાં "શ્રેષ્ઠ કેબિન ક્રૂ" તથા "સૌથી સ્વચ્છ એરલાઈન" ના એવોર્ડ પણ મળ્યા?</div>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp4')">1. Akasa Air</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp4')">2. Air India Express</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp4')">3. SpiceJet</button>
+            <button class="option-btn" onclick="checkAns(this, true, 'exp4')">4. IndiGo</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp4')">5. airblue</button>
+            <div id="exp4" class="explanation">
+                <strong>સાચો જવાબ: 4 (IndiGo)</strong>
+                <ul>
+                    <li>Skytrax દ્વારા 2026 વર્લ્ડ એરલાઇન એવોર્ડ્સમાં ઇન્ડિગોને "Best Low-Cost Airline in India & South Asia" તરીકે નામ આપવામાં આવ્યું.</li>
+                    <li>20 વર્ષની સફર દરમિયાન ઇન્ડિગોએ 14મી વખત વિવિધ પ્રાદેશિક કેટેગરીમાં શ્રેષ્ઠ લો-કોસ્ટ એરલાઇન તરીકે ઓળખ મેળવી છે.</li>
+                    <li>આ ઉપરાંત ઇન્ડિગોને "Best Cabin Crew in India & South Asia" અને "Cleanest Airline in India & South Asia" ના એવોર્ડ્સ પણ મળ્યા છે.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MCQ 5 -->
+        <div class="card">
+            <div class="mcq-q">Q.5 મહારાષ્ટ્રના રાયગઢ જિલ્લાના દિઘીમાં લગભગ ₹27,000 કરોડના રોકાણ સાથે ગ્રીનફિલ્ડ શિપબિલ્ડીંગ ક્લસ્ટર વિકસાવવા માટે કયા ડિફેન્સ પબ્લિક સેક્ટર અન્ડરટેકિંગે નેશનલ શિપબિલ્ડીંગ એન્ડ હેવી ઈન્ડસ્ટ્રીઝ પાર્ક મહારાષ્ટ્ર લિમિટેડ (NSHIPML) સાથે MoU કર્યા છે?</div>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp5')">1. GRSE</button>
+            <button class="option-btn" onclick="checkAns(this, true, 'exp5')">2. MDL</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp5')">3. CSL</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp5')">4. HSL</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp5')">5. GSL</button>
+            <div id="exp5" class="explanation">
+                <strong>સાચો જવાબ: 2 (MDL - Mazagon Dock Shipbuilders Ltd)</strong>
+                <ul>
+                    <li>મઝાગોન ડોક શિપબિલ્ડર્સ લિમિટેડ (MDL) મહારાષ્ટ્રના રાયગઢ જિલ્લાના દિઘી ખાતે ગ્રીનફિલ્ડ શિપબિલ્ડીંગ ક્લસ્ટર વિકસાવવા માટે આશરે ₹27,000 કરોડનું રોકાણ કરશે.</li>
+                    <li>MDL એ આ માટે નેશનલ શિપબિલ્ડીંગ એન્ડ હેવી ઈન્ડસ્ટ્રીઝ પાર્ક મહારાષ્ટ્ર લિમિટેડ (NSHIPML) સાથે કરાર (MoU) પર હસ્તાક્ષર કર્યા છે.</li>
+                    <li>લક્ષ્ય (Target): વાર્ષિક ઓછામાં ઓછી 2 મિલિયન ગ્રોસ ટનની શિપબિલ્ડીંગ ક્ષમતા હાંસલ કરવી.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MCQ 6 -->
+        <div class="card">
+            <div class="mcq-q">Q.6 20 ગર્લ કેડેટ્સે હિમાચલ પ્રદેશના કિબ્બરથી લદ્દાખના કરજોક સુધી 30 દિવસમાં લગભગ 250 કિમીનું અંતર કાપીને 'અપરાજિતા-પારંગ લા 2026' હાઈ ઓલ્ટિટ્યુડ લોંગ ટ્રેક સફળતાપૂર્વક પૂર્ણ કર્યો. આ કેડેટ્સ કઈ સંસ્થાના હતા?</div>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp6')">1. NSS</button>
+            <button class="option-btn" onclick="checkAns(this, true, 'exp6')">2. NCC</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp6')">3. BSF</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp6')">4. CRPF</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp6')">5. SSB</button>
+            <div id="exp6" class="explanation">
+                <strong>સાચો જવાબ: 2 (NCC)</strong>
+                <ul>
+                    <li>20 NCC ગર્લ કેડેટ્સે 'અપરાજિતા-પારંગ લા 2026' હાઈ ઓલ્ટિટ્યુડ લોંગ ટ્રેક સફળતાપૂર્વક પૂર્ણ કર્યો.</li>
+                    <li>તેમણે 30 દિવસમાં લગભગ 250 કિમીનું અંતર કાપ્યું.</li>
+                    <li>રૂટ: કિબ્બર (હિમાચલ પ્રદેશ) થી કરજોક (લદ્દાખ).</li>
+                    <li>તેઓએ પારંગ લા પાસ (Parang La Pass - આશરે 5,578 મીટર) પાર કર્યો.</li>
+                    <li>સંરક્ષણ મંત્રી રાજનાથ સિંહ દ્વારા નવી દિલ્હીથી ફ્લેગ ઓફ કરવામાં આવ્યું હતું.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MCQ 7 -->
+        <div class="card">
+            <div class="mcq-q">Q.7 ભારતે દુબઈમાં મહિલા T20 એશિયા કપ 2026 ની ફાઇનલમાં કઈ ટીમને 72 રને હરાવીને પોતાનો રેકોર્ડ આઠમો વિમેન્સ એશિયા કપ ખિતાબ જીત્યો?</div>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp7')">1. Pakistan</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp7')">2. Bangladesh</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp7')">3. Thailand</button>
+            <button class="option-btn" onclick="checkAns(this, true, 'exp7')">4. Sri Lanka</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp7')">5. Malaysia</button>
+            <div id="exp7" class="explanation">
+                <strong>સાચો જવાબ: 4 (Sri Lanka)</strong>
+                <ul>
+                    <li>ભારતે દુબઈમાં રમાયેલી ફાઈનલમાં શ્રીલંકાને 72 રને હરાવ્યું.</li>
+                    <li>ભારતના એશિયા કપ ટાઇટલ: કુલ 8 (આ એક રેકોર્ડ છે).</li>
+                    <li>પ્લેયર ઓફ ધ મેચ: શેફાલી વર્મા (Shafali Verma).</li>
+                    <li>આ વિમેન્સ એશિયા કપની 10મી આવૃત્તિ હતી (અને T20 ફોર્મેટમાં 6ઠ્ઠી આવૃત્તિ).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MCQ 8 -->
+        <div class="card">
+            <div class="mcq-q">Q.8 2029 વર્લ્ડ એથ્લેટિક્સ ચેમ્પિયનશિપની યજમાની માટે નૈરોબી, કેન્યાની પસંદગી કરવામાં આવી છે (આફ્રિકામાં પ્રથમ વખત). ત્યારબાદ 2031 ની આવૃત્તિની યજમાની માટે કયા શહેરની પસંદગી કરવામાં આવી છે?</div>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp8')">1. Beijing, China</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp8')">2. Budapest, Hungary</button>
+            <button class="option-btn" onclick="checkAns(this, true, 'exp8')">3. Munich, Germany</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp8')">4. Tokyo, Japan</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp8')">5. Nairobi, Kenya</button>
+            <div id="exp8" class="explanation">
+                <strong>સાચો જવાબ: 3 (Munich, Germany)</strong>
+                <ul>
+                    <li>નૈરોબી, કેન્યા 2029 વર્લ્ડ એથ્લેટિક્સ ચેમ્પિયનશિપની યજમાની કરશે (આફ્રિકામાં પ્રથમ વખત).</li>
+                    <li>આ નિર્ણય હંગેરીના બુડાપેસ્ટમાં મળેલી વર્લ્ડ એથ્લેટિક્સ કાઉન્સિલની બેઠક દરમિયાન લેવાયો હતો.</li>
+                    <li>મ્યુનિક (Munich), જર્મની 2031 વર્લ્ડ એથ્લેટિક્સ ચેમ્પિયનશિપની યજમાની કરશે.</li>
+                    <li>2027 વર્લ્ડ એથ્લેટિક્સ ચેમ્પિયનશિપ બેઇજિંગ (Beijing) માં યોજાશે.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MCQ 9 -->
+        <div class="card">
+            <div class="mcq-q">Q.9 કયા પૂર્વ કેન્દ્રીય મંત્રી અને કોંગ્રેસ નેતા, જેમનું તાજેતરમાં નિધન થયું છે, તેમણે 1999 થી 2004 સુધી શિવગંગા લોકસભા મતવિસ્તારનું પ્રતિનિધિત્વ કર્યું અને બાદમાં રાજ્યસભાના સભ્ય તરીકે પણ સેવા આપી હતી?</div>
+            <button class="option-btn" onclick="checkAns(this, true, 'exp9')">1. Sudarsana Natchiappan</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp9')">2. P. Chidambaram</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp9')">3. Manish Tewari</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp9')">4. K. S. Alagiri</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp9')">5. S. R. Balasubramoniyan</button>
+            <div id="exp9" class="explanation">
+                <strong>સાચો જવાબ: 1 (Sudarsana Natchiappan)</strong>
+                <ul>
+                    <li>ભૂતપૂર્વ કેન્દ્રીય મંત્રી અને કોંગ્રેસના નેતા સુદર્શન નચ્ચિયપ્પનનું નિધન થયું છે.</li>
+                    <li>તેમણે લોકસભા (1999-2004) માં તમિલનાડુના શિવગંગા (Sivaganga) નું પ્રતિનિધિત્વ કર્યું હતું.</li>
+                    <li>ત્યારબાદ તેઓ રાજ્યસભાના સભ્ય તરીકે સેવા આપી ચુક્યા છે.</li>
+                    <li>ડો. મનમોહન સિંહના કાર્યકાળ દરમિયાન, તેઓ કેન્દ્ર સરકારમાં રાજ્ય મંત્રી (Minister of State) તરીકે રહ્યા હતા.</li>
+                    <li>તેઓ ભારતીય સુપ્રીમ કોર્ટમાં એડવોકેટ પણ હતા.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MCQ 10 -->
+        <div class="card">
+            <div class="mcq-q">Q.10 કયા મહાન અમેરિકન સ્વિમર, જેમણે 1968 અને 1972 ની ઓલિમ્પિક ગેમ્સમાં 3 વ્યક્તિગત ગોલ્ડ મેડલ જીત્યા હતા અને સતત બે ઓલિમ્પિકમાં 1,500m ફ્રીસ્ટાઈલ ટાઈટલ જીતનાર પ્રથમ અમેરિકન સ્વિમર બન્યા હતા, જેમનું તાજેતરમાં નિધન થયું છે?</div>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp10')">1. Mark Spitz</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp10')">2. Ryan Lochte</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp10')">3. Michael Phelps</button>
+            <button class="option-btn" onclick="checkAns(this, true, 'exp10')">4. Mike Burton</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp10')">5. Matt Biondi</button>
+            <div id="exp10" class="explanation">
+                <strong>સાચો જવાબ: 4 (Mike Burton)</strong>
+                <ul>
+                    <li>પ્રખ્યાત અમેરિકન સ્વિમર અને ત્રણ વખત ઓલિમ્પિક ગોલ્ડ મેડલ વિજેતા માઇક બર્ટન (Mike Burton) નું નિધન થયું છે.</li>
+                    <li>તેમણે ત્રણ વ્યક્તિગત ઓલિમ્પિક ગોલ્ડ મેડલ જીત્યા હતા:
+                        <ul>
+                            <li>1968 મેક્સિકો સિટી ઓલિમ્પિક્સ: 400 મીટર ફ્રીસ્ટાઇલ, 1500 મીટર ફ્રીસ્ટાઇલ.</li>
+                            <li>1972 મ્યુનિક ઓલિમ્પિક્સ: 1500 મીટર ફ્રીસ્ટાઇલ (વર્લ્ડ રેકોર્ડ 15:52.58).</li>
+                        </ul>
+                    </li>
+                    <li>તેઓ સતત બે ગેમ્સ (1968 અને 1972) માં ઓલિમ્પિક 1500 મીટર ફ્રીસ્ટાઈલ ટાઈટલ જીતનાર પ્રથમ અમેરિકન સ્વિમર હતા.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MCQ 11 -->
+        <div class="card">
+            <div class="mcq-q">Q.11 આંતરરાષ્ટ્રીય શાંતિ દિવસ (International Day of Peace) 2026 "Invest in Peace: For Everyone, Everywhere, Every Day" ની થીમ હેઠળ મનાવવામાં આવે છે. આ દિવસ પ્રતિવર્ષ કઈ તારીખે ઉજવવામાં આવે છે?</div>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp11')">1. 15 September</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp11')">2. 18 September</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp11')">3. 20 September</button>
+            <button class="option-btn" onclick="checkAns(this, true, 'exp11')">4. 21 September</button>
+            <button class="option-btn" onclick="checkAns(this, false, 'exp11')">5. 24 September</button>
+            <div id="exp11" class="explanation">
+                <strong>સાચો જવાબ: 4 (21 September)</strong>
+                <ul>
+                    <li>સ્વચ્છતા, કચરામાં ઘટાડો અને ટકાઉ કચરાના વ્યવસ્થાપન માટે વૈશ્વિક પગલાંને પ્રોત્સાહિત કરવા માટે દર વર્ષે 21 સપ્ટેમ્બરના રોજ આ દિવસ મનાવવામાં આવે છે.</li>
+                    <li>2026 ની થીમ: "Invest in Peace: For Everyone, Everywhere, Every Day".</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2️⃣ NEWS PAGE -->
+    <div id="news-page" class="page">
+        <h2 class="section-title">આજના News (23 September 2026)</h2>
+
+        <div class="card">
+            <h3>1. PM મોદીએ શ્રી વિશ્વેશ તીર્થ સ્વામીની જન્મ શતાબ્દી સમારોહના લોગોનું અનાવરણ કર્યું</h3>
+            <ul>
+                <li>વડાપ્રધાન નરેન્દ્ર મોદીએ કર્ણાટકના ઉડુપી સ્થિત શ્રી પેજાવર અધોક્ષજા મઠના શ્રી શ્રી વિશ્વપ્રસન્ના તીર્થ સ્વામી સાથે મુલાકાત કરી.</li>
+                <li>આ બેઠક દરમિયાન, પીએમ મોદીએ પદ્મ વિભૂષણ યતિકુલા ચક્રવર્તી શ્રી વિશ્વેશ તીર્થ સ્વામીના જન્મ શતાબ્દી સમારોહ માટે લોગોનું અનાવરણ કર્યું.</li>
+                <li>પેજાવર મઠ એ ઉડુપીના અષ્ટ મઠોમાંથી એક છે.</li>
+                <li>ઉડુપી શ્રી કૃષ્ણ મઠ એ કર્ણાટકના ઉડુપીમાં સ્થિત ભગવાન કૃષ્ણને સમર્પિત 13મી સદીનું એક પ્રખ્યાત હિંદુ મંદિર છે, જેની સ્થાપના દાર્શનિક સંત શ્રી મધ્વાચાર્ય દ્વારા કરવામાં આવી હતી.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>2. ઓગસ્ટ 2026 માં Core Sector Output માં 4.8% નો વધારો</h3>
+            <ul>
+                <li>ઓગસ્ટ 2026 માં ઈન્ડેક્સ ઓફ કોર ઈન્ડસ્ટ્રીઝ (ICI) માં વર્ષ-દર-વર્ષ (Y-o-Y) ના આધારે 4.8 ટકાની વૃદ્ધિ જોવા મળી છે.</li>
+                <li>આ વૃદ્ધિ દર જુલાઈ 2026 માં નોંધાયેલા 5.0 ટકાના વૃદ્ધિ દર કરતા થોડો ઓછો છે.</li>
+                <li>સુધારેલી ICI સિરીઝમાં આધાર વર્ષ (Base Year) તરીકે 2022-23 નો ઉપયોગ કરવામાં આવ્યો છે.</li>
+                <li>ઇન્ડેક્સ ઓફ કોર ઇન્ડસ્ટ્રીઝ (ICI) ભારતના મુખ્ય કોર ઇન્ફ્રાસ્ટ્રક્ચર ઉદ્યોગોના પ્રદર્શનને માપે છે.</li>
+                <li>તે વાણિજ્ય અને ઉદ્યોગ મંત્રાલય (Ministry of Commerce & Industry) હેઠળના ડિપાર્ટમેન્ટ ફોર પ્રમોશન ઓફ ઇન્ડસ્ટ્રી એન્ડ ઇન્ટરનલ ટ્રેડ (DPIIT) ના ઑફિસ ઑફ ઇકોનોમિક એડવાઇઝર (OEA) દ્વારા કમ્પાઇલ કરવામાં આવે છે.</li>
+                <li><strong>નવા ICI માં મુખ્ય ઉદ્યોગોનું વજન (Weight):</strong>
+                    <ul>
+                        <li>વિદ્યુત (Electricity) - 30.932%</li>
+                        <li>રિફાઇનરી ઉત્પાદનો (Refinery Products) - 22.572%</li>
+                        <li>સ્ટીલ (Steel) - 17.584%</li>
+                        <li>ક્રૂડ ઓઇલ (Crude Oil) - 7.430%</li>
+                        <li>કોલસો (Coal) - 5.596%</li>
+                        <li>આયર્ન ઓર (Iron Ore) - 4.905%</li>
+                        <li>સિમેન્ટ (Cement) - 4.410%</li>
+                        <li>નેચરલ ગેસ (Natural Gas) - 3.841%</li>
+                        <li>ખાતર (Fertilisers) - 2.731%</li>
+                        <li>કુલ (Total) - 100%</li>
+                    </ul>
+                </li>
+                <li>બેઝ ઈયર 2022-23 વાળી નવી IIP સિરીઝ હેઠળ, આ 9 કોર ઈન્ડસ્ટ્રીઝ એકસાથે IIP ના કુલ વજનના 32.882% હિસ્સો ધરાવે છે.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>3. PhonePe ને UAE પેમેન્ટ લાયસન્સ માટે પ્રારંભિક મંજૂરી મળી</h3>
+            <ul>
+                <li>PhonePe ને UAE ની સેન્ટ્રલ બેંક (CBUAE) તરફથી બે લાયસન્સ માટે 'ઈન-પ્રિન્સિપલ અપ્રૂવલ' (In-Principle Approval) મળી છે.</li>
+                <li>1. Retail Payment Services and Card Schemes (RPSCS)</li>
+                <li>2. Stored Value Facilities (SVF)</li>
+                <li>આ PhonePe ની પ્રથમ આંતરરાષ્ટ્રીય રેગ્યુલેટરી ફૂટપ્રિન્ટ (International regulatory footprint) છે.</li>
+                <li>RPSCS → રિટેલ / ડિજિટલ પેમેન્ટ</li>
+                <li>SVF → સ્ટોર્ડ વેલ્યુ / વોલેટ-પ્રકારની સુવિધાઓ</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>4. ઉપરાષ્ટ્રપતિ દ્વારા 9માં ઇન્ડિયા ઇન્ટરનેશનલ વોટર વીક 2026 નું ઉદ્ઘાટન</h3>
+            <ul>
+                <li>ઉપરાષ્ટ્રપતિ સી. પી. રાધાકૃષ્ણને નવી દિલ્હીના ભારત મંડપમ ખાતે 9th India International Water Week (IIWW) 2026 (22 થી 26 સપ્ટેમ્બર 2026) નું ઉદ્ઘાટન કર્યું.</li>
+                <li>તેનું આયોજન જળ શક્તિ મંત્રાલય (Ministry of Jal Shakti) દ્વારા કરવામાં આવી રહ્યું છે.</li>
+                <li>થીમ: "Climate Resilient Water Management" (આબોહવા-અનુકૂળ જળ વ્યવસ્થાપન).</li>
+                <li>નેધરલેન્ડ્સ અને જર્મની પાર્ટનર દેશો તરીકે ભાગ લઈ રહ્યા છે.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>5. US-Denmark-Greenland વચ્ચે નવો આર્કટિક સુરક્ષા કરાર (Arctic Security Deal)</h3>
+            <ul>
+                <li>યુએસ રાષ્ટ્રપતિ ડોનાલ્ડ ટ્રમ્પ, ડેનિશ વડાપ્રધાન મેટે ફ્રેડરિકસેન અને ગ્રીનલેન્ડના વડાપ્રધાન જેન્સ-ફ્રેડરિક નીલ્સને ન્યૂયોર્કમાં સંયુક્ત રાષ્ટ્ર મહાસભા (United General Assembly) દરમિયાન એક નવા કરાર પર હસ્તાક્ષર કર્યા.</li>
+                <li>આ કરાર ગ્રીનલેન્ડ અંગેના 1951 ના જૂના યુએસ-ડેનમાર્ક સંરક્ષણ કરારમાં સુધારો/પૂરક કરે છે.</li>
+                <li>આ કરાર ગ્રીનલેન્ડમાં યુએસ સૈન્યની વિસ્તૃત હાજરીને મંજૂરી આપે છે.</li>
+                <li>આ વ્યવસ્થા હેઠળ, યુએસ Narsarsuaq અને Mestersvig માં સૈન્ય સુવિધાઓનું વિસ્તરણ કરી શકે છે; યુએસ પહેલેથી જ ગ્રીનલેન્ડમાં Pituffik Space Base નું સંચાલન કરે છે.</li>
+                <li>ગ્રીનલેન્ડ વિશ્વનો સૌથી મોટો ટાપુ છે. તે એક સ્વતંત્ર સાર્વભૌમ દેશ નથી. તે ડેનમાર્ક કિંગડમની અંદરનો એક સ્વ-સંચાલિત અથવા સ્વાયત્ત પ્રદેશ (Autonomous territory) છે.</li>
+                <li>ક્ષેત્રફળ: અંદાજે 2.16 મિલિયન ચો. કિમી.</li>
+                <li>લગભગ 80% વિસ્તાર બરફની ચાદર (Ice sheet) થી ઢંકાયેલો છે. રાજધાની: નુઉક (Nuuk). વસ્તી: આશરે 56,000. સ્થાન: આર્કટિક અને ઉત્તર એટલાન્ટિક ક્ષેત્ર.</li>
+                <li>આર્કટિક સુરક્ષાને લઈને અમેરિકા અને યુરોપ બંને માટે તે વ્યૂહાત્મક રીતે નિર્ણાયક છે.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>6. ભારત-મંગોલિયા સંયુક્ત સૈન્ય અભ્યાસ 'Nomadic Elephant 2026' શરૂ થયો</h3>
+            <ul>
+                <li>ભારત-મંગોલિયા જોઇન્ટ મિલિટરી એક્સરસાઇઝ નોમેડિક એલિફન્ટ 2026 ની 18મી આવૃત્તિ ફોરેન ટ્રેનિંગ નોડ, પિથોરાગઢ, ઉત્તરાખંડ ખાતે શરૂ થઈ.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>7. ભારતીય મહિલા ક્રિકેટ ટીમે એશિયન ગેમ્સમાં ક્રિકેટ ગોલ્ડ જાળવી રાખ્યો</h3>
+            <ul>
+                <li>હરમનપ્રીત કૌરની કપ્તાનીમાં ભારતીય મહિલા ક્રિકેટ ટીમે જાપાનમાં 2026 આઈચી-નાગોયા એશિયન ગેમ્સમાં મહિલા ક્રિકેટનો ગોલ્ડ મેડલ જીત્યો.</li>
+                <li>ભારતે ફાઇનલમાં શ્રીલંકાને 147 રનથી હરાવ્યું.</li>
+                <li>આ એશિયન ગેમ્સ મહિલા ક્રિકેટમાં ભારતનો સળંગ બીજો ગોલ્ડ મેડલ હતો, અગાઉ હાંગઝોઉ 2022 માં જીતેલા ટાઇટલનો સફળતાપૂર્વક બચાવ કર્યો.</li>
+                <li>આ 2026 એશિયન ગેમ્સનો ભારતનો પહેલો ગોલ્ડ મેડલ પણ હતો.</li>
+                <li>વેન્યુ (સ્થળ): કોરોગી એથ્લેટિક પાર્ક, નાગોયા, જાપાન.</li>
+                <li>બ્રોન્ઝ મેડલ પાકિસ્તાને જીત્યો.</li>
+                <li>ભારતનો 216/3 નો સ્કોર એશિયન ગેમ્સના ક્રિકેટ ઈતિહાસમાં મહિલા ટીમ દ્વારા નોંધાયેલ સર્વોચ્ચ સ્કોર હતો.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>8. સુચિકા તારિયાલે એશિયન ગેમ્સ 2026 માં MMA માં ઇતિહાસ રચ્યો</h3>
+            <ul>
+                <li>સુચિકા તારિયાલ મિક્સ્ડ માર્શલ આર્ટ્સ (MMA) માં ભારતની સૌપ્રથમ એશિયન ગેમ્સ મેડલિસ્ટ બનીને ઇતિહાસ સર્જ્યો.</li>
+                <li>તેણે જાપાનમાં આઈચી-નાગોયા એશિયન ગેમ્સ 2026 માં વિમેન્સ ટ્રેડિશનલ MMA 60 કિગ્રા કેટેગરીમાં બ્રોન્ઝ મેડલ જીત્યો.</li>
+                <li>MMA એ 2026 ની આવૃત્તિમાં એશિયન ગેમ્સમાં ડેબ્યૂ કર્યું છે.</li>
+                <li>તેણે મંગોલિયાની અલ્તાનચિમેગ બાઈગાલ્મા (Altanchimeg Baigalmaa) ને હરાવીને ભારત માટે ઐતિહાસિક મેડલ મેળવ્યો.</li>
+                <li>તેમનો જન્મ ઉત્તર પ્રદેશના બુઢાનામાં થયો હતો અને હરિયાણાના રોહતકમાં ઉછેર થયો હતો.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>9. માર્ક વુડ (Mark Wood) ની ઇન્ટરનેશનલ ક્રિકેટમાંથી નિવૃત્તિ</h3>
+            <ul>
+                <li>ઇંગ્લેન્ડના ફાસ્ટ બોલર માર્ક વુડે આંતરરાષ્ટ્રીય ક્રિકેટમાંથી નિવૃત્તિ જાહેર કરી છે.</li>
+                <li>તેણે તમામ ફોર્મેટમાં ઇંગ્લેન્ડ માટે 146 ઇન્ટરનેશનલ મેચ રમી હતી અને 253 વિકેટ ઝડપી હતી.</li>
+                <li>વુડ 2019 ICC ક્રિકેટ વર્લ્ડ કપ વિજેતા ઇંગ્લેન્ડની ટીમનો હિસ્સો હતા.</li>
+                <li>તેઓ 2022 ICC મેન્સ T20 વર્લ્ડ કપ વિજેતા ઇંગ્લેન્ડની ટીમનો પણ હિસ્સો હતા.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>10. International Day of Sign Languages (23 September)</h3>
+            <ul>
+                <li>સાંકેતિક ભાષાઓ (Sign languages) ના મહત્વ અને બહેરા લોકોના અધિકારો વિશે જાગૃતિ લાવવા માટે દર વર્ષે 23 સપ્ટેમ્બરના રોજ ઇન્ટરનેશનલ ડે ઓફ સાઇન લેંગ્વેજીસ (IDSL) મનાવવામાં આવે છે.</li>
+                <li>2026 ની થીમ: "Declaring Deaf People's Human Rights".</li>
+                <li>આ તારીખ 23 સપ્ટેમ્બર 1951 ના રોજ World Federation of the Deaf (WFD) ની સ્થાપનાનું પ્રતીક છે.</li>
+                <li>2026 માં WFD તેની 75મી વર્ષગાંઠ પણ મનાવી રહ્યું છે.</li>
+                <li>હેડક્વાર્ટર: હેલસિંકી, ફિનલેન્ડ.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 3️⃣ MAGICAL SLIDE PAGE -->
+    <div id="magical-page" class="page">
+        <h2 class="section-title">Magical Slide (Daily Current Affairs - 22nd September)</h2>
+        <div class="card">
+            <h3>1. PM Matsya Sampada Yojana (PMMSY) - 6 Years</h3>
+            <ul>
+                <li>Completed 6 years on 10 September 2026.</li>
+                <li>Launched in 2020 for holistic development of India's fisheries and aquaculture sector.</li>
+                <li>Total outlay: ₹20,750 crore.</li>
+                <li>Budget 2026-27: ₹2,500 crore (Record allocation).</li>
+                <li>Runs up to September 2026.</li>
+                <li><strong>PM Matsya Kisan Samridhi Sah-Yojana (PM-MKSSY):</strong> Central Sector sub-scheme under PMMSY. Operational across all States and UTs. Period: 2023-24 to 2026-27 (4 years). Estimated outlay: ₹6,000 crore.</li>
+                <li><strong>Progress:</strong> Fish production: 141.64 lakh tonnes (2019-20) ➔ 197.75 lakh tonnes (2024-25).</li>
+                <li>Fisheries exports: ₹46,663 crore (2019-20) ➔ ₹73,890 crore (2025-26).</li>
+            </ul>
+            
+            <h3>2. LPG Refill: Aadhaar Authentication Mandatory</h3>
+            <ul>
+                <li>Biometric Aadhaar Authentication mandatory for subsidised domestic LPG refills from 1 October 2026.</li>
+                <li>Consumers must complete authentication to book refills at the regulated Retail Selling Price (RSP) with applicable subsidy.</li>
+            </ul>
+
+            <h3>3. World Bank Group Mobilises Record Private Capital</h3>
+            <ul>
+                <li>Mobilised a record $112 billion in private capital for developing economies in FY 2025-2026.</li>
+                <li>Highest private capital mobilisation in World Bank Group's history.</li>
+                <li>Also issued more than $25 billion in guarantees, exceeding its earlier target of $20 billion annually by 2030 ahead of schedule.</li>
+            </ul>
+
+            <h3>4. IndiGo Bags Top Honours at Skytrax 2026</h3>
+            <ul>
+                <li>Named "Best Low-Cost Airline in India & South Asia" at the 2026 World Airline Awards by Skytrax.</li>
+                <li>14th time IndiGo recognised as best low-cost airline across different regional categories during 20-year journey.</li>
+                <li>Also won: Best Cabin Crew in India & South Asia & Cleanest Airline in India & South Asia.</li>
+            </ul>
+
+            <h3>5. MDL to Invest ₹27,000 Crore in Dighi Shipbuilding Cluster</h3>
+            <ul>
+                <li>Mazagon Dock Shipbuilders Ltd (MDL) will invest around ₹27,000 crore to develop a greenfield shipbuilding cluster at Dighi in Raigad district, Maharashtra.</li>
+                <li>MDL has signed an MoU with National Shipbuilding and Heavy Industries Park Maharashtra Ltd (NSHIPML).</li>
+                <li>Target: annual shipbuilding capacity of at least 2 million gross tonnes.</li>
+            </ul>
+
+            <h3>6. NCC Girl Cadets Complete Aparajita - Parang La 2026 Trek</h3>
+            <ul>
+                <li>20 NCC girl cadets successfully completed the 'Aparajita-Parang La 2026' High Altitude Long Trek.</li>
+                <li>Covered around 250 km in 30 days.</li>
+                <li>Route: Kibber (Himachal Pradesh) to Karzok (Ladakh).</li>
+                <li>Crossed Parang La Pass (approx. 5,578 metres).</li>
+                <li>Flagged off from New Delhi by Defence Minister Rajnath Singh.</li>
+            </ul>
+
+            <h3>7. India Wins Women's T20 Asia Cup 2026</h3>
+            <ul>
+                <li>India defeated Sri Lanka by 72 runs in the final in Dubai.</li>
+                <li>India's Asia Cup titles: 8 - record.</li>
+                <li>Player of the Match: Shafali Verma.</li>
+                <li>10th edition of Women's Asia Cup (and 6th in T20 format).</li>
+            </ul>
+
+            <h3>8. World Athletics Championships Hosts</h3>
+            <ul>
+                <li>Nairobi, Kenya to host 2029 World Athletics Championships. (First time the event will be held in Africa).</li>
+                <li>Decision by World Athletics Council during its meeting in Budapest, Hungary.</li>
+                <li>Munich, Germany to host 2031 World Athletics Championships.</li>
+                <li>2027 World Athletics Championships will be held in Beijing.</li>
+            </ul>
+
+            <h3>9. Sudarsana Natchiappan Passes Away</h3>
+            <ul>
+                <li>Former Union Minister and Congress leader Sudarsana Natchiappan passed away.</li>
+                <li>Represented Sivaganga (Tamil Nadu) in Lok Sabha (1999-2004).</li>
+                <li>Later served as a Member of Rajya Sabha.</li>
+                <li>During Dr. Manmohan Singh's tenure, served as Minister of State in the Union Government.</li>
+                <li>Also an advocate in the Supreme Court of India.</li>
+            </ul>
+
+            <h3>10. Mike Burton Passes Away</h3>
+            <ul>
+                <li>Legendary American swimmer and three-time Olympic gold medallist Mike Burton passed away.</li>
+                <li>Won three individual Olympic gold medals:</li>
+                <li>1968 Mexico City Olympics: 400 m freestyle, 1500 m freestyle.</li>
+                <li>1972 Munich Olympics: 1500 m freestyle (world record 15:52.58).</li>
+                <li>First American swimmer to win the Olympic 1500 m freestyle title at consecutive Games - 1968 and 1972.</li>
+            </ul>
+
+            <h3>11. International Day of Peace (21 September)</h3>
+            <ul>
+                <li>Observed every year on 21 September to encourage global action for cleanliness, waste reduction and sustainable waste management.</li>
+                <li>2026 Theme: "Invest in Peace: For Everyone, Everywhere, Every Day".</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Web Audio API for Hard Beep Sound
+        function playBeep() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                osc.type = 'square'; // Hard robotic beep
+                osc.frequency.setValueAtTime(400, ctx.currentTime);
+                gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+                
+                osc.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                osc.start();
+                osc.stop(ctx.currentTime + 0.1); // Short duration
+            } catch (error) {
+                console.log("Audio not supported in this browser");
+            }
+        }
+
+        let historyStack = ['home-page'];
+
+        // Page Navigation
+        function navigate(pageId) {
+            playBeep();
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            // Show Sticky Nav if not on Home Page
+            if(pageId !== 'home-page') {
+                document.getElementById('topNav').style.display = 'flex';
+                if(historyStack[historyStack.length - 1] !== pageId) {
+                    historyStack.push(pageId);
+                }
+            } else {
+                document.getElementById('topNav').style.display = 'none';
+                historyStack = ['home-page'];
+            }
+            window.scrollTo(0,0);
+        }
+
+        // Go Back button logic
+        function goBack() {
+            playBeep();
+            if(historyStack.length > 1) {
+                historyStack.pop();
+                const previousPage = historyStack[historyStack.length - 1];
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById(previousPage).classList.add('active');
+                
+                if(previousPage === 'home-page') {
+                    document.getElementById('topNav').style.display = 'none';
+                }
+                window.scrollTo(0,0);
+            }
+        }
+
+        // MCQ Check Answer Logic (Rule: Sacho k khoto click karta color aave, and direct explanation niche open thay)
+        function checkAns(btn, isCorrect, expId) {
+            playBeep();
+            
+            const parent = btn.parentElement;
+            const options = parent.querySelectorAll('.option-btn');
+            
+            // Reset colors
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+            
+            // Apply correct/wrong colors
+            if(isCorrect) {
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+                // Auto highlight correct option
+                options.forEach(opt => {
+                    if(opt.getAttribute('onclick').includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+            
+            // Show explanation below question
+            document.getElementById(expId).style.display = 'block';
+        }
+    </script>
+</body>
+</html>
